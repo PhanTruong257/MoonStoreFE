@@ -1,5 +1,0 @@
-export * from '@/global-types/api'
-export * from '@/global-types/cart'
-export * from '@/global-types/order'
-export * from '@/global-types/product'
-export * from '@/global-types/user'

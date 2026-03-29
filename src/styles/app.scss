@@ -3,11 +3,68 @@
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --color-bg: #fcf8f3;
   --color-surface: #ffffff;
+  --color-surface-compact: #fff;
   --color-primary: #de5b2c;
   --color-accent: #1f6ea4;
   --color-text: #272421;
   --color-muted: #6b635b;
   --color-border: #e7ddd2;
+  --color-black: #000;
+  --color-black-soft: #050505;
+  --color-ink-950: #08060d;
+  --color-ink-900: #101010;
+  --color-ink-850: #121212;
+  --color-ink-800: #16171d;
+  --color-ink-780: #1f2028;
+  --color-ink-760: #1f2430;
+  --color-ink-700: #2b3240;
+  --color-ink-680: #2c2c2c;
+  --color-ink-650: #2e303a;
+  --color-ink-620: #3d3d3d;
+  --color-charcoal-500: #444;
+  --color-slate-520: #5b6675;
+  --color-slate-500: #636363;
+  --color-slate-480: #6b6375;
+  --color-slate-420: #8f8f8f;
+  --color-slate-360: #9ca3af;
+  --color-brand-violet: #aa3bff;
+  --color-brand-violet-soft: #c084fc;
+  --color-danger: #db4444;
+  --color-danger-strong: #c11b1b;
+  --color-danger-soft: #f04747;
+  --color-pink-300: #f6b9dd;
+  --color-pink-400: #f28dc8;
+  --color-cyan-100: #cbe9f6;
+  --color-cyan-200: #b3ddee;
+  --color-cyan-050: #dbedf4;
+  --color-gray-050: #f2f2f2;
+  --color-gray-100: #f3f4f6;
+  --color-gray-120: #f4f4f4;
+  --color-gray-140: #f5f5f5;
+  --color-gray-160: #f4f3ec;
+  --color-gray-200: #e6e6e6;
+  --color-gray-220: #e5e4e7;
+  --color-gray-240: #d7d7d7;
+  --color-gray-260: #d2d2d2;
+  --color-gray-280: #cfcfcf;
+  --color-gray-600: #2a2a2a;
+  --overlay-shadow-05: rgba(0, 0, 0, 0.05);
+  --overlay-shadow-10: rgba(0, 0, 0, 0.1);
+  --overlay-shadow-18: rgba(0, 0, 0, 0.18);
+  --overlay-shadow-25: rgba(0, 0, 0, 0.25);
+  --overlay-shadow-40: rgba(0, 0, 0, 0.4);
+  --overlay-violet-10: rgba(170, 59, 255, 0.1);
+  --overlay-violet-50: rgba(170, 59, 255, 0.5);
+  --overlay-violet-soft-15: rgba(192, 132, 252, 0.15);
+  --overlay-violet-soft-50: rgba(192, 132, 252, 0.5);
+  --overlay-sand-50: rgba(244, 243, 236, 0.5);
+  --overlay-bg-86: rgba(252, 248, 243, 0.86);
+  --overlay-white-65: rgba(255, 255, 255, 0.65);
+  --overlay-white-80: rgba(255, 255, 255, 0.8);
+  --overlay-accent-12: rgba(31, 110, 164, 0.12);
+  --overlay-primary-12: rgba(222, 91, 44, 0.12);
+  --overlay-slate-50: rgba(47, 48, 58, 0.5);
+  --color-transparent: transparent;
   --shadow-card: 0 16px 40px rgba(22, 18, 14, 0.07);
 }
 
@@ -20,8 +77,8 @@ body {
   font-family: var(--font-body);
   color: var(--color-text);
   background:
-    radial-gradient(circle at 15% 10%, rgba(222, 91, 44, 0.12), transparent 35%),
-    radial-gradient(circle at 85% 90%, rgba(31, 110, 164, 0.12), transparent 30%),
+    radial-gradient(circle at 15% 10%, var(--overlay-primary-12), var(--color-transparent) 35%),
+    radial-gradient(circle at 85% 90%, var(--overlay-accent-12), var(--color-transparent) 30%),
     var(--color-bg);
 }
 
@@ -147,7 +204,7 @@ a {
 
 .app-footer {
   border-top: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--overlay-white-80);
 }
 
 .app-footer__inner {
