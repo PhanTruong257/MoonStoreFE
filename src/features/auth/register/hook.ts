@@ -22,7 +22,7 @@ export const useRegister = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const submit = async () => {
+  const submit = () => {
     if (!form.name || !form.email || !form.password) {
       setError("Please fill all required fields.");
       return false;
@@ -30,16 +30,9 @@ export const useRegister = () => {
 
     setError("");
     setIsSubmitting(true);
-
-    try {
-      void navigate("/login", { replace: true });
-      return true;
-    } catch {
-      setError("Registration failed. Please try again.");
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
+    void navigate("/login", { replace: true });
+    setIsSubmitting(false);
+    return true;
   };
 
   return {

@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 
-import { SiteFooter } from "@/features/layout/components/site-footer";
-import { SiteHeader } from "@/features/layout/components/site-header";
+import styles from "./auth-page.module.scss";
+
 import { Login } from "@/features/auth/login/login";
 import { Register } from "@/features/auth/register/register";
-
-import styles from "./auth-page.module.scss";
+import { SiteFooter } from "@/features/layout/components/site-footer";
+import { SiteHeader } from "@/features/layout/components/site-header";
 
 const authHeaderLinks = [
   { label: "Home", to: "/login" },

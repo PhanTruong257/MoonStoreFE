@@ -20,7 +20,7 @@ export const useLogin = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const submit = async () => {
+  const submit = () => {
     if (!form.email || !form.password) {
       setError("Please enter email and password.");
       return false;
@@ -28,16 +28,9 @@ export const useLogin = () => {
 
     setError("");
     setIsSubmitting(true);
-
-    try {
-      void navigate("/login", { replace: true });
-      return true;
-    } catch {
-      setError("Login failed. Please try again.");
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
+    void navigate("/login", { replace: true });
+    setIsSubmitting(false);
+    return true;
   };
 
   return {
