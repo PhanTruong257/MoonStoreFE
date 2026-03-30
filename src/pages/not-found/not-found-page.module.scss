@@ -1,0 +1,49 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 70px;
+  display: grid;
+  gap: 24px;
+}
+
+.breadcrumb {
+  color: var(--color-slate-500);
+  font-size: 13px;
+}
+
+.content {
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-family: var(--font-display);
+  }
+
+  p {
+    margin: 14px 0 24px;
+    color: var(--color-slate-500);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    height: 50px;
+    border-radius: 6px;
+    background: var(--color-danger);
+    color: #fff;
+    font-weight: 700;
+  }
+}
