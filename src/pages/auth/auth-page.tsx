@@ -8,9 +8,9 @@ import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 
 const authHeaderLinks = [
-  { label: "Home", to: "/login" },
-  { label: "Contact", to: "/register" },
-  { label: "About", to: "/register" },
+  { label: "Home", to: "/" },
+  { label: "Contact", to: "/contact" },
+  { label: "About", to: "/about" },
   { label: "Sign Up", to: "/register" },
 ];
 

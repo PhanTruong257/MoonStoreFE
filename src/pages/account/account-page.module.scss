@@ -1,0 +1,151 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 70px;
+  display: grid;
+  gap: 24px;
+}
+
+.breadcrumbRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-slate-500);
+  font-size: 13px;
+}
+
+.welcome {
+  color: var(--color-ink-680);
+
+  span {
+    color: var(--color-danger);
+  }
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+}
+
+.sideMenu {
+  h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+  }
+
+  h4 {
+    margin: 18px 0 8px;
+    font-size: 16px;
+  }
+
+  a,
+  button {
+    border: 0;
+    background: transparent;
+    display: block;
+    text-align: left;
+    color: var(--color-slate-500);
+    padding: 6px 0;
+    cursor: pointer;
+  }
+}
+
+.menuActive {
+  color: var(--color-danger) !important;
+}
+
+.panel {
+  border: 1px solid var(--color-gray-220);
+  border-radius: 10px;
+  padding: 26px;
+
+  h2 {
+    margin: 0 0 18px;
+    color: var(--color-danger);
+    font-size: 24px;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+  }
+
+  input {
+    height: 46px;
+    border: 1px solid var(--color-gray-220);
+    border-radius: 6px;
+    background: var(--color-gray-140);
+    padding: 0 12px;
+  }
+}
+
+.passwordSection {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  input {
+    height: 46px;
+    border: 1px solid var(--color-gray-220);
+    border-radius: 6px;
+    background: var(--color-gray-140);
+    padding: 0 12px;
+  }
+}
+
+.actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    min-width: 120px;
+    height: 44px;
+    border-radius: 6px;
+    border: 1px solid var(--color-gray-220);
+    background: #fff;
+    cursor: pointer;
+  }
+}
+
+.saveBtn {
+  border-color: var(--color-danger) !important;
+  background: var(--color-danger) !important;
+  color: #fff;
+  font-weight: 700;
+}
+
+@media (max-width: 960px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

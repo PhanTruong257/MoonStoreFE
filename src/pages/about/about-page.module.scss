@@ -1,0 +1,155 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 70px;
+  display: grid;
+  gap: 28px;
+}
+
+.breadcrumb {
+  color: var(--color-slate-500);
+  font-size: 13px;
+}
+
+.storySection {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 26px;
+  align-items: center;
+}
+
+.storyText {
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-family: var(--font-display);
+  }
+
+  p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+    color: var(--color-ink-650);
+  }
+}
+
+.storyImage {
+  width: 100%;
+  border-radius: 12px;
+  aspect-ratio: 16 / 11;
+  object-fit: cover;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  border: 1px solid var(--color-gray-220);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+
+  h3 {
+    margin: 10px 0 6px;
+    font-size: 30px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-slate-500);
+    font-size: 13px;
+  }
+}
+
+.statFeatured {
+  background: var(--color-danger);
+  color: #fff;
+
+  p {
+    color: #fff;
+  }
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.memberCard {
+  img {
+    width: 100%;
+    border-radius: 10px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: var(--color-gray-140);
+  }
+
+  h3 {
+    margin: 10px 0 4px;
+    font-size: 30px;
+    font-family: var(--font-display);
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-slate-500);
+  }
+}
+
+.serviceRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.serviceItem {
+  text-align: center;
+
+  span {
+    width: 66px;
+    height: 66px;
+    margin: 0 auto 10px;
+    display: block;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 35% 35%,
+      #fff 0%,
+      #ddd 22%,
+      #000 23%,
+      #000 100%
+    );
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--color-slate-500);
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 960px) {
+  .storySection {
+    grid-template-columns: 1fr;
+  }
+
+  .stats,
+  .teamGrid,
+  .serviceRow {
+    grid-template-columns: 1fr;
+  }
+}

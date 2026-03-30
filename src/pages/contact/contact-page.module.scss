@@ -1,0 +1,109 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 70px;
+  display: grid;
+  gap: 24px;
+}
+
+.breadcrumb {
+  color: var(--color-slate-500);
+  font-size: 13px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+}
+
+.infoCard {
+  border: 1px solid var(--color-gray-220);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.infoBlock {
+  h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: var(--color-slate-500);
+  }
+}
+
+.formCard {
+  border: 1px solid var(--color-gray-220);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.formTop {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 10px;
+
+  input {
+    height: 48px;
+    border: 1px solid var(--color-gray-220);
+    border-radius: 6px;
+    background: var(--color-gray-140);
+    padding: 0 12px;
+  }
+}
+
+.messageInput {
+  margin-top: 12px;
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid var(--color-gray-220);
+  border-radius: 6px;
+  background: var(--color-gray-140);
+  padding: 12px;
+  resize: vertical;
+}
+
+.actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    min-width: 170px;
+    height: 48px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--color-danger);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+.message {
+  margin-top: 10px;
+  color: var(--color-slate-500);
+  font-size: 13px;
+}
+
+@media (max-width: 960px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .formTop {
+    grid-template-columns: 1fr;
+  }
+}

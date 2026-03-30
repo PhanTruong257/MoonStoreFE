@@ -28,7 +28,8 @@ export const useLogin = () => {
 
     setError("");
     setIsSubmitting(true);
-    void navigate("/login", { replace: true });
+    localStorage.setItem("auth_token", form.email);
+    void navigate("/", { replace: true });
     setIsSubmitting(false);
     return true;
   };
