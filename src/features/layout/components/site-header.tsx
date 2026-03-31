@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { SharedButton } from "@/component/shared-button/shared-button";
+import { SharedInput } from "@/component/shared-input/shared-input";
+import { HEADER_TEXT } from "@/const/header.const";
 import styles from "@/features/layout/components/site-header.module.scss";
 
 type HeaderLink = {
@@ -32,6 +36,8 @@ export const SiteHeader = ({
   promo,
   search,
 }: SiteHeaderProps) => {
+  const [searchValue, setSearchValue] = useState("");
+
   return (
     <header className={styles.header}>
       {promo ? (
@@ -56,11 +62,16 @@ export const SiteHeader = ({
 
         {search ? (
           <div className={styles.searchWrap}>
-            <input
+            <SharedInput
               placeholder={search.placeholder}
-              aria-label={search.ariaLabel ?? "Search"}
+              ariaLabel={search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel}
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
             />
-            <button type="button">{search.actionLabel ?? "Search"}</button>
+            <SharedButton
+              variant="text"
+              label={search.actionLabel ?? HEADER_TEXT.defaultSearchActionLabel}
+            />
           </div>
         ) : (
           <div />

@@ -2,6 +2,9 @@ import { useState } from "react";
 
 import styles from "./contact-page.module.scss";
 
+import { SharedButton } from "@/component/shared-button/shared-button";
+import { SharedInput } from "@/component/shared-input/shared-input";
+import { CONTACT_TEXT } from "@/const/contact.const";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
@@ -15,11 +18,11 @@ export const ContactPage = () => {
 
   const sendMessage = () => {
     if (!name || !email || !phone || !message) {
-      setStatus("Please complete all required fields.");
+      setStatus(CONTACT_TEXT.requiredMessage);
       return;
     }
 
-    setStatus("Message sent successfully.");
+    setStatus(CONTACT_TEXT.successMessage);
     setName("");
     setEmail("");
     setPhone("");
@@ -41,7 +44,7 @@ export const ContactPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>Home / Contact</div>
+        <div className={styles.breadcrumb}>{CONTACT_TEXT.breadcrumb}</div>
 
         <section className={styles.content}>
           <aside className={styles.infoCard}>
@@ -61,34 +64,38 @@ export const ContactPage = () => {
 
           <article className={styles.formCard}>
             <div className={styles.formTop}>
-              <input
-                placeholder="Your Name *"
+              <SharedInput
+                placeholder={CONTACT_TEXT.namePlaceholder}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
-              <input
-                placeholder="Your Email *"
+              <SharedInput
+                placeholder={CONTACT_TEXT.emailPlaceholder}
                 value={email}
+                kind="email"
                 onChange={(event) => setEmail(event.target.value)}
               />
-              <input
-                placeholder="Your Phone *"
+              <SharedInput
+                placeholder={CONTACT_TEXT.phonePlaceholder}
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
               />
             </div>
 
-            <textarea
+            <SharedInput
               className={styles.messageInput}
-              placeholder="Your Message"
+              kind="textarea"
+              placeholder={CONTACT_TEXT.messagePlaceholder}
               value={message}
               onChange={(event) => setMessage(event.target.value)}
             />
 
             <div className={styles.actions}>
-              <button type="button" onClick={sendMessage}>
-                Send Message
-              </button>
+              <SharedButton
+                variant="primary"
+                label={CONTACT_TEXT.submitLabel}
+                onClick={sendMessage}
+              />
             </div>
 
             {status ? <p className={styles.message}>{status}</p> : null}

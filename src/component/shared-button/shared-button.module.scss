@@ -1,0 +1,19 @@
+.button {
+  border-radius: 6px;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.primary {
+  :global(.ant-btn) {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+  }
+}
+
+.text {
+  :global(.ant-btn) {
+    border-color: transparent;
+    background: transparent;
+  }
+}

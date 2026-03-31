@@ -1,6 +1,9 @@
 import styles from "./checkout-page.module.scss";
 import { useCheckoutPageData } from "./use-checkout-page-data";
 
+import { SharedButton } from "@/component/shared-button/shared-button";
+import { SharedInput } from "@/component/shared-input/shared-input";
+import { CHECKOUT_TEXT } from "@/const/checkout.const";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections } from "@/pages/home/mock-data";
@@ -69,9 +72,10 @@ export const CheckoutPage = () => {
 
             <div className={styles.fieldList}>
               <div className={styles.field}>
-                <label htmlFor="firstName">First Name*</label>
-                <input
+                <label htmlFor="firstName">{CHECKOUT_TEXT.firstName}</label>
+                <SharedInput
                   id="firstName"
+                  placeholder={CHECKOUT_TEXT.firstName}
                   value={billing.firstName}
                   onChange={(event) =>
                     setBillingField("firstName", event.target.value)
@@ -80,9 +84,10 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="companyName">Company Name</label>
-                <input
+                <label htmlFor="companyName">{CHECKOUT_TEXT.companyName}</label>
+                <SharedInput
                   id="companyName"
+                  placeholder={CHECKOUT_TEXT.companyName}
                   value={billing.companyName}
                   onChange={(event) =>
                     setBillingField("companyName", event.target.value)
@@ -91,9 +96,10 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="streetAddress">Street Address*</label>
-                <input
+                <label htmlFor="streetAddress">{CHECKOUT_TEXT.streetAddress}</label>
+                <SharedInput
                   id="streetAddress"
+                  placeholder={CHECKOUT_TEXT.streetAddress}
                   value={billing.streetAddress}
                   onChange={(event) =>
                     setBillingField("streetAddress", event.target.value)
@@ -102,11 +108,10 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="apartment">
-                  Apartment, floor, etc. (optional)
-                </label>
-                <input
+                <label htmlFor="apartment">{CHECKOUT_TEXT.apartment}</label>
+                <SharedInput
                   id="apartment"
+                  placeholder={CHECKOUT_TEXT.apartment}
                   value={billing.apartment}
                   onChange={(event) =>
                     setBillingField("apartment", event.target.value)
@@ -115,9 +120,10 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="city">Town/City*</label>
-                <input
+                <label htmlFor="city">{CHECKOUT_TEXT.city}</label>
+                <SharedInput
                   id="city"
+                  placeholder={CHECKOUT_TEXT.city}
                   value={billing.city}
                   onChange={(event) =>
                     setBillingField("city", event.target.value)
@@ -126,9 +132,10 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="phone">Phone Number*</label>
-                <input
+                <label htmlFor="phone">{CHECKOUT_TEXT.phone}</label>
+                <SharedInput
                   id="phone"
+                  placeholder={CHECKOUT_TEXT.phone}
                   value={billing.phone}
                   onChange={(event) =>
                     setBillingField("phone", event.target.value)
@@ -137,9 +144,11 @@ export const CheckoutPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="email">Email Address*</label>
-                <input
+                <label htmlFor="email">{CHECKOUT_TEXT.email}</label>
+                <SharedInput
                   id="email"
+                  kind="email"
+                  placeholder={CHECKOUT_TEXT.email}
                   value={billing.email}
                   onChange={(event) =>
                     setBillingField("email", event.target.value)
@@ -225,27 +234,28 @@ export const CheckoutPage = () => {
             </div>
 
             <div className={styles.couponRow}>
-              <input
-                placeholder="Coupon Code"
+              <SharedInput
+                placeholder={CHECKOUT_TEXT.couponPlaceholder}
                 value={couponCode}
                 onChange={(event) => setCouponCode(event.target.value)}
               />
-              <button type="button" onClick={applyCoupon}>
-                Apply Coupon
-              </button>
+              <SharedButton
+                variant="primary"
+                label={CHECKOUT_TEXT.applyCouponLabel}
+                onClick={applyCoupon}
+              />
             </div>
 
             {couponMessage ? (
               <p className={styles.couponMessage}>{couponMessage}</p>
             ) : null}
 
-            <button
-              type="button"
+            <SharedButton
               className={styles.placeOrderButton}
+              variant="primary"
               onClick={placeOrder}
-            >
-              Place Order
-            </button>
+              label={CHECKOUT_TEXT.placeOrderLabel}
+            />
 
             {orderMessage ? (
               <p className={styles.orderMessage}>{orderMessage}</p>

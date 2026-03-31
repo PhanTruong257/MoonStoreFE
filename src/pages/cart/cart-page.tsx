@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import styles from "./cart-page.module.scss";
 import { useCartPageData } from "./use-cart-page-data";
 
+import { SharedButton } from "@/component/shared-button/shared-button";
+import { SharedInput } from "@/component/shared-input/shared-input";
+import { CART_TEXT } from "@/const/cart.const";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections } from "@/pages/home/mock-data";
@@ -99,20 +102,22 @@ export const CartPage = () => {
 
         <div className={styles.actionsRow}>
           <Link to="/">Return To Shop</Link>
-          <button type="button">Update Cart</button>
+          <SharedButton label={CART_TEXT.updateCartLabel} />
         </div>
 
         <div className={styles.summaryWrap}>
           <div>
             <div className={styles.couponRow}>
-              <input
-                placeholder="Coupon Code"
+              <SharedInput
+                placeholder={CART_TEXT.couponPlaceholder}
                 value={couponCode}
                 onChange={(event) => setCouponCode(event.target.value)}
               />
-              <button type="button" onClick={applyCoupon}>
-                Apply Coupon
-              </button>
+              <SharedButton
+                variant="primary"
+                label={CART_TEXT.applyCouponLabel}
+                onClick={applyCoupon}
+              />
             </div>
             {couponMessage ? (
               <p className={styles.couponMessage}>{couponMessage}</p>
