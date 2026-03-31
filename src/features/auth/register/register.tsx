@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 
 import styles from "./styles.module.scss";
 
+import { SharedButton } from "@/component/shared-button/shared-button";
+import { SharedInput } from "@/component/shared-input/shared-input";
+import { REGISTER_TEXT } from "@/const/auth.const";
 import { useRegister } from "@/features/auth/register/hook";
 
 export const Register = () => {
@@ -9,52 +12,49 @@ export const Register = () => {
 
   return (
     <section className={styles.panel}>
-      <h1>Create an account</h1>
-      <p>Enter your details below</p>
+      <h1>{REGISTER_TEXT.title}</h1>
+      <p>{REGISTER_TEXT.subtitle}</p>
 
-      <input
+      <SharedInput
         className={styles.field}
-        placeholder="Name"
+        placeholder={REGISTER_TEXT.namePlaceholder}
         value={form.name}
         onChange={(event) => setField("name", event.target.value)}
       />
 
-      <input
+      <SharedInput
         className={styles.field}
-        type="email"
-        placeholder="Email or Phone Number"
+        kind="email"
+        placeholder={REGISTER_TEXT.emailPlaceholder}
         value={form.email}
         onChange={(event) => setField("email", event.target.value)}
       />
 
-      <input
+      <SharedInput
         className={styles.field}
-        type="password"
-        placeholder="Password"
+        kind="password"
+        placeholder={REGISTER_TEXT.passwordPlaceholder}
         value={form.password}
         onChange={(event) => setField("password", event.target.value)}
       />
 
       {error ? <p className={styles.error}>{error}</p> : null}
 
-      <button
-        type="button"
+      <SharedButton
         className={styles.button}
+        variant="primary"
         disabled={isSubmitting}
         onClick={() => {
           submit();
         }}
-      >
-        {isSubmitting ? "Creating..." : "Create Account"}
-      </button>
+        label={isSubmitting ? REGISTER_TEXT.loadingLabel : REGISTER_TEXT.submitLabel}
+      />
 
-      <button type="button" className={styles.google}>
-        Sign up with Google
-      </button>
+      <SharedButton className={styles.google} label={REGISTER_TEXT.googleLabel} />
 
       <div className={styles.bottom}>
-        Already have account?
-        <Link to="/login">Log in</Link>
+        {REGISTER_TEXT.loginHint}
+        <Link to="/login">{REGISTER_TEXT.loginLabel}</Link>
       </div>
     </section>
   );

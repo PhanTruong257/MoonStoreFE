@@ -1,0 +1,35 @@
+.input,
+.password,
+.textarea {
+  width: 100%;
+
+  :global(.ant-input),
+  :global(.ant-input-affix-wrapper),
+  :global(.ant-input-outlined) {
+    border-radius: 6px;
+    border-color: var(--color-gray-220);
+    box-shadow: none;
+  }
+
+  :global(.ant-input):focus,
+  :global(.ant-input-affix-wrapper-focused),
+  :global(.ant-input-affix-wrapper):focus-within {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 1px rgba(219, 68, 68, 0.12);
+  }
+}
+
+.input,
+.password {
+  :global(.ant-input),
+  :global(.ant-input-affix-wrapper) {
+    height: 46px;
+  }
+}
+
+.textarea {
+  :global(.ant-input) {
+    min-height: 140px;
+    resize: vertical;
+  }
+}
