@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { register } from "@/features/auth/auth-api";
+import { getAuthErrorMessage } from "@/features/auth/auth-errors";
+import { setStoredUser } from "@/features/auth/auth-storage";
+
 interface RegisterFormState {
   name: string;
   email: string;
@@ -22,7 +26,7 @@ export const useRegister = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!form.name || !form.email || !form.password) {
       setError("Please fill all required fields.");
       return false;
@@ -30,9 +34,22 @@ export const useRegister = () => {
 
     setError("");
     setIsSubmitting(true);
-    void navigate("/login", { replace: true });
-    setIsSubmitting(false);
-    return true;
+
+    try {
+      const user = await register({
+        fullName: form.name,
+        email: form.email,
+        password: form.password,
+      });
+      setStoredUser(user);
+      void navigate("/", { replace: true });
+      return true;
+    } catch (error) {
+      setError(getAuthErrorMessage(error, "Register failed."));
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {

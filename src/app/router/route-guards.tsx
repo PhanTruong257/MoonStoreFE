@@ -1,9 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import { appConfig } from "@/app/config/app-config";
+import { getStoredUser } from "@/features/auth/auth-storage";
 
 const isAuthenticated = () => {
-  return Boolean(localStorage.getItem("auth_token"));
+  return Boolean(getStoredUser());
 };
 
 export const RequireAuth = () => {
