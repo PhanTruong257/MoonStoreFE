@@ -77,6 +77,68 @@
   }
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  position: relative;
+}
+
+.accountMenu {
+  position: relative;
+}
+
+.accountButton {
+  border: 1px solid var(--color-gray-200);
+  background: var(--color-surface);
+  color: var(--color-ink-800);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  min-width: 110px;
+  text-align: center;
+}
+
+.loginLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink-800);
+  border: 1px solid var(--color-gray-200);
+  padding: 8px 12px;
+  border-radius: 18px;
+}
+
+.accountDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-gray-200);
+  box-shadow: 0 8px 20px rgba(8, 10, 15, 0.12);
+  border-radius: 10px;
+  min-width: 180px;
+  z-index: 10;
+  overflow: hidden;
+  display: grid;
+}
+
+.accountItem {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--color-ink-800);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.accountItem:hover {
+  background: var(--color-gray-140);
+}
+
 @media (max-width: 900px) {
   .navRow {
     grid-template-columns: 1fr;
@@ -97,5 +159,15 @@
 
   .searchWrap {
     width: 100%;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .accountDropdown {
+    right: auto;
+    left: 0;
   }
 }

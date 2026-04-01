@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/features/auth/auth-api";
+import type { AuthUser } from "@/services/auth-service";
 
 const STORAGE_KEY = "auth_user";
 

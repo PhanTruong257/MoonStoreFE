@@ -1,8 +1,5 @@
 import { all, fork } from "redux-saga/effects";
-
-function* authSaga() {
-  yield Promise.resolve();
-}
+import { authSaga } from "@/features/auth/auth-saga";
 
 function* cartSaga() {
   yield Promise.resolve();
