@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./account-page.module.scss";
 
@@ -9,18 +9,134 @@ import {
   ACCOUNT_TEXT,
   PROFILE_FIELDS,
 } from "@/const/account.const";
+import { fetchProfile, updateProfile } from "@/features/auth/auth-api";
+import { getAuthErrorMessage } from "@/features/auth/auth-errors";
+import { getStoredUser, setStoredUser } from "@/features/auth/auth-storage";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
+const splitName = (fullName: string) => {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstName: "", lastName: "" };
+  }
+
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(" "),
+  };
+};
+
+const joinName = (firstName: string, lastName: string) => {
+  return `${firstName} ${lastName}`.trim();
+};
+
 export const AccountPage = () => {
-  const [firstName, setFirstName] = useState("Md");
-  const [lastName, setLastName] = useState("Rimel");
-  const [email, setEmail] = useState("rimel1111@gmail.com");
-  const [address, setAddress] = useState("Kingston, 5236, United State");
+  const storedUser = getStoredUser();
+  const initialName = splitName(storedUser?.fullName ?? "");
+
+  const [firstName, setFirstName] = useState(initialName.firstName);
+  const [lastName, setLastName] = useState(initialName.lastName);
+  const [email, setEmail] = useState(storedUser?.email ?? "");
+  const [address, setAddress] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [initialProfile, setInitialProfile] = useState({
+    firstName: initialName.firstName,
+    lastName: initialName.lastName,
+    email: storedUser?.email ?? "",
+    address: "",
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      try {
+        const profile = await fetchProfile();
+        if (!isMounted) {
+          return;
+        }
+        const parsedName = splitName(profile.user.fullName ?? "");
+        setFirstName(parsedName.firstName);
+        setLastName(parsedName.lastName);
+        setEmail(profile.user.email ?? "");
+        setAddress(profile.address ?? "");
+        setInitialProfile({
+          firstName: parsedName.firstName,
+          lastName: parsedName.lastName,
+          email: profile.user.email ?? "",
+          address: profile.address ?? "",
+        });
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+        setError(getAuthErrorMessage(error, "Unable to load profile."));
+      }
+    };
+
+    void loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const resetForm = () => {
+    setFirstName(initialProfile.firstName);
+    setLastName(initialProfile.lastName);
+    setEmail(initialProfile.email);
+    setAddress(initialProfile.address);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+    setSuccessMessage("");
+  };
+
+  const submitProfile = async () => {
+    if (!firstName.trim() || !email.trim()) {
+      setError("Please enter your name and email.");
+      return;
+    }
+
+    if (currentPassword || newPassword || confirmPassword) {
+      setError("Password change is not supported yet.");
+      return;
+    }
+
+    setError("");
+    setSuccessMessage("");
+    setIsSaving(true);
+
+    try {
+      const response = await updateProfile({
+        fullName: joinName(firstName, lastName),
+        email,
+        address,
+      });
+      setStoredUser(response.user);
+      setInitialProfile({
+        firstName,
+        lastName,
+        email,
+        address,
+      });
+      setSuccessMessage("Profile updated.");
+    } catch (error) {
+      setError(getAuthErrorMessage(error, "Unable to save profile."));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const welcomeName = storedUser?.fullName ?? ACCOUNT_TEXT.welcomeName;
 
   return (
     <main className={styles.page}>
@@ -39,10 +155,11 @@ export const AccountPage = () => {
       <section className={styles.main}>
         <div className={styles.breadcrumbRow}>
           <div>
-            {ACCOUNT_TEXT.breadcrumbPrefix} <strong>{ACCOUNT_TEXT.breadcrumbCurrent}</strong>
+            {ACCOUNT_TEXT.breadcrumbPrefix}{" "}
+            <strong>{ACCOUNT_TEXT.breadcrumbCurrent}</strong>
           </div>
           <div className={styles.welcome}>
-            {ACCOUNT_TEXT.welcomePrefix} <span>{ACCOUNT_TEXT.welcomeName}</span>
+            {ACCOUNT_TEXT.welcomePrefix} <span>{welcomeName}</span>
           </div>
         </div>
 
@@ -74,7 +191,9 @@ export const AccountPage = () => {
 
             <div className={styles.formGrid}>
               <div className={styles.field}>
-                <label htmlFor="firstName">{PROFILE_FIELDS.firstNameLabel}</label>
+                <label htmlFor="firstName">
+                  {PROFILE_FIELDS.firstNameLabel}
+                </label>
                 <SharedInput
                   id="firstName"
                   value={firstName}
@@ -138,13 +257,27 @@ export const AccountPage = () => {
             </div>
 
             <div className={styles.actions}>
-              <SharedButton label={ACCOUNT_TEXT.cancelLabel} />
+              <SharedButton
+                label={ACCOUNT_TEXT.cancelLabel}
+                onClick={() => {
+                  resetForm();
+                }}
+              />
               <SharedButton
                 label={ACCOUNT_TEXT.saveLabel}
                 variant="primary"
                 className={styles.saveBtn}
+                disabled={isSaving}
+                onClick={() => {
+                  void submitProfile();
+                }}
               />
             </div>
+
+            {error ? <p className={styles.error}>{error}</p> : null}
+            {successMessage ? (
+              <p className={styles.success}>{successMessage}</p>
+            ) : null}
           </section>
         </div>
       </section>

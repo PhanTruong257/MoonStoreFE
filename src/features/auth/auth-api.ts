@@ -19,6 +19,18 @@ export type RegisterPayload = {
   phone?: string;
 };
 
+export type ProfilePayload = {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+};
+
+export type ProfileResponse = {
+  user: AuthUser & { phone?: string };
+  address: string | null;
+};
+
 export const login = async (payload: LoginPayload) => {
   const response = await http.post<{ user: AuthUser }>("/auth/login", payload);
   return response.data.user;
@@ -35,6 +47,16 @@ export const register = async (payload: RegisterPayload) => {
 export const fetchMe = async () => {
   const response = await http.get<{ user: AuthUser }>("/auth/me");
   return response.data.user;
+};
+
+export const fetchProfile = async () => {
+  const response = await http.get<ProfileResponse>("/users/me");
+  return response.data;
+};
+
+export const updateProfile = async (payload: ProfilePayload) => {
+  const response = await http.put<ProfileResponse>("/users/me", payload);
+  return response.data;
 };
 
 export const logout = async () => {

@@ -45,12 +45,17 @@ export const Register = () => {
         variant="primary"
         disabled={isSubmitting}
         onClick={() => {
-          submit();
+          void submit();
         }}
-        label={isSubmitting ? REGISTER_TEXT.loadingLabel : REGISTER_TEXT.submitLabel}
+        label={
+          isSubmitting ? REGISTER_TEXT.loadingLabel : REGISTER_TEXT.submitLabel
+        }
       />
 
-      <SharedButton className={styles.google} label={REGISTER_TEXT.googleLabel} />
+      <SharedButton
+        className={styles.google}
+        label={REGISTER_TEXT.googleLabel}
+      />
 
       <div className={styles.bottom}>
         {REGISTER_TEXT.loginHint}

@@ -10,7 +10,7 @@ export const getStoredUser = () => {
 
   try {
     return JSON.parse(raw) as AuthUser;
-  } catch (error) {
+  } catch {
     localStorage.removeItem(STORAGE_KEY);
     return null;
   }

@@ -12,7 +12,7 @@ const restoreAuthSession = async () => {
   try {
     const user = await fetchMe();
     setStoredUser(user);
-  } catch (error) {
+  } catch {
     setStoredUser(null);
   }
 };

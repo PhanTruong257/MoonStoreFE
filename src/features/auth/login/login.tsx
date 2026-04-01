@@ -39,9 +39,11 @@ export const Login = () => {
           variant="primary"
           disabled={isSubmitting}
           onClick={() => {
-            submit();
+            void submit();
           }}
-          label={isSubmitting ? LOGIN_TEXT.loadingLabel : LOGIN_TEXT.submitLabel}
+          label={
+            isSubmitting ? LOGIN_TEXT.loadingLabel : LOGIN_TEXT.submitLabel
+          }
         />
 
         <Link className={styles.link} to="/register">
