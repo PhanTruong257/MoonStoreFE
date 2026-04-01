@@ -1,4 +1,6 @@
 import { appConfig } from "@/app/config/app-config";
+import { fetchMe } from "@/features/auth/auth-api";
+import { setStoredUser } from "@/features/auth/auth-storage";
 
 let hasInitialized = false;
 
@@ -7,7 +9,12 @@ const preloadMasterData = async () => {
 };
 
 const restoreAuthSession = async () => {
-  await Promise.resolve();
+  try {
+    const user = await fetchMe();
+    setStoredUser(user);
+  } catch {
+    setStoredUser(null);
+  }
 };
 
 const loadAppSettings = async () => {

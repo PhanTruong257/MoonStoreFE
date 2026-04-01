@@ -140,6 +140,18 @@
   font-weight: 700;
 }
 
+.error {
+  margin: 12px 0 0;
+  color: var(--color-danger);
+  font-size: 14px;
+}
+
+.success {
+  margin: 12px 0 0;
+  color: #1f7a1f;
+  font-size: 14px;
+}
+
 @media (max-width: 960px) {
   .content {
     grid-template-columns: 1fr;
