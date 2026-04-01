@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
+import type { AppDispatch, RootState } from "@/app/app-store";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { HEADER_TEXT } from "@/const/header.const";
-import styles from "@/features/layout/components/site-header.module.scss";
-import type { AppDispatch, RootState } from "@/app/app-store";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
+import styles from "@/features/layout/components/site-header.module.scss";
 
 type HeaderLink = {
   label: string;
@@ -25,6 +25,8 @@ type SearchConfig = {
   placeholder: string;
   ariaLabel?: string;
   actionLabel?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
 type SiteHeaderProps = {
@@ -41,9 +43,11 @@ export const SiteHeader = ({
   search,
 }: SiteHeaderProps) => {
   const [searchValue, setSearchValue] = useState("");
+  const inputValue = search?.value ?? searchValue;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const selectAuth = (state: RootState): AuthState => state.auth as AuthState;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  const selectAuth = (state: RootState): AuthState => state.auth;
   const { user } = useSelector(selectAuth);
 
   const toggleMenu = () => {
@@ -89,8 +93,12 @@ export const SiteHeader = ({
                 ariaLabel={
                   search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel
                 }
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
+                value={inputValue}
+                onChange={(event) => {
+                  const nextValue = event.target.value;
+                  setSearchValue(nextValue);
+                  search.onChange?.(nextValue);
+                }}
               />
               <SharedButton
                 variant="text"

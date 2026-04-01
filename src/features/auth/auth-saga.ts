@@ -1,15 +1,16 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
 
+import { getAuthErrorMessage } from "./auth-errors";
+import { authActions } from "./auth-slice";
+import { setStoredUser } from "./auth-storage";
+
 import type {
   AuthUser,
   LoginPayload,
   RegisterPayload,
 } from "@/services/auth-service";
 import { login, logout, register } from "@/services/auth-service";
-import { getAuthErrorMessage } from "./auth-errors";
-import { authActions } from "./auth-slice";
-import { setStoredUser } from "./auth-storage";
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {
   try {

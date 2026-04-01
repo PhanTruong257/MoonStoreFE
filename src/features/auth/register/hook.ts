@@ -15,7 +15,7 @@ interface RegisterFormState {
 export const useRegister = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const selectAuth = (state: RootState): AuthState => state.auth as AuthState;
+  const selectAuth = (state: RootState): AuthState => state.auth;
   const { user, isLoading, error: authError } = useSelector(selectAuth);
 
   const [form, setForm] = useState<RegisterFormState>({

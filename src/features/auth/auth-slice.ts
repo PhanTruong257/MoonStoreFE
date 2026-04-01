@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+import { getStoredUser } from "./auth-storage";
+
 import type {
   AuthUser,
   LoginPayload,
   RegisterPayload,
 } from "@/services/auth-service";
-import { getStoredUser } from "./auth-storage";
 
 export type AuthState = {
   user: AuthUser | null;

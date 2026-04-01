@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
@@ -18,6 +18,8 @@ export const ProductDetailPage = () => {
     selectedColor,
     selectedImage,
     selectedSize,
+    selectedSku,
+    addSelectedToCart,
     decreaseQuantity,
     increaseQuantity,
     setSelectedColor,
@@ -25,6 +27,8 @@ export const ProductDetailPage = () => {
     setSelectedSize,
     toggleWishlist,
   } = useProductDetailData();
+
+  const navigate = useNavigate();
 
   if (!product) {
     return <Navigate to="/" replace />;
@@ -85,7 +89,11 @@ export const ProductDetailPage = () => {
               <em>{product.inStock ? "In Stock" : "Out of Stock"}</em>
             </div>
 
-            <p className={styles.price}>{formatMoney(product.price)}</p>
+            <p className={styles.price}>
+              {formatMoney(
+                selectedSku ? Number(selectedSku.price) : product.price,
+              )}
+            </p>
             <p className={styles.description}>{product.description}</p>
 
             <div className={styles.metaRow}>
@@ -134,9 +142,29 @@ export const ProductDetailPage = () => {
                 </button>
               </div>
 
-              <Link to="/cart" className={styles.buyNowButton}>
+              <button
+                type="button"
+                className={styles.buyNowButton}
+                onClick={() => {
+                  void addSelectedToCart().then((ok) => {
+                    if (ok) {
+                      void navigate("/cart");
+                    }
+                  });
+                }}
+              >
                 Buy Now
-              </Link>
+              </button>
+
+              <button
+                type="button"
+                className={styles.buyNowButton}
+                onClick={() => {
+                  void addSelectedToCart();
+                }}
+              >
+                Add To Cart
+              </button>
 
               <button
                 type="button"

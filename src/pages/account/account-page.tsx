@@ -9,12 +9,12 @@ import {
   ACCOUNT_TEXT,
   PROFILE_FIELDS,
 } from "@/const/account.const";
-import { fetchProfile, updateProfile } from "@/services/auth-service";
 import { getAuthErrorMessage } from "@/features/auth/auth-errors";
 import { getStoredUser, setStoredUser } from "@/features/auth/auth-storage";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+import { fetchProfile, updateProfile } from "@/services/auth-service";
 
 const splitName = (fullName: string) => {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);

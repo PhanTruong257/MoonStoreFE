@@ -29,6 +29,8 @@ export const HomePage = () => {
     countdown,
     heroIndex,
     productSpotlight,
+    searchQuery,
+    showAllFlash,
     visibleBestSellingProducts,
     visibleCategories,
     visibleFlashProducts,
@@ -44,6 +46,8 @@ export const HomePage = () => {
     previousHero,
     setActiveCategory,
     setHeroIndex,
+    setSearchQuery,
+    toggleFlashView,
     toggleWishlist,
   } = useHomePageData();
 
@@ -58,14 +62,25 @@ export const HomePage = () => {
           linkLabel: "ShopNow",
           to: "/",
         }}
-        search={{ placeholder: "What are you looking for?" }}
+        search={{
+          placeholder: "What are you looking for?",
+          value: searchQuery,
+          onChange: setSearchQuery,
+        }}
       />
 
       <div className={`main-container ${styles.main}`}>
         <section className={styles.heroSection}>
           <aside className={styles.sideMenu}>
             {homeSideMenu.map((item) => (
-              <button key={item} type="button">
+              <button
+                key={item}
+                type="button"
+                onClick={() => {
+                  setSearchQuery(item);
+                  setActiveCategory("all");
+                }}
+              >
                 <span>{item}</span>
                 <span>&gt;</span>
               </button>
@@ -203,7 +218,15 @@ export const HomePage = () => {
                   <button
                     type="button"
                     className={styles.addToCartButton}
-                    onClick={addToCart}
+                    onClick={() => {
+                      void addToCart(
+                        product.id,
+                        "defaultSkuId" in product
+                          ? product.defaultSkuId
+                          : undefined,
+                        product.name,
+                      );
+                    }}
                   >
                     Add To Cart
                   </button>
@@ -213,8 +236,13 @@ export const HomePage = () => {
           </div>
 
           <div className={styles.centerRow}>
-            <button type="button" className={styles.viewAllButton}>
-              View All Products ({cartCount} in cart)
+            <button
+              type="button"
+              className={styles.viewAllButton}
+              onClick={toggleFlashView}
+            >
+              {showAllFlash ? "Show Less" : "View All Products"} ({cartCount} in
+              cart)
             </button>
           </div>
         </section>
