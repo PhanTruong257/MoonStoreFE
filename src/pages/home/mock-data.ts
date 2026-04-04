@@ -31,7 +31,7 @@ export type HomeService = {
 };
 
 export const homeHeaderLinks = [
-  { label: "Home", to: "/" },
+  { label: "Home", to: "/home" },
   { label: "Contact", to: "/contact" },
   { label: "About", to: "/about" },
   { label: "Sign Up", to: "/register" },
@@ -72,15 +72,14 @@ export const homeFooterSections = [
 ];
 
 export const homeSideMenu = [
-  "Woman's Fashion",
-  "Men's Fashion",
-  "Electronics",
-  "Home & Lifestyle",
-  "Medicine",
-  "Sports & Outdoor",
-  "Baby's & Toys",
-  "Groceries & Pets",
-  "Health & Beauty",
+  "Phones",
+  "Computers",
+  "Smart Watch",
+  "Camera",
+  "Headphones",
+  "Gaming",
+  "Fashion",
+  "Furniture",
 ];
 
 export const homeBanners: HomeBanner[] = [

@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
@@ -11,23 +11,83 @@ const formatMoney = (value: number) => `$${value.toFixed(2)}`;
 
 export const ProductDetailPage = () => {
   const {
+    isLoading,
     isWishlisted,
     product,
     quantity,
     relatedProducts,
-    selectedColor,
     selectedImage,
-    selectedSize,
+    selectedOptions,
+    selectedSku,
+    addSelectedToCart,
     decreaseQuantity,
     increaseQuantity,
-    setSelectedColor,
+    setSelectedOption,
     setSelectedImage,
-    setSelectedSize,
     toggleWishlist,
   } = useProductDetailData();
 
+  const navigate = useNavigate();
+
+  if (!product && !isLoading) {
+    return (
+      <main className={styles.page}>
+        <SiteHeader
+          brand={{ label: "Exclusive", to: "/" }}
+          navLinks={homeHeaderLinks}
+          promo={{
+            message:
+              "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
+            linkLabel: "ShopNow",
+            to: "/",
+          }}
+          search={{ placeholder: "What are you looking for?" }}
+        />
+
+        <section className={styles.main}>
+          <div className={styles.breadcrumb}>
+            <span>Home</span>
+            <span>/</span>
+            <span>Product not found</span>
+          </div>
+          <div>
+            <h1>Product not found</h1>
+            <p>We could not find that product. It may be unavailable.</p>
+            <Link to="/">Back to home</Link>
+          </div>
+        </section>
+
+        <SiteFooter
+          sections={homeFooterSections}
+          copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        />
+      </main>
+    );
+  }
+
   if (!product) {
-    return <Navigate to="/" replace />;
+    return (
+      <main className={styles.page}>
+        <SiteHeader
+          brand={{ label: "Exclusive", to: "/" }}
+          navLinks={homeHeaderLinks}
+          promo={{
+            message:
+              "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
+            linkLabel: "ShopNow",
+            to: "/",
+          }}
+          search={{ placeholder: "What are you looking for?" }}
+        />
+        <section className={styles.main}>
+          <div className={styles.breadcrumb}>
+            <span>Home</span>
+            <span>/</span>
+            <span>Loading product...</span>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -85,43 +145,52 @@ export const ProductDetailPage = () => {
               <em>{product.inStock ? "In Stock" : "Out of Stock"}</em>
             </div>
 
-            <p className={styles.price}>{formatMoney(product.price)}</p>
+            <p className={styles.price}>
+              {formatMoney(
+                selectedSku ? Number(selectedSku.price) : product.price,
+              )}
+            </p>
             <p className={styles.description}>{product.description}</p>
 
-            <div className={styles.metaRow}>
-              <strong>Colours:</strong>
-              <div className={styles.colorWrap}>
-                {product.colors.map((color, index) => (
-                  <button
-                    key={color.id}
-                    type="button"
-                    className={
-                      index === selectedColor ? styles.colorActive : ""
-                    }
-                    onClick={() => setSelectedColor(index)}
-                    aria-label={`Select ${color.id} color`}
-                  >
-                    <span style={{ background: color.hex }} />
-                  </button>
-                ))}
-              </div>
-            </div>
+            {(product.optionGroups ?? []).map((group) => {
+              const isColor = group.name.toLowerCase() === "color";
+              const selectedValue = selectedOptions[group.name];
 
-            <div className={styles.metaRow}>
-              <strong>Size:</strong>
-              <div className={styles.sizeWrap}>
-                {product.sizes.map((size, index) => (
-                  <button
-                    key={size}
-                    type="button"
-                    className={index === selectedSize ? styles.sizeActive : ""}
-                    onClick={() => setSelectedSize(index)}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+              return (
+                <div key={group.name} className={styles.metaRow}>
+                  <strong>{group.name}:</strong>
+                  <div className={styles.optionWrap}>
+                    {group.options.map((option) => {
+                      const isSelected = option.value === selectedValue;
+                      const buttonClass = isColor
+                        ? `${styles.optionButton} ${styles.optionButtonSwatch} ${isSelected ? styles.optionSwatchActive : ""}`
+                        : `${styles.optionButton} ${isSelected ? styles.optionActive : ""}`;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          className={buttonClass}
+                          onClick={() =>
+                            setSelectedOption(group.name, option.value)
+                          }
+                          aria-label={`Select ${option.value} ${group.name}`}
+                        >
+                          {isColor ? (
+                            <span
+                              className={styles.optionSwatch}
+                              style={{ background: option.swatch ?? "#8abdcf" }}
+                            />
+                          ) : (
+                            option.value
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
 
             <div className={styles.buyRow}>
               <div className={styles.quantityBox}>
@@ -134,9 +203,29 @@ export const ProductDetailPage = () => {
                 </button>
               </div>
 
-              <Link to="/cart" className={styles.buyNowButton}>
+              <button
+                type="button"
+                className={styles.buyNowButton}
+                onClick={() => {
+                  void addSelectedToCart().then((ok) => {
+                    if (ok) {
+                      void navigate("/cart");
+                    }
+                  });
+                }}
+              >
                 Buy Now
-              </Link>
+              </button>
+
+              <button
+                type="button"
+                className={styles.buyNowButton}
+                onClick={() => {
+                  void addSelectedToCart();
+                }}
+              >
+                Add To Cart
+              </button>
 
               <button
                 type="button"

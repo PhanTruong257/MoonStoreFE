@@ -1,6 +1,6 @@
 import { appConfig } from "@/app/config/app-config";
-import { fetchMe } from "@/features/auth/auth-api";
 import { setStoredUser } from "@/features/auth/auth-storage";
+import { fetchMe } from "@/services/auth-service";
 
 let hasInitialized = false;
 

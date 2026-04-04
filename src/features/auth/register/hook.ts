@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { register } from "@/features/auth/auth-api";
-import { getAuthErrorMessage } from "@/features/auth/auth-errors";
-import { setStoredUser } from "@/features/auth/auth-storage";
+import type { AppDispatch, RootState } from "@/app/app-store";
+import type { AuthState } from "@/features/auth/auth-slice";
+import { authActions } from "@/features/auth/auth-slice";
 
 interface RegisterFormState {
   name: string;
@@ -13,49 +14,51 @@ interface RegisterFormState {
 
 export const useRegister = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const selectAuth = (state: RootState): AuthState => state.auth;
+  const { user, isLoading, error: authError } = useSelector(selectAuth);
 
   const [form, setForm] = useState<RegisterFormState>({
     name: "",
     email: "",
     password: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const setField = (field: keyof RegisterFormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const submit = async () => {
+  useEffect(() => {
+    if (user) {
+      void navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
+
+  const submit = () => {
     if (!form.name || !form.email || !form.password) {
-      setError("Please fill all required fields.");
+      setLocalError("Please fill all required fields.");
       return false;
     }
 
-    setError("");
-    setIsSubmitting(true);
-
-    try {
-      const user = await register({
+    setLocalError("");
+    dispatch(authActions.clearAuthError());
+    dispatch(
+      authActions.registerRequested({
         fullName: form.name,
         email: form.email,
         password: form.password,
-      });
-      setStoredUser(user);
-      void navigate("/", { replace: true });
-      return true;
-    } catch (error) {
-      setError(getAuthErrorMessage(error, "Register failed."));
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
+      }),
+    );
+    return true;
   };
+
+  const error = localError || authError || "";
 
   return {
     form,
     error,
-    isSubmitting,
+    isSubmitting: isLoading,
     setField,
     submit,
   };

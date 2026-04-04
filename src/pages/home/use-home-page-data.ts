@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { getStoredUser } from "@/features/auth/auth-storage";
 import {
   flashSaleDeadline,
   homeBanners,
   homeCategories,
   homeProducts,
 } from "@/pages/home/mock-data";
+import type { HomeProduct } from "@/pages/home/mock-data";
+import { addToCart as addToCartApi } from "@/services/cart-service";
+import { fetchCategories, fetchProducts } from "@/services/catalog-service";
 
 type Countdown = {
   days: number;
@@ -35,43 +39,158 @@ const getCountdown = (deadline: string): Countdown => {
   };
 };
 
+const CART_STORAGE_KEY = "cart_items";
+const WISHLIST_STORAGE_KEY = "wishlist_items";
+
+type CartItems = Record<string, number>;
+type HomeProductView = HomeProduct & { defaultSkuId?: number };
+
+const readCartItems = (): CartItems => {
+  const raw = localStorage.getItem(CART_STORAGE_KEY);
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as CartItems;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    localStorage.removeItem(CART_STORAGE_KEY);
+    return {};
+  }
+};
+
+const readWishlist = (): Record<string, boolean> => {
+  const raw = localStorage.getItem(WISHLIST_STORAGE_KEY);
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Record<string, boolean>;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    localStorage.removeItem(WISHLIST_STORAGE_KEY);
+    return {};
+  }
+};
+
 export const useHomePageData = () => {
   const [heroIndex, setHeroIndex] = useState(0);
   const [categoryStart, setCategoryStart] = useState(0);
   const [activeCategory, setActiveCategory] = useState("all");
   const [flashStart, setFlashStart] = useState(0);
   const [bestSellingStart, setBestSellingStart] = useState(0);
-  const [cartCount, setCartCount] = useState(0);
-  const [wishlistMap, setWishlistMap] = useState<Record<string, boolean>>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAllFlash, setShowAllFlash] = useState(false);
+  const [products, setProducts] = useState<HomeProductView[]>(homeProducts);
+  const [categories, setCategories] = useState(homeCategories);
+  const [cartItems, setCartItems] = useState<CartItems>(() => readCartItems());
+  const [wishlistMap, setWishlistMap] = useState<Record<string, boolean>>(() =>
+    readWishlist(),
+  );
   const [countdown, setCountdown] = useState<Countdown>(() =>
     getCountdown(flashSaleDeadline),
   );
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCatalog = async () => {
+      try {
+        const [categoryList, productList] = await Promise.all([
+          fetchCategories(),
+          fetchProducts(),
+        ]);
+
+        if (!isMounted) {
+          return;
+        }
+
+        const mappedCategories = [
+          { id: "all", label: "All" },
+          ...categoryList.map((item) => ({
+            id: String(item.id),
+            label: item.name,
+          })),
+        ];
+
+        const mappedProducts: HomeProductView[] = productList.map((item) => {
+          const price = Number(item.defaultSku?.price ?? 0);
+          return {
+            id: String(item.id),
+            name: item.name,
+            price,
+            oldPrice: Math.round(price * 1.2),
+            categoryId: String(item.categoryId),
+            image:
+              item.defaultSku?.imageUrl ?? "/images/products/product-1.jpg",
+            rating: 4,
+            sold: Math.max(10, (item.defaultSku?.stock ?? 0) / 2),
+            defaultSkuId: item.defaultSku?.id,
+          };
+        });
+
+        if (mappedCategories.length > 1) {
+          setCategories(mappedCategories);
+        }
+
+        if (mappedProducts.length > 0) {
+          setProducts(mappedProducts);
+        }
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+      }
+    };
+
+    void loadCatalog();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const flashSaleProducts = useMemo(() => {
-    return activeCategory === "all"
-      ? homeProducts
-      : homeProducts.filter((item) => item.categoryId === activeCategory);
-  }, [activeCategory]);
+    const byCategory =
+      activeCategory === "all"
+        ? products
+        : products.filter((item) => item.categoryId === activeCategory);
+
+    if (!searchQuery.trim()) {
+      return byCategory;
+    }
+
+    const query = searchQuery.trim().toLowerCase();
+    return byCategory.filter((item) => item.name.toLowerCase().includes(query));
+  }, [activeCategory, products, searchQuery]);
 
   const bestSellingProducts = useMemo(() => {
-    return [...homeProducts].sort((a, b) => b.sold - a.sold).slice(0, 8);
-  }, []);
+    return [...products].sort((a, b) => b.sold - a.sold).slice(0, 8);
+  }, [products]);
 
   const productSpotlight = useMemo(() => {
-    return homeProducts.slice(2, 10);
-  }, []);
+    return products.slice(2, 10);
+  }, [products]);
 
   const visibleCategories = useMemo(() => {
-    return cycleSlice(homeCategories, categoryStart, 6);
-  }, [categoryStart]);
+    return cycleSlice(categories, categoryStart, 6);
+  }, [categoryStart, categories]);
 
   const visibleFlashProducts = useMemo(() => {
-    return cycleSlice(flashSaleProducts, flashStart, 5);
-  }, [flashSaleProducts, flashStart]);
+    return showAllFlash
+      ? flashSaleProducts
+      : cycleSlice(flashSaleProducts, flashStart, 5);
+  }, [flashSaleProducts, flashStart, showAllFlash]);
 
   const visibleBestSellingProducts = useMemo(() => {
     return cycleSlice(bestSellingProducts, bestSellingStart, 4);
   }, [bestSellingProducts, bestSellingStart]);
+
+  const cartCount = useMemo(() => {
+    return Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
+  }, [cartItems]);
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
@@ -82,6 +201,14 @@ export const useHomePageData = () => {
       window.clearInterval(timerId);
     };
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(wishlistMap));
+  }, [wishlistMap]);
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
@@ -100,8 +227,34 @@ export const useHomePageData = () => {
     }));
   };
 
-  const addToCart = () => {
-    setCartCount((prev) => prev + 1);
+  const addToCart = async (
+    productId: string,
+    skuId: number | undefined,
+    productName: string,
+  ) => {
+    const user = getStoredUser();
+
+    try {
+      await addToCartApi({
+        userId: user?.id,
+        skuId,
+        productName,
+        quantity: 1,
+      });
+
+      setCartItems((prev) => ({
+        ...prev,
+        [productId]: (prev[productId] ?? 0) + 1,
+      }));
+
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const toggleFlashView = () => {
+    setShowAllFlash((prev) => !prev);
   };
 
   const previousHero = () => {
@@ -131,13 +284,17 @@ export const useHomePageData = () => {
   };
 
   const previousCategory = () => {
-    setCategoryStart((prev) =>
-      prev === 0 ? homeCategories.length - 1 : prev - 1,
-    );
+    if (categories.length === 0) {
+      return;
+    }
+    setCategoryStart((prev) => (prev === 0 ? categories.length - 1 : prev - 1));
   };
 
   const nextCategory = () => {
-    setCategoryStart((prev) => (prev + 1) % homeCategories.length);
+    if (categories.length === 0) {
+      return;
+    }
+    setCategoryStart((prev) => (prev + 1) % categories.length);
   };
 
   const previousBestSelling = () => {
@@ -158,6 +315,8 @@ export const useHomePageData = () => {
     flashSaleProducts,
     heroIndex,
     productSpotlight,
+    searchQuery,
+    showAllFlash,
     visibleBestSellingProducts,
     visibleCategories,
     visibleFlashProducts,
@@ -173,6 +332,8 @@ export const useHomePageData = () => {
     previousHero,
     setActiveCategory,
     setHeroIndex,
+    setSearchQuery,
+    toggleFlashView,
     toggleWishlist,
   };
 };

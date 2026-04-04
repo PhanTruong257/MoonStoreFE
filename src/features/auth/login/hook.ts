@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { login } from "@/features/auth/auth-api";
-import { getAuthErrorMessage } from "@/features/auth/auth-errors";
-import { setStoredUser } from "@/features/auth/auth-storage";
+import type { AppDispatch, RootState } from "@/app/app-store";
+import type { AuthState } from "@/features/auth/auth-slice";
+import { authActions } from "@/features/auth/auth-slice";
 
 interface LoginFormState {
   email: string;
@@ -12,44 +13,52 @@ interface LoginFormState {
 
 export const useLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    user,
+    isLoading,
+    error: authError,
+  } = useSelector<RootState, AuthState>((state) => state.auth);
 
   const [form, setForm] = useState<LoginFormState>({
     email: "",
     password: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const setField = (field: keyof LoginFormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const submit = async () => {
-    if (!form.email || !form.password) {
-      setError("Please enter email and password.");
-      return false;
-    }
-
-    setError("");
-    setIsSubmitting(true);
-
-    try {
-      const user = await login({ email: form.email, password: form.password });
-      setStoredUser(user);
+  useEffect(() => {
+    if (user) {
       void navigate("/", { replace: true });
-      return true;
-    } catch (error) {
-      setError(getAuthErrorMessage(error, "Login failed."));
-      return false;
-    } finally {
-      setIsSubmitting(false);
     }
+  }, [user, navigate]);
+
+  const submit = () => {
+    if (!form.email || !form.password) {
+      setLocalError("Please enter email and password.");
+      return false;
+    }
+
+    setLocalError("");
+    dispatch(authActions.clearAuthError());
+    dispatch(
+      authActions.loginRequested({
+        email: form.email,
+        password: form.password,
+      }),
+    );
+    return true;
   };
+
+  const error = localError || authError || "";
 
   return {
     form,
     error,
-    isSubmitting,
+    isSubmitting: isLoading,
     setField,
     submit,
   };

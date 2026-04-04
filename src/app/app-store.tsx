@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { rootSaga } from "@/app/app-saga";
+import { authReducer } from "@/features/auth/auth-slice";
 
 type AppState = {
   isBootstrapped: boolean;
@@ -27,6 +28,7 @@ const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
   reducer: {
     app: appSlice.reducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
