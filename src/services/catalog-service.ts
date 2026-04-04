@@ -13,6 +13,11 @@ export type CatalogSku = {
   attributes?: Array<{ name: string; value: string }>;
 };
 
+export type CatalogOptionGroup = {
+  name: string;
+  options: Array<{ value: string }>;
+};
+
 export type CatalogProduct = {
   id: number;
   name: string;
@@ -35,6 +40,7 @@ export type CatalogProductDetail = {
   brandId: number;
   brandName: string;
   skus: CatalogSku[];
+  optionGroups?: CatalogOptionGroup[];
 };
 
 export const fetchCategories = async () => {

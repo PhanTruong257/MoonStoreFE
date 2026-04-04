@@ -1,4 +1,5 @@
 import type { RouteObject } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { AboutPage } from "@/pages/about/about-page";
 import { AuthPage } from "@/pages/auth/auth-page";
@@ -9,6 +10,11 @@ import { ProductDetailPage } from "@/pages/product/product-detail-page";
 export const publicRoutes: RouteObject[] = [
   {
     path: "/",
+    element: <Navigate to="/home" replace />,
+    handle: { title: "Home" },
+  },
+  {
+    path: "/home",
     element: <HomePage />,
     handle: { title: "Home" },
   },

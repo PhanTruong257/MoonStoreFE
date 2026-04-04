@@ -46,7 +46,6 @@ export const SiteHeader = ({
   const inputValue = search?.value ?? searchValue;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const selectAuth = (state: RootState): AuthState => state.auth;
   const { user } = useSelector(selectAuth);
 

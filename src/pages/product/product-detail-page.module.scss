@@ -129,6 +129,49 @@
   }
 }
 
+.optionWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.optionButton {
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid var(--color-gray-260);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionButtonSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 3px;
+}
+
+.optionSwatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.optionActive {
+  background: var(--color-danger) !important;
+  color: #fff;
+  border-color: var(--color-danger) !important;
+}
+
+.optionSwatchActive {
+  border-color: var(--color-ink-680) !important;
+}
+
 .colorWrap {
   display: flex;
   gap: 8px;

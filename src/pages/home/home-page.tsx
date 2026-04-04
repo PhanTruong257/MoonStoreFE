@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import type { MouseEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./home-page.module.scss";
 import { useHomePageData } from "./use-home-page-data";
@@ -14,6 +15,7 @@ import {
   homeServices,
   homeSideMenu,
 } from "@/pages/home/mock-data";
+import { fetchProductDetail } from "@/services/catalog-service";
 
 const formatMoney = (value: number) => {
   return `$${value.toFixed(0)}`;
@@ -23,6 +25,7 @@ const formatCountdownPart = (value: number) =>
   value.toString().padStart(2, "0");
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const {
     activeCategory,
     cartCount,
@@ -50,6 +53,24 @@ export const HomePage = () => {
     toggleFlashView,
     toggleWishlist,
   } = useHomePageData();
+
+  const handleProductClick = async (
+    event: MouseEvent<HTMLAnchorElement>,
+    productId: string,
+  ) => {
+    event.preventDefault();
+
+    const numericId = Number(productId);
+    if (!Number.isNaN(numericId)) {
+      try {
+        await fetchProductDetail(numericId);
+      } catch {
+        // Ignore fetch errors and still navigate to the detail page.
+      }
+    }
+
+    void navigate(`/product/${productId}`);
+  };
 
   return (
     <main className={styles.page}>
@@ -191,7 +212,15 @@ export const HomePage = () => {
                 <article key={product.id} className={styles.productCard}>
                   <div className={styles.imageWrap}>
                     <span className={styles.discountTag}>-{discount}%</span>
-                    <img src={product.image} alt={product.name} />
+                    <Link
+                      to={`/product/${product.id}`}
+                      onClick={(event) => {
+                        void handleProductClick(event, product.id);
+                      }}
+                      aria-label={`View ${product.name}`}
+                    >
+                      <img src={product.image} alt={product.name} />
+                    </Link>
                     <button
                       type="button"
                       className={styles.wishlistButton}
@@ -201,7 +230,12 @@ export const HomePage = () => {
                     </button>
                   </div>
 
-                  <Link to={`/product/${product.id}`}>
+                  <Link
+                    to={`/product/${product.id}`}
+                    onClick={(event) => {
+                      void handleProductClick(event, product.id);
+                    }}
+                  >
                     <h3>{product.name}</h3>
                   </Link>
 
@@ -301,7 +335,15 @@ export const HomePage = () => {
             {visibleBestSellingProducts.map((product) => (
               <article key={product.id} className={styles.productCard}>
                 <div className={styles.imageWrap}>
-                  <img src={product.image} alt={product.name} />
+                  <Link
+                    to={`/product/${product.id}`}
+                    onClick={(event) => {
+                      void handleProductClick(event, product.id);
+                    }}
+                    aria-label={`View ${product.name}`}
+                  >
+                    <img src={product.image} alt={product.name} />
+                  </Link>
                   <button
                     type="button"
                     className={styles.wishlistButton}
@@ -311,7 +353,12 @@ export const HomePage = () => {
                   </button>
                 </div>
 
-                <Link to={`/product/${product.id}`}>
+                <Link
+                  to={`/product/${product.id}`}
+                  onClick={(event) => {
+                    void handleProductClick(event, product.id);
+                  }}
+                >
                   <h3>{product.name}</h3>
                 </Link>
 
@@ -354,7 +401,15 @@ export const HomePage = () => {
                   {product.isNew ? (
                     <span className={styles.newTag}>NEW</span>
                   ) : null}
-                  <img src={product.image} alt={product.name} />
+                  <Link
+                    to={`/product/${product.id}`}
+                    onClick={(event) => {
+                      void handleProductClick(event, product.id);
+                    }}
+                    aria-label={`View ${product.name}`}
+                  >
+                    <img src={product.image} alt={product.name} />
+                  </Link>
                   <button
                     type="button"
                     className={styles.wishlistButton}
@@ -364,7 +419,12 @@ export const HomePage = () => {
                   </button>
                 </div>
 
-                <Link to={`/product/${product.id}`}>
+                <Link
+                  to={`/product/${product.id}`}
+                  onClick={(event) => {
+                    void handleProductClick(event, product.id);
+                  }}
+                >
                   <h3>{product.name}</h3>
                 </Link>
 

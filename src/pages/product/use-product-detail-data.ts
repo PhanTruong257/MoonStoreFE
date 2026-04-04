@@ -6,7 +6,10 @@ import { homeProducts } from "@/pages/home/mock-data";
 import { getProductDetailById } from "@/pages/product/mock-data";
 import { addToCart } from "@/services/cart-service";
 import { fetchProductDetail } from "@/services/catalog-service";
-import type { CatalogProductDetail } from "@/services/catalog-service";
+import type {
+  CatalogOptionGroup,
+  CatalogProductDetail,
+} from "@/services/catalog-service";
 
 const colorMap: Record<string, string> = {
   Red: "#e07575",
@@ -19,10 +22,21 @@ const resolveColor = (value: string) => {
   return colorMap[value] ?? "#8abdcf";
 };
 
+type ProductOption = {
+  value: string;
+  swatch?: string;
+};
+
+type ProductOptionGroup = {
+  name: string;
+  options: ProductOption[];
+};
+
 export const useProductDetailData = () => {
   const { productId } = useParams();
   const [catalogProduct, setCatalogProduct] =
     useState<CatalogProductDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const product = useMemo(() => {
     if (!productId) {
@@ -30,22 +44,40 @@ export const useProductDetailData = () => {
     }
 
     if (catalogProduct) {
-      const colors = Array.from(
-        new Set(
-          catalogProduct.skus
-            .flatMap((sku) => sku.attributes ?? [])
-            .filter((attr) => attr.name.toLowerCase() === "color")
-            .map((attr) => attr.value),
-        ),
-      ).map((value) => ({ id: value, hex: resolveColor(value) }));
+      const toOptionGroups = (groups: CatalogOptionGroup[]) => {
+        return groups.map((group) => {
+          const isColor = group.name.toLowerCase() === "color";
+          return {
+            name: group.name,
+            options: group.options.map((option) => ({
+              value: option.value,
+              swatch: isColor ? resolveColor(option.value) : undefined,
+            })),
+          } as ProductOptionGroup;
+        });
+      };
 
-      const sizes = Array.from(
-        new Set(
-          catalogProduct.skus
-            .flatMap((sku) => sku.attributes ?? [])
-            .filter((attr) => attr.name.toLowerCase() === "size")
-            .map((attr) => attr.value),
-        ),
+      const derivedGroupsMap = new Map<string, Set<string>>();
+      for (const sku of catalogProduct.skus) {
+        for (const attr of sku.attributes ?? []) {
+          if (!derivedGroupsMap.has(attr.name)) {
+            derivedGroupsMap.set(attr.name, new Set<string>());
+          }
+          derivedGroupsMap.get(attr.name)?.add(attr.value);
+        }
+      }
+
+      const derivedGroups: CatalogOptionGroup[] = Array.from(
+        derivedGroupsMap.entries(),
+      ).map(([name, values]) => ({
+        name,
+        options: Array.from(values).map((value) => ({ value })),
+      }));
+
+      const optionGroups = toOptionGroups(
+        catalogProduct.optionGroups && catalogProduct.optionGroups.length > 0
+          ? catalogProduct.optionGroups
+          : derivedGroups,
       );
 
       const gallery = Array.from(
@@ -66,20 +98,60 @@ export const useProductDetailData = () => {
         description: catalogProduct.description ?? "",
         gallery:
           gallery.length > 0 ? gallery : ["/images/products/product-1.jpg"],
-        colors,
-        sizes,
+        optionGroups,
         skus: catalogProduct.skus,
       };
     }
 
-    return getProductDetailById(productId);
+    const fallback = getProductDetailById(productId);
+    if (!fallback) {
+      return null;
+    }
+
+    const fallbackGroups: ProductOptionGroup[] = [
+      {
+        name: "Color",
+        options: fallback.colors.map((color) => ({
+          value: color.id,
+          swatch: color.hex,
+        })),
+      },
+      {
+        name: "Size",
+        options: fallback.sizes.map((size) => ({ value: size })),
+      },
+    ];
+
+    return {
+      ...fallback,
+      optionGroups: fallbackGroups,
+      skus: [],
+    };
   }, [catalogProduct, productId]);
 
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
   const [quantity, setQuantity] = useState(2);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    const defaults: Record<string, string> = {};
+    for (const group of product.optionGroups ?? []) {
+      const firstOption = group.options[0];
+      if (firstOption) {
+        defaults[group.name] = firstOption.value;
+      }
+    }
+
+    setSelectedOptions(defaults);
+    setSelectedImage(0);
+  }, [product]);
 
   useEffect(() => {
     if (!productId) {
@@ -88,10 +160,13 @@ export const useProductDetailData = () => {
 
     const numericId = Number(productId);
     if (Number.isNaN(numericId)) {
+      setIsLoading(false);
       return;
     }
 
     let isMounted = true;
+
+    setIsLoading(true);
 
     const loadDetail = async () => {
       try {
@@ -102,6 +177,10 @@ export const useProductDetailData = () => {
       } catch {
         if (isMounted) {
           setCatalogProduct(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
         }
       }
     };
@@ -114,30 +193,26 @@ export const useProductDetailData = () => {
   }, [productId]);
 
   const selectedSku = useMemo(() => {
-    if (!product || !("skus" in product)) {
+    if (!product || !product.skus || product.skus.length === 0) {
       return null;
     }
 
-    const selectedColorValue = product.colors[selectedColor]?.id;
-    const selectedSizeValue = product.sizes[selectedSize];
+    const selectedEntries = Object.entries(selectedOptions).filter(
+      ([, value]) => Boolean(value),
+    );
 
     const match = product.skus.find((sku) => {
       const attrs = sku.attributes ?? [];
-      const color = attrs.find(
-        (attr) => attr.name.toLowerCase() === "color",
-      )?.value;
-      const size = attrs.find(
-        (attr) => attr.name.toLowerCase() === "size",
-      )?.value;
-
-      return (
-        (!selectedColorValue || color === selectedColorValue) &&
-        (!selectedSizeValue || size === selectedSizeValue)
-      );
+      return selectedEntries.every(([groupName, value]) => {
+        const attr = attrs.find(
+          (item) => item.name.toLowerCase() === groupName.toLowerCase(),
+        );
+        return !value || attr?.value === value;
+      });
     });
 
     return match ?? product.skus[0] ?? null;
-  }, [product, selectedColor, selectedSize]);
+  }, [product, selectedOptions]);
 
   const relatedProducts = useMemo(() => {
     if (!product) {
@@ -179,20 +254,21 @@ export const useProductDetailData = () => {
   };
 
   return {
+    isLoading,
     isWishlisted,
     product,
     quantity,
     selectedSku,
     relatedProducts,
-    selectedColor,
     selectedImage,
-    selectedSize,
+    selectedOptions,
     addSelectedToCart,
     decreaseQuantity,
     increaseQuantity,
-    setSelectedColor,
+    setSelectedOption: (groupName: string, value: string) => {
+      setSelectedOptions((prev) => ({ ...prev, [groupName]: value }));
+    },
     setSelectedImage,
-    setSelectedSize,
     toggleWishlist,
   };
 };
