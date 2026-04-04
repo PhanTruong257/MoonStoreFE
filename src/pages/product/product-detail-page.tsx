@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./product-detail-page.module.scss";
@@ -28,6 +32,15 @@ export const ProductDetailPage = () => {
   } = useProductDetailData();
 
   const navigate = useNavigate();
+  const effectivePrice = selectedSku
+    ? Number(selectedSku.price)
+    : (product?.price ?? 0);
+  const fallbackOldPrice = Math.round(effectivePrice * 1.15);
+  const oldPrice = product?.oldPrice ?? fallbackOldPrice;
+  const discountPercent =
+    oldPrice > 0
+      ? Math.round(((oldPrice - effectivePrice) / oldPrice) * 100)
+      : 0;
 
   if (!product && !isLoading) {
     return (
@@ -106,9 +119,9 @@ export const ProductDetailPage = () => {
 
       <section className={styles.main}>
         <div className={styles.breadcrumb}>
-          <span>Account</span>
+          <span>Trang chu</span>
           <span>/</span>
-          <span>Gaming</span>
+          <span>{product.categoryName ?? "Danh muc"}</span>
           <span>/</span>
           <span>{product.name}</span>
         </div>
@@ -137,60 +150,83 @@ export const ProductDetailPage = () => {
           </section>
 
           <aside className={styles.infoArea}>
-            <h1>{product.name}</h1>
-
-            <div className={styles.ratingRow}>
-              <span>{"*".repeat(product.rating)}</span>
-              <small>({product.reviews} Reviews)</small>
-              <em>{product.inStock ? "In Stock" : "Out of Stock"}</em>
+            <div className={styles.infoHeader}>
+              <h1>{product.name}</h1>
+              <div className={styles.ratingRow}>
+                <span>{"*".repeat(product.rating)}</span>
+                <small>{product.reviews} danh gia</small>
+                <em>{product.inStock ? "Con hang" : "Het hang"}</em>
+              </div>
             </div>
 
-            <p className={styles.price}>
-              {formatMoney(
-                selectedSku ? Number(selectedSku.price) : product.price,
-              )}
-            </p>
+            <div className={styles.priceCard}>
+              <div className={styles.priceMain}>
+                <strong>{formatMoney(effectivePrice)}</strong>
+                {discountPercent > 0 ? (
+                  <span className={styles.priceBadge}>-{discountPercent}%</span>
+                ) : null}
+              </div>
+              <div className={styles.priceMeta}>
+                <span>{formatMoney(oldPrice)}</span>
+                <small>Gia cu</small>
+              </div>
+              <div className={styles.installment}>
+                Tra gop tu{" "}
+                <strong>
+                  {formatMoney(Math.max(effectivePrice / 8, 0))}/thang
+                </strong>
+              </div>
+            </div>
+
             <p className={styles.description}>{product.description}</p>
 
-            {(product.optionGroups ?? []).map((group) => {
-              const isColor = group.name.toLowerCase() === "color";
-              const selectedValue = selectedOptions[group.name];
+            <div className={styles.optionsPanel}>
+              {(product.optionGroups ?? []).map((group) => {
+                const isColor = group.name.toLowerCase() === "color";
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                const selectedValue = selectedOptions[group.name];
 
-              return (
-                <div key={group.name} className={styles.metaRow}>
-                  <strong>{group.name}:</strong>
-                  <div className={styles.optionWrap}>
-                    {group.options.map((option) => {
-                      const isSelected = option.value === selectedValue;
-                      const buttonClass = isColor
-                        ? `${styles.optionButton} ${styles.optionButtonSwatch} ${isSelected ? styles.optionSwatchActive : ""}`
-                        : `${styles.optionButton} ${isSelected ? styles.optionActive : ""}`;
+                return (
+                  <div key={group.name} className={styles.optionGroup}>
+                    <div className={styles.optionLabel}>
+                      <strong>{group.name}</strong>
+                      {selectedValue ? <span>{selectedValue}</span> : null}
+                    </div>
+                    <div className={styles.optionWrap}>
+                      {group.options.map((option) => {
+                        const isSelected = option.value === selectedValue;
+                        const buttonClass = isColor
+                          ? `${styles.optionButton} ${styles.optionButtonSwatch} ${isSelected ? styles.optionSwatchActive : ""}`
+                          : `${styles.optionButton} ${isSelected ? styles.optionActive : ""}`;
 
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          className={buttonClass}
-                          onClick={() =>
-                            setSelectedOption(group.name, option.value)
-                          }
-                          aria-label={`Select ${option.value} ${group.name}`}
-                        >
-                          {isColor ? (
-                            <span
-                              className={styles.optionSwatch}
-                              style={{ background: option.swatch ?? "#8abdcf" }}
-                            />
-                          ) : (
-                            option.value
-                          )}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={option.value}
+                            type="button"
+                            className={buttonClass}
+                            onClick={() =>
+                              setSelectedOption(group.name, option.value)
+                            }
+                            aria-label={`Select ${option.value} ${group.name}`}
+                          >
+                            {isColor ? (
+                              <span
+                                className={styles.optionSwatch}
+                                style={{
+                                  background: option.swatch ?? "#8abdcf",
+                                }}
+                              />
+                            ) : (
+                              option.value
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
 
             <div className={styles.buyRow}>
               <div className={styles.quantityBox}>

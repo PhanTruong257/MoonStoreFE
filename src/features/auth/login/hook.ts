@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import type { AuthState } from "@/features/auth/auth-slice";
@@ -13,6 +13,7 @@ interface LoginFormState {
 
 export const useLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const {
     user,
@@ -32,9 +33,12 @@ export const useLogin = () => {
 
   useEffect(() => {
     if (user) {
-      void navigate("/", { replace: true });
+      const state = location.state as { from?: string } | null;
+      const target =
+        state?.from && state.from !== "/login" ? state.from : "/home";
+      void navigate(target, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, location.state]);
 
   const submit = () => {
     if (!form.email || !form.password) {

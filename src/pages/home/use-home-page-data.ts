@@ -247,6 +247,8 @@ export const useHomePageData = () => {
         [productId]: (prev[productId] ?? 0) + 1,
       }));
 
+      window.dispatchEvent(new CustomEvent("cart:updated"));
+
       return true;
     } catch {
       return false;

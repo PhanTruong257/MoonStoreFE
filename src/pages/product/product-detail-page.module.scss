@@ -6,9 +6,9 @@
 }
 
 .main {
-  width: min(1180px, calc(100% - 40px));
+  width: min(1280px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 34px 0 70px;
+  padding: 28px 0 70px;
   display: grid;
   gap: 30px;
 }
@@ -27,8 +27,8 @@
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  gap: 34px;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 30px;
 }
 
 .galleryArea {
@@ -62,9 +62,10 @@
 }
 
 .mainImageWrap {
-  background: var(--color-gray-140);
-  border-radius: 12px;
+  background: #f6f6f6;
+  border-radius: 18px;
   padding: 18px;
+  border: 1px solid #eee;
 
   img {
     width: 100%;
@@ -75,18 +76,26 @@
 }
 
 .infoArea {
+  display: grid;
+  gap: 16px;
+
   h1 {
     margin: 0;
-    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    font-size: clamp(1.9rem, 3vw, 2.3rem);
     font-family: var(--font-display);
   }
 }
 
+.infoHeader {
+  display: grid;
+  gap: 6px;
+}
+
 .ratingRow {
-  margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 13px;
 
   span {
     color: #ffad33;
@@ -104,28 +113,77 @@
   }
 }
 
-.price {
-  margin: 14px 0 0;
-  font-size: 30px;
+.priceCard {
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff5e8;
+  border: 1px solid #ffe4c2;
+  display: grid;
+  gap: 8px;
+}
+
+.priceMain {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #b91c1c;
   font-family: var(--font-display);
 }
 
+.priceBadge {
+  background: #ef4444;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.priceMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6b7280;
+
+  span {
+    text-decoration: line-through;
+  }
+}
+
+.installment {
+  font-size: 13px;
+  color: #374151;
+}
+
 .description {
-  margin: 14px 0;
+  margin: 0;
   color: var(--color-ink-650);
-  padding-bottom: 18px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--color-gray-240);
   line-height: 1.55;
 }
 
-.metaRow {
+.optionsPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.optionGroup {
+  display: grid;
+  gap: 10px;
+}
+
+.optionLabel {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--color-ink-760);
 
-  strong {
-    min-width: 70px;
+  span {
+    font-size: 12px;
+    color: var(--color-slate-500);
   }
 }
 
@@ -146,6 +204,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 13px;
 }
 
 .optionButtonSwatch {
@@ -163,9 +222,9 @@
 }
 
 .optionActive {
-  background: var(--color-danger) !important;
+  background: #111827 !important;
   color: #fff;
-  border-color: var(--color-danger) !important;
+  border-color: #111827 !important;
 }
 
 .optionSwatchActive {
@@ -219,10 +278,10 @@
 }
 
 .buyRow {
-  margin-top: 18px;
+  margin-top: 6px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 10px;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
 }
 
 .quantityBox {
@@ -251,9 +310,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  background: var(--color-danger);
+  background: #c51e1e;
   color: #fff;
   font-weight: 700;
+  min-height: 44px;
 }
 
 .wishButton {
@@ -262,6 +322,7 @@
   padding: 0 16px;
   background: #fff;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .policyCard {

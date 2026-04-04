@@ -90,6 +90,7 @@ export const useProductDetailData = () => {
       return {
         id: String(catalogProduct.id),
         name: catalogProduct.name,
+        categoryName: catalogProduct.categoryName,
         price,
         oldPrice: Math.round(price * 1.2),
         rating: 4,
@@ -124,6 +125,7 @@ export const useProductDetailData = () => {
 
     return {
       ...fallback,
+      categoryName: "Danh muc",
       optionGroups: fallbackGroups,
       skus: [],
     };
@@ -247,6 +249,7 @@ export const useProductDetailData = () => {
         skuId: selectedSku.id,
         quantity,
       });
+      window.dispatchEvent(new CustomEvent("cart:updated"));
       return true;
     } catch {
       return false;

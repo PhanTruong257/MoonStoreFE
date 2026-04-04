@@ -1,14 +1,15 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
-import { SharedButton } from "@/component/shared-button/shared-button";
-import { SharedInput } from "@/component/shared-input/shared-input";
 import { HEADER_TEXT } from "@/const/header.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
+import { getStoredUser } from "@/features/auth/auth-storage";
 import styles from "@/features/layout/components/site-header.module.scss";
+import { fetchCartByUser } from "@/services/cart-service";
 
 type HeaderLink = {
   label: string;
@@ -27,6 +28,7 @@ type SearchConfig = {
   actionLabel?: string;
   value?: string;
   onChange?: (value: string) => void;
+  keywords?: string[];
 };
 
 type SiteHeaderProps = {
@@ -34,20 +36,81 @@ type SiteHeaderProps = {
   navLinks: HeaderLink[];
   promo?: PromoConfig;
   search?: SearchConfig;
+  categoryLink?: HeaderLink;
+  cartCount?: number;
 };
 
 export const SiteHeader = ({
   brand,
   navLinks,
-  promo,
   search,
+  categoryLink,
+
+  cartCount,
 }: SiteHeaderProps) => {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const inputValue = search?.value ?? searchValue;
+  const keywords = search?.keywords ?? [
+    "iphone 17",
+    "laptop",
+    "samsung",
+    "iphone 16",
+    "macbook",
+    "ipad",
+    "macbook neo",
+    "may lanh",
+  ];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const selectAuth = (state: RootState): AuthState => state.auth;
   const { user } = useSelector(selectAuth);
+  const storedUser = getStoredUser();
+  const isLoggedIn = Boolean(user ?? storedUser);
+  const [apiCartCount, setApiCartCount] = useState(0);
+  const resolvedCartCount =
+    typeof cartCount === "number" ? cartCount : apiCartCount;
+
+  useEffect(() => {
+    const userId = (user ?? storedUser)?.id;
+    if (!isLoggedIn || !userId) {
+      setApiCartCount(0);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadCartCount = async () => {
+      try {
+        const cart = await fetchCartByUser(userId);
+        if (!isMounted) {
+          return;
+        }
+        const nextCount = cart.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
+        setApiCartCount(nextCount);
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+        setApiCartCount(0);
+      }
+    };
+
+    const handleCartUpdated = () => {
+      void loadCartCount();
+    };
+
+    void loadCartCount();
+    window.addEventListener("cart:updated", handleCartUpdated);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("cart:updated", handleCartUpdated);
+    };
+  }, [isLoggedIn, storedUser?.id, user?.id]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -64,32 +127,30 @@ export const SiteHeader = ({
 
   return (
     <header className={styles.header}>
-      {promo ? (
-        <div className={styles.promoBar}>
-          <span>{promo.message}</span>
-          <Link to={promo.to}>{promo.linkLabel}</Link>
+      <div className={styles.mainRow}>
+        <div className={styles.brandArea}>
+          <Link to={brand.to} className={styles.brand}>
+            {brand.label}
+          </Link>
+          <Link
+            to={categoryLink?.to ?? "/categories"}
+            className={styles.categoryButton}
+          >
+            <span className={styles.categoryIcon}>
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>{categoryLink?.label ?? "Danh muc"}</span>
+          </Link>
         </div>
-      ) : null}
 
-      <div className={styles.navRow}>
-        <Link to={brand.to} className={styles.brand}>
-          {brand.label}
-        </Link>
-
-        <nav className={styles.nav}>
-          {navLinks.map((link) => (
-            <Link key={`${link.label}-${link.to}`} to={link.to}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={styles.actions}>
-          {search ? (
-            <div className={styles.searchWrap}>
-              <SharedInput
+        {search ? (
+          <div className={styles.searchArea}>
+            <div className={styles.searchBar}>
+              <input
                 placeholder={search.placeholder}
-                ariaLabel={
+                aria-label={
                   search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel
                 }
                 value={inputValue}
@@ -99,15 +160,33 @@ export const SiteHeader = ({
                   search.onChange?.(nextValue);
                 }}
               />
-              <SharedButton
-                variant="text"
-                label={
-                  search.actionLabel ?? HEADER_TEXT.defaultSearchActionLabel
-                }
-              />
+              <button type="button" aria-label="Search">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M11 4a7 7 0 1 0 4.9 12.1l3.5 3.5 1.4-1.4-3.5-3.5A7 7 0 0 0 11 4zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </div>
-          ) : null}
+            <div className={styles.searchHints}>
+              {keywords.map((keyword) => (
+                <button
+                  key={keyword}
+                  type="button"
+                  onClick={() => {
+                    setSearchValue(keyword);
+                    search.onChange?.(keyword);
+                  }}
+                >
+                  {keyword}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
+        <div className={styles.actions}>
           <div className={styles.accountMenu}>
             {user ? (
               <>
@@ -116,7 +195,15 @@ export const SiteHeader = ({
                   className={styles.accountButton}
                   onClick={toggleMenu}
                 >
-                  {user.fullName || "Account"}
+                  <span className={styles.accountIcon}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                  <span>{user.fullName || "Tai khoan"}</span>
                 </button>
                 {isMenuOpen ? (
                   <div className={styles.accountDropdown}>
@@ -139,12 +226,59 @@ export const SiteHeader = ({
               </>
             ) : (
               <Link className={styles.loginLink} to="/login">
-                Login
+                <span className={styles.accountIcon}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+                <span>Dang nhap</span>
               </Link>
             )}
           </div>
+
+          <button
+            type="button"
+            className={styles.cartButton}
+            onClick={() => {
+              if (isLoggedIn) {
+                void navigate("/cart");
+              } else {
+                void navigate("/login", { state: { from: "/cart" } });
+              }
+            }}
+          >
+            <span className={styles.cartIcon}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M7 6h14l-2 8H8L6.2 3H3v2h2l2.2 11h12.6l2.4-10H7V6zm1 14a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"
+                  fill="currentColor"
+                />
+              </svg>
+              {resolvedCartCount > 0 ? (
+                <span className={styles.cartBadge}>
+                  {resolvedCartCount > 99 ? "99+" : resolvedCartCount}
+                </span>
+              ) : null}
+            </span>
+            <span>Gio hang</span>
+          </button>
         </div>
       </div>
+
+      {navLinks.length > 0 ? (
+        <div className={styles.linksRow}>
+          <nav className={styles.nav}>
+            {navLinks.map((link) => (
+              <Link key={`${link.label}-${link.to}`} to={link.to}>
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 };
