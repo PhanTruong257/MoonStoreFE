@@ -23,21 +23,80 @@
   padding-right: 14px;
   display: grid;
   gap: 8px;
+  position: relative;
+}
 
-  button {
-    border: 0;
-    background: transparent;
-    padding: 7px 0;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: var(--color-ink-680);
-    cursor: pointer;
+.sideMenuItem {
+  position: relative;
+}
 
-    &:hover {
-      color: var(--color-danger);
-    }
-  }
+.sideMenuItem::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 10px;
+  height: 100%;
+}
+
+.sideMenuButton {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 7px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--color-ink-680);
+  cursor: pointer;
+}
+
+.sideMenuButton:hover,
+.sideMenuItem:hover .sideMenuButton {
+  color: var(--color-danger);
+}
+
+.sideSubMenu {
+  position: absolute;
+  left: 100%;
+  top: -8px;
+  min-width: 220px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--color-gray-220);
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+  display: grid;
+  gap: 4px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.sideMenuItem:hover .sideSubMenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.sideSubMenuItem {
+  border: 0;
+  background: transparent;
+  text-align: left;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--color-ink-680);
+  cursor: pointer;
+}
+
+.sideSubMenuItem:hover {
+  background: var(--color-gray-140);
+  color: var(--color-danger);
 }
 
 .heroBanner {
@@ -522,6 +581,12 @@
     border-bottom: 1px solid var(--color-gray-220);
     padding: 0 0 16px;
     grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+
+  .sideSubMenu {
+    left: 0;
+    top: calc(100% + 6px);
+    min-width: 100%;
   }
 
   .heroSlide {

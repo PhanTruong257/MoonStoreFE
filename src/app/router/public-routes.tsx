@@ -19,6 +19,11 @@ export const publicRoutes: RouteObject[] = [
     handle: { title: "Home" },
   },
   {
+    path: "/categories",
+    element: <HomePage />,
+    handle: { title: "Categories" },
+  },
+  {
     path: "/about",
     element: <AboutPage />,
     handle: { title: "About" },
@@ -42,5 +47,10 @@ export const publicRoutes: RouteObject[] = [
     path: "/product/:productId",
     element: <ProductDetailPage />,
     handle: { title: "Product Detail" },
+  },
+  {
+    path: "/:categorySlug",
+    element: <HomePage />,
+    handle: { title: "Category Products" },
   },
 ];

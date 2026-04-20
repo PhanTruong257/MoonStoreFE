@@ -1,0 +1,45 @@
+.card {
+  display: grid;
+  gap: 10px;
+}
+
+.imageWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.discount {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.wishlist {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.actionButton {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}

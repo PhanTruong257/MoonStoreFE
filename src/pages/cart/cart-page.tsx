@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./cart-page.module.scss";
 import { useCartPageData } from "./use-cart-page-data";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CART_TEXT } from "@/const/cart.const";
@@ -50,11 +51,10 @@ export const CartPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>
-          <span>Home</span>
-          <span>/</span>
-          <span>Cart</span>
-        </div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[{ label: "Home", to: "/" }, { label: "Cart" }]}
+        />
 
         <div className={styles.headerRow}>
           <span>Product</span>

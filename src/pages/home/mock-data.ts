@@ -30,6 +30,11 @@ export type HomeService = {
   description: string;
 };
 
+export type HomeSideMenuItem = {
+  label: string;
+  children: string[];
+};
+
 export const homeHeaderLinks = [
   { label: "Home", to: "/home" },
   { label: "Contact", to: "/contact" },
@@ -71,15 +76,39 @@ export const homeFooterSections = [
   },
 ];
 
-export const homeSideMenu = [
-  "Phones",
-  "Computers",
-  "Smart Watch",
-  "Camera",
-  "Headphones",
-  "Gaming",
-  "Fashion",
-  "Furniture",
+export const homeSideMenu: HomeSideMenuItem[] = [
+  {
+    label: "Phones",
+    children: ["Flagship Phones", "Budget Phones", "Foldable Phones"],
+  },
+  {
+    label: "Computers",
+    children: ["Ultrabooks", "Gaming Laptops", "Workstations"],
+  },
+  {
+    label: "Smart Watch",
+    children: ["Fitness Watches", "Luxury Watches"],
+  },
+  {
+    label: "Camera",
+    children: ["DSLR Cameras", "Mirrorless Cameras"],
+  },
+  {
+    label: "Headphones",
+    children: ["Earbuds", "Over-Ear"],
+  },
+  {
+    label: "Gaming",
+    children: ["Controllers", "Keyboards"],
+  },
+  {
+    label: "Fashion",
+    children: ["Hoodies", "Jackets"],
+  },
+  {
+    label: "Furniture",
+    children: ["Desks", "Chairs"],
+  },
 ];
 
 export const homeBanners: HomeBanner[] = [

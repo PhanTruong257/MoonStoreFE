@@ -1,5 +1,6 @@
 import styles from "./about-page.module.scss";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
@@ -60,7 +61,10 @@ export const AboutPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>Home / About</div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[{ label: "Home", to: "/" }, { label: "About" }]}
+        />
 
         <section className={styles.storySection}>
           <article className={styles.storyText}>

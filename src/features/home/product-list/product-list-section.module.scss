@@ -1,0 +1,408 @@
+.sectionShell {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background:
+    radial-gradient(circle at top right, rgba(248, 113, 113, 0.12), transparent 42%),
+    linear-gradient(180deg, #ffffff, #fbfdff);
+  overflow: hidden;
+}
+
+.sectionShell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 48%,
+    transparent 66%
+  );
+  pointer-events: none;
+  transform: translateX(-130%);
+  animation: sectionSweep 6.5s linear infinite;
+}
+
+.sectionHeaderCompact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+
+  h2 {
+    margin: 10px 0 0;
+    font-family: var(--font-display);
+  }
+}
+
+.sectionLabel {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.categoryRow {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.categoryButton {
+  border: 1px solid var(--color-gray-220);
+  background: rgba(255, 255, 255, 0.88);
+  height: 36px;
+  border-radius: 999px;
+  padding: 0 14px;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.2s ease;
+}
+
+.categoryButton:hover {
+  transform: translateY(-1px);
+  border-color: #fda4af;
+  background: #fff;
+  box-shadow: 0 7px 16px rgba(148, 163, 184, 0.2);
+}
+
+.categoryButtonActive {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background: #fff5f5;
+  box-shadow: 0 8px 18px rgba(239, 68, 68, 0.18);
+}
+
+.productGrid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.productCard {
+  display: grid;
+  gap: 10px;
+  border-radius: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid transparent;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  transform: translateY(14px);
+  opacity: 0;
+  animation: cardIn 0.48s ease forwards;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.24s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(251, 113, 133, 0.28);
+  background: #fff;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.15);
+}
+
+.productCard:nth-child(1) {
+  animation-delay: 0.03s;
+}
+
+.productCard:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.productCard:nth-child(3) {
+  animation-delay: 0.09s;
+}
+
+.productCard:nth-child(4) {
+  animation-delay: 0.12s;
+}
+
+.productCard:nth-child(5) {
+  animation-delay: 0.15s;
+}
+
+.productCard:nth-child(6) {
+  animation-delay: 0.18s;
+}
+
+.productCard:nth-child(7) {
+  animation-delay: 0.21s;
+}
+
+.productCard:nth-child(8) {
+  animation-delay: 0.24s;
+}
+
+.imageWrap {
+  background: var(--color-gray-140);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 170px;
+  position: relative;
+  display: grid;
+  place-items: center;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+}
+
+.productCard:hover .imageWrap img {
+  transform: scale(1.05);
+}
+
+.priceRow {
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  span {
+    color: var(--color-danger);
+    font-weight: 700;
+  }
+
+  del {
+    color: var(--color-slate-500);
+  }
+}
+
+.metaRow {
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #ffad33;
+  font-size: 13px;
+
+  small {
+    color: var(--color-slate-500);
+  }
+}
+
+.message {
+  margin-top: 16px;
+  color: var(--color-slate-500);
+  position: relative;
+  z-index: 1;
+}
+
+.paginationRow {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.paginationButton {
+  border: 1px solid var(--color-gray-220);
+  background: #fff;
+  border-radius: 8px;
+  min-width: 92px;
+  height: 36px;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #fca5a5;
+  box-shadow: 0 8px 16px rgba(148, 163, 184, 0.18);
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.paginationInfo {
+  font-size: 13px;
+  color: var(--color-slate-500);
+}
+
+.paginationNumbers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.paginationNumberButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--color-gray-220);
+  background: #fff;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    border-color 0.18s ease,
+    box-shadow 0.2s ease;
+}
+
+.paginationNumberButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #fca5a5;
+  box-shadow: 0 7px 14px rgba(148, 163, 184, 0.16);
+}
+
+.paginationNumberButtonActive {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  font-weight: 700;
+  box-shadow: 0 10px 18px rgba(239, 68, 68, 0.34);
+}
+
+.paginationNumberButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.skeletonGrid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.skeletonCard {
+  border-radius: 12px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #edf2f7;
+}
+
+.skeletonImage,
+.skeletonLineShort,
+.skeletonLineLong {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eef2f6 25%, #f8fafc 48%, #eef2f6 75%);
+  background-size: 220% 100%;
+  animation: shimmer 1.25s linear infinite;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.skeletonLineShort {
+  margin-top: 12px;
+  height: 12px;
+  width: 62%;
+}
+
+.skeletonLineLong {
+  margin-top: 10px;
+  height: 12px;
+  width: 88%;
+}
+
+.emptyState {
+  margin-top: 18px;
+  text-align: center;
+  color: #64748b;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes sectionSweep {
+  0% {
+    transform: translateX(-130%);
+  }
+
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+@media (max-width: 1100px) {
+  .productGrid {
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+  }
+
+  .skeletonGrid {
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .productGrid {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+  }
+
+  .skeletonGrid {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+  }
+
+  .paginationRow {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .skeletonGrid {
+    grid-template-columns: 1fr;
+  }
+}

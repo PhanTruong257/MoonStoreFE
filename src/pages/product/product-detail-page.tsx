@@ -7,9 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+import { ProductCard } from "@/component/product-card/product-card";
 
 const formatMoney = (value: number) => `$${value.toFixed(2)}`;
 
@@ -58,11 +60,10 @@ export const ProductDetailPage = () => {
         />
 
         <section className={styles.main}>
-          <div className={styles.breadcrumb}>
-            <span>Home</span>
-            <span>/</span>
-            <span>Product not found</span>
-          </div>
+          <Breadcrumb
+            className={styles.breadcrumb}
+            items={[{ label: "Home", to: "/" }, { label: "Product not found" }]}
+          />
           <div>
             <h1>Product not found</h1>
             <p>We could not find that product. It may be unavailable.</p>
@@ -93,11 +94,10 @@ export const ProductDetailPage = () => {
           search={{ placeholder: "What are you looking for?" }}
         />
         <section className={styles.main}>
-          <div className={styles.breadcrumb}>
-            <span>Home</span>
-            <span>/</span>
-            <span>Loading product...</span>
-          </div>
+          <Breadcrumb
+            className={styles.breadcrumb}
+            items={[{ label: "Home", to: "/" }, { label: "Loading product..." }]}
+          />
         </section>
       </main>
     );
@@ -118,13 +118,14 @@ export const ProductDetailPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>
-          <span>Trang chu</span>
-          <span>/</span>
-          <span>{product.categoryName ?? "Danh muc"}</span>
-          <span>/</span>
-          <span>{product.name}</span>
-        </div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[
+            { label: "Trang chu", to: "/" },
+            { label: product.categoryName ?? "Danh muc" },
+            { label: product.name },
+          ]}
+        />
 
         <div className={styles.content}>
           <section className={styles.galleryArea}>
@@ -297,26 +298,27 @@ export const ProductDetailPage = () => {
               );
 
               return (
-                <article key={item.id} className={styles.relatedCard}>
-                  <div className={styles.relatedImageWrap}>
-                    <span>-{discount}%</span>
-                    <img src={item.image} alt={item.name} />
-                    <button type="button">Wish</button>
-                  </div>
-
-                  <Link to={`/product/${item.id}`}>
-                    <h3>{item.name}</h3>
-                  </Link>
-
-                  <p>
-                    <strong>{`$${item.price}`}</strong>
-                    <del>{`$${item.oldPrice}`}</del>
-                  </p>
-
-                  <small>
-                    {"*".repeat(item.rating)} ({item.sold})
-                  </small>
-                </article>
+                <ProductCard
+                  key={item.id}
+                  name={item.name}
+                  image={item.image}
+                  to={`/product/${item.id}`}
+                  discountLabel={`-${discount}%`}
+                  wishlistLabel="Wish"
+                  renderPrice={
+                    <p>
+                      <strong>{`$${item.price}`}</strong>
+                      <del>{`$${item.oldPrice}`}</del>
+                    </p>
+                  }
+                  renderMeta={
+                    <small>
+                      {"*".repeat(item.rating)} ({item.sold})
+                    </small>
+                  }
+                  className={styles.relatedCard}
+                  imageWrapClassName={styles.relatedImageWrap}
+                />
               );
             })}
           </div>

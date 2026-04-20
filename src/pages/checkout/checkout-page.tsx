@@ -1,6 +1,7 @@
 import styles from "./checkout-page.module.scss";
 import { useCheckoutPageData } from "./use-checkout-page-data";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CHECKOUT_TEXT } from "@/const/checkout.const";
@@ -54,17 +55,16 @@ export const CheckoutPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>
-          <span>Account</span>
-          <span>/</span>
-          <span>My Account</span>
-          <span>/</span>
-          <span>Product</span>
-          <span>/</span>
-          <span>View Cart</span>
-          <span>/</span>
-          <span>CheckOut</span>
-        </div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[
+            { label: "Account" },
+            { label: "My Account" },
+            { label: "Product" },
+            { label: "View Cart" },
+            { label: "CheckOut" },
+          ]}
+        />
 
         <div className={styles.layout}>
           <section className={styles.billing}>

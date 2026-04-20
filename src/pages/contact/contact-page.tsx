@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import styles from "./contact-page.module.scss";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CONTACT_TEXT } from "@/const/contact.const";
@@ -44,7 +45,10 @@ export const ContactPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>{CONTACT_TEXT.breadcrumb}</div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[{ label: CONTACT_TEXT.breadcrumb }]}
+        />
 
         <section className={styles.content}>
           <aside className={styles.infoCard}>

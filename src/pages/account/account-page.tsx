@@ -15,6 +15,7 @@ import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 import { fetchProfile, updateProfile } from "@/services/auth-service";
+import { createSellerProfile } from "@/services/seller-service";
 
 const splitName = (fullName: string) => {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
@@ -46,6 +47,9 @@ export const AccountPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [sellerShopName, setSellerShopName] = useState("");
+  const [sellerDescription, setSellerDescription] = useState("");
+  const [sellerMessage, setSellerMessage] = useState("");
   const [initialProfile, setInitialProfile] = useState({
     firstName: initialName.firstName,
     lastName: initialName.lastName,
@@ -136,6 +140,30 @@ export const AccountPage = () => {
     }
   };
 
+  const registerSeller = async () => {
+    if (!storedUser) {
+      return;
+    }
+
+    if (!sellerShopName.trim()) {
+      setSellerMessage("Please enter a shop name.");
+      return;
+    }
+
+    setSellerMessage("");
+    try {
+      await createSellerProfile({
+        userId: storedUser.id,
+        shopName: sellerShopName,
+        description: sellerDescription,
+      });
+      setStoredUser({ ...storedUser, role: "seller" });
+      setSellerMessage("Seller profile activated.");
+    } catch {
+      setSellerMessage("Unable to activate seller profile.");
+    }
+  };
+
   const welcomeName = storedUser?.fullName ?? ACCOUNT_TEXT.welcomeName;
 
   return (
@@ -187,6 +215,44 @@ export const AccountPage = () => {
           </aside>
 
           <section className={styles.panel}>
+            <div className={styles.sellerCard}>
+              <div>
+                <h3>Seller hub</h3>
+                <p>
+                  {storedUser?.role === "seller"
+                    ? "Manage your product catalog and launch new items."
+                    : "Activate seller mode to publish products."}
+                </p>
+              </div>
+              {storedUser?.role === "seller" ? (
+                <Link className={styles.sellerLink} to="/seller">
+                  Open seller hub
+                </Link>
+              ) : (
+                <div className={styles.sellerForm}>
+                  <SharedInput
+                    placeholder="Shop name"
+                    value={sellerShopName}
+                    onChange={(event) => setSellerShopName(event.target.value)}
+                  />
+                  <SharedInput
+                    placeholder="Shop description"
+                    value={sellerDescription}
+                    onChange={(event) =>
+                      setSellerDescription(event.target.value)
+                    }
+                  />
+                  <SharedButton
+                    label="Activate seller"
+                    onClick={registerSeller}
+                  />
+                  {sellerMessage ? (
+                    <p className={styles.sellerMessage}>{sellerMessage}</p>
+                  ) : null}
+                </div>
+              )}
+            </div>
+
             <h2>{ACCOUNT_TEXT.profileTitle}</h2>
 
             <div className={styles.formGrid}>

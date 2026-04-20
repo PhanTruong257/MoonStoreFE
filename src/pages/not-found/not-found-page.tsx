@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import styles from "./not-found-page.module.scss";
 
+import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
@@ -22,7 +23,10 @@ export const NotFoundPage = () => {
       />
 
       <section className={styles.main}>
-        <div className={styles.breadcrumb}>Home / 404 Error</div>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[{ label: "Home", to: "/" }, { label: "404 Error" }]}
+        />
 
         <section className={styles.content}>
           <div>

@@ -4,6 +4,9 @@ import createSagaMiddleware from "redux-saga";
 
 import { rootSaga } from "@/app/app-saga";
 import { authReducer } from "@/features/auth/auth-slice";
+import { homeCategoryReducer } from "@/features/home/category/category.slice";
+import { flashSaleReducer } from "@/features/home/flash-sale/flash-sale.slice";
+import { productListReducer } from "@/features/home/product-list/product-list.slice";
 
 type AppState = {
   isBootstrapped: boolean;
@@ -29,6 +32,9 @@ export const store = configureStore({
   reducer: {
     app: appSlice.reducer,
     auth: authReducer,
+    homeCategory: homeCategoryReducer,
+    flashSale: flashSaleReducer,
+    productList: productListReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
