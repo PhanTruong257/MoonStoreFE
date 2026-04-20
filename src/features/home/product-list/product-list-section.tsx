@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 import type { MouseEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { toCategorySlug } from "@/app/utils/category-slug";
 import { ProductCard } from "@/component/product-card/product-card";
 import styles from "@/features/home/product-list/product-list-section.module.scss";
 import { useProductList } from "@/features/home/product-list/use-product-list";
+import { getStoredUser } from "@/features/auth/auth-storage";
+import { addToCart } from "@/services/cart-service";
 
 type ProductListSectionProps = {
   initialCategorySlug?: string;
@@ -21,6 +25,7 @@ export const ProductListSection = ({
   onProductClick,
   searchQuery,
 }: ProductListSectionProps) => {
+  const navigate = useNavigate();
   const {
     categories,
     error,
@@ -37,35 +42,72 @@ export const ProductListSection = ({
   } = useProductList(searchQuery, initialCategorySlug);
 
   const hasItems = items.length > 0;
+  const handleAddToCart = async (
+    productId: string,
+    skuId: number | undefined,
+    productName: string,
+  ) => {
+    if (!skuId) {
+      void navigate(`/product/${productId}`);
+      return;
+    }
+
+    const user = getStoredUser();
+
+    try {
+      await addToCart({
+        userId: user?.id,
+        skuId,
+        productName,
+        quantity: 1,
+      });
+      window.dispatchEvent(new CustomEvent("cart:updated"));
+    } catch {
+      // Ignore add errors for now.
+    }
+  };
 
   return (
     <section className={`page-section ${styles.sectionShell}`}>
-      <header className={styles.sectionHeaderCompact}>
-        <div>
-          <p className={styles.sectionLabel}>Product List</p>
-          <h2>All Products</h2>
-        </div>
-      </header>
-
       <div className={styles.categoryRow}>
         {categories.map((category) => (
           <button
             key={category.id}
             type="button"
+            aria-pressed={selectedCategoryId === category.id}
             className={`${styles.categoryButton} ${
               selectedCategoryId === category.id
                 ? styles.categoryButtonActive
                 : ""
             }`}
-            onClick={() => setCategory(category.id)}
-            disabled={isLoading}
+            onClick={() => {
+              if (selectedCategoryId === category.id) {
+                return;
+              }
+
+              setCategory(category.id);
+              if (category.id === "all") {
+                void navigate("/categories");
+                return;
+              }
+
+              const categorySlug =
+                category.slug || toCategorySlug(category.label);
+              void navigate(`/${categorySlug}`);
+            }}
+            disabled={isLoading && selectedCategoryId !== category.id}
           >
             {category.label}
           </button>
         ))}
       </div>
 
-      {isLoading ? <p className={styles.message}>Loading products...</p> : null}
+      {isLoading ? (
+        <div className={styles.loadingRow} aria-live="polite" aria-busy="true">
+          <span className={styles.loadingBar} />
+          <span className={styles.loadingBarShort} />
+        </div>
+      ) : null}
       {error ? <p className={styles.message}>{error}</p> : null}
 
       {isLoading ? (
@@ -103,8 +145,17 @@ export const ProductListSection = ({
                   <small>({product.sold})</small>
                 </p>
               }
+              actionLabel="Add To Cart"
+              onAction={() => {
+                void handleAddToCart(
+                  product.id,
+                  product.defaultSkuId,
+                  product.name,
+                );
+              }}
               className={styles.productCard}
               imageWrapClassName={styles.imageWrap}
+              actionClassName={styles.addToCartButton}
             />
           ))}
         </div>

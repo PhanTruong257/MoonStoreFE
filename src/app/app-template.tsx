@@ -30,7 +30,12 @@ export const AppTemplate = ({ children, title }: AppTemplateProps) => {
   }, []);
 
   if (isLoading) {
-    return <div className="loading-wrap">Loading...</div>;
+    return (
+      <div className="loading-wrap" aria-live="polite" aria-busy="true">
+        <span className="app-loading-bar" />
+        <span className="app-loading-bar app-loading-bar--short" />
+      </div>
+    );
   }
 
   return <>{children}</>;

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import { useEffect, useMemo } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
@@ -33,6 +34,7 @@ export const useProductList = (
   searchQuery: string,
   initialCategorySlug?: string,
 ): UseProductListResult => {
+  const syncedSlugRef = useRef<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const {
     categories,
@@ -58,16 +60,27 @@ export const useProductList = (
 
   useEffect(() => {
     if (!initialCategorySlug) {
+      syncedSlugRef.current = null;
       return;
     }
 
     const normalizedSlug = normalizeCategorySlug(initialCategorySlug);
+    if (syncedSlugRef.current === normalizedSlug) {
+      return;
+    }
+
     const matchedCategory = categories.find(
       (category: ProductListCategory) =>
         normalizeCategorySlug(category.slug) === normalizedSlug,
     );
 
-    if (!matchedCategory || matchedCategory.id === selectedCategoryId) {
+    if (!matchedCategory) {
+      return;
+    }
+
+    syncedSlugRef.current = normalizedSlug;
+
+    if (matchedCategory.id === selectedCategoryId) {
       return;
     }
 

@@ -1,6 +1,6 @@
 :root {
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
   --color-bg: #fcf8f3;
   --color-surface: #ffffff;
   --color-surface-compact: #fff;
@@ -77,8 +77,16 @@ body {
   font-family: var(--font-body);
   color: var(--color-text);
   background:
-    radial-gradient(circle at 15% 10%, var(--overlay-primary-12), var(--color-transparent) 35%),
-    radial-gradient(circle at 85% 90%, var(--overlay-accent-12), var(--color-transparent) 30%),
+    radial-gradient(
+      circle at 15% 10%,
+      var(--overlay-primary-12),
+      var(--color-transparent) 35%
+    ),
+    radial-gradient(
+      circle at 85% 90%,
+      var(--overlay-accent-12),
+      var(--color-transparent) 30%
+    ),
     var(--color-bg);
 }
 
@@ -222,6 +230,30 @@ a {
   min-height: 120px;
   display: grid;
   place-items: center;
+  gap: 10px;
+}
+
+.app-loading-bar {
+  width: min(360px, 70vw);
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eef2f6 25%, #f8fafc 48%, #eef2f6 75%);
+  background-size: 220% 100%;
+  animation: shimmer 1.25s linear infinite;
+}
+
+.app-loading-bar--short {
+  width: min(220px, 55vw);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 @media (max-width: 900px) {
@@ -234,9 +266,9 @@ a {
   .cart-item {
     grid-template-columns: 80px 1fr;
     grid-template-areas:
-      'image info'
-      'image quantity'
-      'image remove';
+      "image info"
+      "image quantity"
+      "image remove";
   }
 
   .cart-item img {

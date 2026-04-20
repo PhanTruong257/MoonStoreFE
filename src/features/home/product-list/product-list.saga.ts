@@ -72,6 +72,7 @@ function* handleProductListRequested(
         image: item.defaultSku?.imageUrl ?? "/images/products/product-1.jpg",
         rating: 4,
         sold: Math.max(10, Math.round((item.defaultSku?.stock ?? 0) / 2)),
+        defaultSkuId: item.defaultSku?.id,
       };
     });
 

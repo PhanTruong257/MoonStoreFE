@@ -201,7 +201,7 @@ export const SiteHeader = ({
                 <span />
                 <span />
               </span>
-              <span>{categoryLink?.label ?? "Danh muc"}</span>
+              <span>{categoryLink?.label ?? "Category"}</span>
             </button>
 
             <div
@@ -210,13 +210,6 @@ export const SiteHeader = ({
               }`}
               role="menu"
             >
-              <Link
-                to={categoryLink?.to ?? "/categories"}
-                className={styles.categoryItem}
-                onClick={() => setIsCategoryOpen(false)}
-              >
-                Tat ca danh muc
-              </Link>
               {resolvedCategoryItems.map((item) => (
                 <Link
                   key={`${item.label}-${item.to}`}
