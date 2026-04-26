@@ -14,6 +14,17 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
 }
 
+.statCardAccent {
+  background: linear-gradient(135deg, #b91c1c, #f97316);
+}
+
+.statCardMuted {
+  background: #fff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
 .statValue {
   font-size: 28px;
   font-weight: 700;
@@ -26,10 +37,22 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.statCardMuted .statLabel {
+  color: #6b7280;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
 .panelTitle {
@@ -56,17 +79,27 @@
   background: #111827;
   color: #fff;
   font-weight: 600;
+  text-align: center;
 }
 
 .quickSecondary {
   background: #f97316;
 }
 
+.errorText {
+  color: #b91c1c;
+  margin: 8px 0;
+}
+
+.heroLink {
+  color: #fff;
+  text-decoration: none;
+}
+
 @media (max-width: 980px) {
   .statsGrid {
     grid-template-columns: 1fr;
   }
-
   .grid {
     grid-template-columns: 1fr;
   }

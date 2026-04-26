@@ -44,10 +44,9 @@ export const ProductListSection = ({
   const hasItems = items.length > 0;
   const handleAddToCart = async (
     productId: string,
-    skuId: number | undefined,
-    productName: string,
+    productIdNumber: number | undefined,
   ) => {
-    if (!skuId) {
+    if (!productIdNumber) {
       void navigate(`/product/${productId}`);
       return;
     }
@@ -57,8 +56,7 @@ export const ProductListSection = ({
     try {
       await addToCart({
         userId: user?.id,
-        skuId,
-        productName,
+        productId: productIdNumber,
         quantity: 1,
       });
       window.dispatchEvent(new CustomEvent("cart:updated"));
@@ -147,11 +145,7 @@ export const ProductListSection = ({
               }
               actionLabel="Add To Cart"
               onAction={() => {
-                void handleAddToCart(
-                  product.id,
-                  product.defaultSkuId,
-                  product.name,
-                );
+                void handleAddToCart(product.id, product.productIdNumber);
               }}
               className={styles.productCard}
               imageWrapClassName={styles.imageWrap}

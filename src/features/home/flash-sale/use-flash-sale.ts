@@ -170,13 +170,13 @@ export const useFlashSale = (
       dispatch(flashSaleActions.flashSaleToggleWishlist(productId)),
     addToCart: (
       productId: string,
-      skuId: number | undefined,
+      productIdNumber: number | undefined,
       productName: string,
     ) =>
       dispatch(
         flashSaleActions.flashSaleAddToCartRequested({
           productId,
-          skuId,
+          productIdNumber,
           productName,
         }),
       ),

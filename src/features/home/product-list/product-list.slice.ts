@@ -9,7 +9,7 @@ export type ProductListItem = {
   image: string;
   rating: number;
   sold: number;
-  defaultSkuId?: number;
+  productIdNumber?: number;
 };
 
 export type ProductListCategory = {

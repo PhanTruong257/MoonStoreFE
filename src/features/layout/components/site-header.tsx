@@ -45,7 +45,7 @@ type SiteHeaderProps = {
 
 export const SiteHeader = ({
   brand,
-  navLinks,
+  navLinks: _navLinks,
   search,
   categoryLink,
   categoryItems,

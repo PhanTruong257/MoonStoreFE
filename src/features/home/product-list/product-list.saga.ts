@@ -50,11 +50,9 @@ function* handleProductListRequested(
       products: Array<{
         id: number;
         name: string;
-        defaultSku: {
-          price: number;
-          imageUrl: string;
-          stock: number;
-        } | null;
+        basePrice: number;
+        stock: number;
+        imageUrl: string;
       }>;
       page: number;
       limit: number;
@@ -63,16 +61,16 @@ function* handleProductListRequested(
     };
 
     const mapped: ProductListItem[] = productResponse.products.map((item) => {
-      const price = Number(item.defaultSku?.price ?? 0);
+      const price = Number(item.basePrice ?? 0);
       return {
         id: String(item.id),
         name: item.name,
         price,
         oldPrice: Math.round(price * 1.2),
-        image: item.defaultSku?.imageUrl ?? "/images/products/product-1.jpg",
+        image: item.imageUrl ?? "/images/products/product-1.jpg",
         rating: 4,
-        sold: Math.max(10, Math.round((item.defaultSku?.stock ?? 0) / 2)),
-        defaultSkuId: item.defaultSku?.id,
+        sold: Math.max(10, Math.round((item.stock ?? 0) / 2)),
+        productIdNumber: item.id,
       };
     });
 

@@ -23,7 +23,7 @@ function* handleFlashSaleInit() {
     ];
 
     const products: FlashProduct[] = productList.map((item) => {
-      const price = Number(item.defaultSku?.price ?? 0);
+      const price = Number(item.basePrice ?? 0);
 
       return {
         id: String(item.id),
@@ -31,10 +31,10 @@ function* handleFlashSaleInit() {
         price,
         oldPrice: Math.round(price * 1.2),
         categoryId: String(item.categoryId),
-        image: item.defaultSku?.imageUrl ?? "/images/products/product-1.jpg",
+        image: item.imageUrl ?? "/images/products/product-1.jpg",
         rating: 4,
-        sold: Math.max(10, (item.defaultSku?.stock ?? 0) / 2),
-        defaultSkuId: item.defaultSku?.id,
+        sold: Math.max(10, (item.stock ?? 0) / 2),
+        productIdNumber: item.id,
       };
     });
 
@@ -53,10 +53,12 @@ function* handleAddToCart(
 ) {
   try {
     const user = getStoredUser();
+    if (!action.payload.productIdNumber) {
+      throw new Error("Missing product id");
+    }
     yield call(addToCartApi, {
       userId: user?.id,
-      skuId: action.payload.skuId,
-      productName: action.payload.productName,
+      productId: action.payload.productIdNumber,
       quantity: 1,
     });
 

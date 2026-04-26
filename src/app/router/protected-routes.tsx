@@ -1,12 +1,15 @@
 import type { RouteObject } from "react-router-dom";
 
-import { RequireAuth } from "@/app/router/route-guards";
+import { RequireAuth, RequireSeller } from "@/app/router/route-guards";
 import { AccountPage } from "@/pages/account/account-page";
 import { CartPage } from "@/pages/cart/cart-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
-import { SellerHubPage } from "@/pages/seller/seller-hub-page";
+import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
+import { SellerOrderDetailPage } from "@/pages/seller/seller-order-detail";
+import { SellerOrdersPage } from "@/pages/seller/seller-orders";
+import { SellerProductEditPage } from "@/pages/seller/seller-product-edit";
 import { SellerProductNewPage } from "@/pages/seller/seller-product-new-page";
-import { SellerProductsPage } from "@/pages/seller/seller-products-page";
+import { SellerProductsPage } from "@/pages/seller/seller-products";
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -28,9 +31,29 @@ export const protectedRoutes: RouteObject[] = [
         handle: { title: "Checkout" },
       },
       {
+        path: "/seller/products/new",
+        element: <SellerProductNewPage />,
+        handle: { title: "Upload Product" },
+      },
+    ],
+  },
+  {
+    element: <RequireSeller />,
+    children: [
+      {
         path: "/seller",
-        element: <SellerHubPage />,
-        handle: { title: "Seller Hub" },
+        element: <SellerDashboardPage />,
+        handle: { title: "Seller Dashboard" },
+      },
+      {
+        path: "/seller/orders",
+        element: <SellerOrdersPage />,
+        handle: { title: "Seller Orders" },
+      },
+      {
+        path: "/seller/orders/:groupId",
+        element: <SellerOrderDetailPage />,
+        handle: { title: "Order Detail" },
       },
       {
         path: "/seller/products",
@@ -38,9 +61,9 @@ export const protectedRoutes: RouteObject[] = [
         handle: { title: "Manage Products" },
       },
       {
-        path: "/seller/products/new",
-        element: <SellerProductNewPage />,
-        handle: { title: "Upload Product" },
+        path: "/seller/products/:productId/edit",
+        element: <SellerProductEditPage />,
+        handle: { title: "Edit Product" },
       },
     ],
   },

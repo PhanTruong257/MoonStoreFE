@@ -24,3 +24,26 @@ export const RequireAuth = () => {
 
   return <Outlet />;
 };
+
+export const RequireSeller = () => {
+  const location = useLocation();
+  const user = getStoredUser();
+
+  if (!user) {
+    return (
+      <Navigate
+        to={appConfig.loginPath}
+        replace
+        state={{
+          from: `${location.pathname}${location.search}${location.hash}`,
+        }}
+      />
+    );
+  }
+
+  if (user.role !== "seller") {
+    return <Navigate to="/seller/products/new" replace />;
+  }
+
+  return <Outlet />;
+};

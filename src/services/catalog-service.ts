@@ -6,17 +6,20 @@ export type CatalogCategory = {
   parentId?: number | null;
 };
 
-export type CatalogSku = {
+export type CatalogOption = {
   id: number;
-  price: number;
-  stock: number;
-  imageUrl: string;
-  attributes?: Array<{ name: string; value: string }>;
+  name: string;
+  priceDelta: number;
+  position: number;
 };
 
 export type CatalogOptionGroup = {
+  id: number;
   name: string;
-  options: Array<{ value: string }>;
+  position: number;
+  required: boolean;
+  multiSelect: boolean;
+  options: CatalogOption[];
 };
 
 export type CatalogProduct = {
@@ -28,7 +31,9 @@ export type CatalogProduct = {
   categoryName: string;
   brandId: number;
   brandName: string;
-  defaultSku: CatalogSku | null;
+  basePrice: number;
+  stock: number;
+  imageUrl: string;
 };
 
 export type CatalogProductListResponse = {
@@ -45,17 +50,10 @@ export type CatalogProductListParams = {
   limit?: number;
 };
 
-export type CatalogProductDetail = {
-  id: number;
-  name: string;
-  description: string | null;
-  status: string;
-  categoryId: number;
-  categoryName: string;
-  brandId: number;
-  brandName: string;
-  skus: CatalogSku[];
-  optionGroups?: CatalogOptionGroup[];
+export type CatalogProductDetail = CatalogProduct & {
+  averageRating: number;
+  totalReviews: number;
+  optionGroups: CatalogOptionGroup[];
 };
 
 export const fetchCategories = async () => {

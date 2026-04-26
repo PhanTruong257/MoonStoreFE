@@ -123,7 +123,7 @@ export const FlashSaleSection = ({
               }
               actionLabel="Add To Cart"
               onAction={() => {
-                addToCart(product.id, product.defaultSkuId, product.name);
+                addToCart(product.id, product.productIdNumber, product.name);
               }}
               className={styles.productCard}
               imageWrapClassName={styles.imageWrap}

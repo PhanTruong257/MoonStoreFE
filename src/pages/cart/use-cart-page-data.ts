@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getStoredUser } from "@/features/auth/auth-storage";
+import { useVoucher } from "@/features/vouchers";
 import {
   fetchCartByUser,
   removeCartItem,
@@ -13,17 +14,19 @@ type CartItem = {
   price: number;
   quantity: number;
   image: string;
+  selectedOptions: Array<{
+    groupName: string;
+    optionName: string;
+    priceDelta: number;
+  }>;
 };
 
 const CART_STORAGE_KEY = "cart_items";
-
 const SHIPPING_FEE = 0;
 
 export const useCartPageData = () => {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [couponCode, setCouponCode] = useState("");
-  const [couponMessage, setCouponMessage] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const voucherState = useVoucher();
 
   useEffect(() => {
     let isMounted = true;
@@ -41,10 +44,15 @@ export const useCartPageData = () => {
 
         const nextItems = cart.items.map((item) => ({
           id: item.id,
-          name: item.sku.product.name,
-          price: Number(item.sku.price),
+          name: item.product.name,
+          price: Number(item.unitPrice),
           quantity: item.quantity,
-          image: item.sku.imageUrl,
+          image: item.product.imageUrl,
+          selectedOptions: item.selectedOptions.map((opt) => ({
+            groupName: opt.groupName,
+            optionName: opt.optionName,
+            priceDelta: opt.priceDelta,
+          })),
         }));
 
         setItems(nextItems);
@@ -73,11 +81,7 @@ export const useCartPageData = () => {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [items]);
 
-  const discountAmount = useMemo(() => {
-    return Math.round((subTotal * discountPercent) / 100);
-  }, [discountPercent, subTotal]);
-
-  const total = subTotal - discountAmount + SHIPPING_FEE;
+  const total = Math.max(0, subTotal - voucherState.discountAmount + SHIPPING_FEE);
 
   const updateQuantity = (itemId: number, quantity: number) => {
     setItems((prev) =>
@@ -101,36 +105,20 @@ export const useCartPageData = () => {
   };
 
   const applyCoupon = () => {
-    const code = couponCode.trim().toUpperCase();
-
-    if (code === "MOON10") {
-      setDiscountPercent(10);
-      setCouponMessage("Coupon applied: 10% off");
-      return;
-    }
-
-    if (code === "MOON20") {
-      setDiscountPercent(20);
-      setCouponMessage("Coupon applied: 20% off");
-      return;
-    }
-
-    setDiscountPercent(0);
-    setCouponMessage("Invalid coupon code");
+    voucherState.apply(subTotal);
   };
 
   return {
-    couponCode,
-    couponMessage,
-    discountAmount,
-    discountPercent,
+    couponCode: voucherState.code,
+    couponMessage: voucherState.message,
+    discountAmount: voucherState.discountAmount,
     items,
     shippingFee: SHIPPING_FEE,
     subTotal,
     total,
     applyCoupon,
     removeItem,
-    setCouponCode,
+    setCouponCode: voucherState.setCode,
     updateQuantity,
   };
 };

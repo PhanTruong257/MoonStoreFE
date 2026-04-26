@@ -1,4 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { getStoredUser } from "@/features/auth/auth-storage";
+import { useVoucher } from "@/features/vouchers";
+import { fetchCartByUser } from "@/services/cart-service";
+import { createOrder } from "@/services/orders-service";
 
 type CheckoutItem = {
   id: string;
@@ -6,6 +11,11 @@ type CheckoutItem = {
   price: number;
   quantity: number;
   image: string;
+  selectedOptions: Array<{
+    groupName: string;
+    optionName: string;
+    priceDelta: number;
+  }>;
 };
 
 type BillingField =
@@ -18,23 +28,6 @@ type BillingField =
   | "email";
 
 type BillingForm = Record<BillingField, string>;
-
-const checkoutItems: CheckoutItem[] = [
-  {
-    id: "checkout-1",
-    name: "LCD Monitor",
-    price: 650,
-    quantity: 1,
-    image: "/images/products/product-3.jpg",
-  },
-  {
-    id: "checkout-2",
-    name: "H1 Gamepad",
-    price: 550,
-    quantity: 2,
-    image: "/images/products/product-1.jpg",
-  },
-];
 
 const SHIPPING_FEE = 0;
 
@@ -49,51 +42,81 @@ const initialBillingForm: BillingForm = {
 };
 
 export const useCheckoutPageData = () => {
+  const [items, setItems] = useState<CheckoutItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [billing, setBilling] = useState<BillingForm>(initialBillingForm);
   const [paymentMethod, setPaymentMethod] = useState<"bank" | "cod">("cod");
-  const [couponCode, setCouponCode] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [couponMessage, setCouponMessage] = useState("");
   const [saveInfo, setSaveInfo] = useState(true);
   const [orderMessage, setOrderMessage] = useState("");
 
-  const subTotal = useMemo(() => {
-    return checkoutItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
+  const voucherState = useVoucher();
+
+  useEffect(() => {
+    let isMounted = true;
+    const user = getStoredUser();
+
+    if (!user) {
+      setItems([]);
+      setIsLoading(false);
+      return;
+    }
+
+    const loadCart = async () => {
+      try {
+        const cart = await fetchCartByUser(user.id);
+        if (!isMounted) {
+          return;
+        }
+
+        setItems(
+          cart.items.map((item) => ({
+            id: String(item.id),
+            name: item.product.name,
+            price: Number(item.unitPrice),
+            quantity: item.quantity,
+            image: item.product.imageUrl,
+            selectedOptions: item.selectedOptions.map((opt) => ({
+              groupName: opt.groupName,
+              optionName: opt.optionName,
+              priceDelta: opt.priceDelta,
+            })),
+          })),
+        );
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+        setItems([]);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadCart();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const discountAmount = useMemo(() => {
-    return Math.round((subTotal * discountPercent) / 100);
-  }, [discountPercent, subTotal]);
+  const subTotal = useMemo(() => {
+    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }, [items]);
 
-  const total = subTotal - discountAmount + SHIPPING_FEE;
+  const total = Math.max(0, subTotal - voucherState.discountAmount + SHIPPING_FEE);
 
   const setBillingField = (field: BillingField, value: string) => {
     setBilling((prev) => ({ ...prev, [field]: value }));
   };
 
   const applyCoupon = () => {
-    const code = couponCode.trim().toUpperCase();
-
-    if (code === "MOON10") {
-      setDiscountPercent(10);
-      setCouponMessage("Coupon applied: 10% off");
-      return;
-    }
-
-    if (code === "MOON20") {
-      setDiscountPercent(20);
-      setCouponMessage("Coupon applied: 20% off");
-      return;
-    }
-
-    setDiscountPercent(0);
-    setCouponMessage("Invalid coupon code");
+    voucherState.apply(subTotal);
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (
       !billing.firstName ||
       !billing.streetAddress ||
@@ -105,29 +128,56 @@ export const useCheckoutPageData = () => {
       return;
     }
 
-    setOrderMessage(
-      paymentMethod === "cod"
-        ? "Order placed successfully. Payment method: Cash on delivery."
-        : "Order placed successfully. Payment method: Bank transfer.",
-    );
+    if (items.length === 0) {
+      setOrderMessage("Cart is empty.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await createOrder({
+        shippingFee: SHIPPING_FEE,
+        voucherCode: voucherState.voucher?.code,
+        paymentMethod: paymentMethod === "cod" ? "COD" : "BANK",
+        shippingAddress: {
+          ...billing,
+          saveInfo,
+        },
+      });
+
+      setOrderMessage(
+        paymentMethod === "cod"
+          ? "Order placed successfully. Payment method: Cash on delivery."
+          : "Order placed successfully. Payment method: Bank transfer.",
+      );
+      setItems([]);
+      voucherState.reset();
+      window.dispatchEvent(new CustomEvent("cart:updated"));
+    } catch {
+      setOrderMessage("Unable to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {
     billing,
-    checkoutItems,
-    couponCode,
-    couponMessage,
-    discountAmount,
+    checkoutItems: items,
+    couponCode: voucherState.code,
+    couponMessage: voucherState.message,
+    discountAmount: voucherState.discountAmount,
     paymentMethod,
     saveInfo,
     shippingFee: SHIPPING_FEE,
     subTotal,
     total,
     orderMessage,
+    isLoading,
+    isSubmitting,
     applyCoupon,
     placeOrder,
     setBillingField,
-    setCouponCode,
+    setCouponCode: voucherState.setCode,
     setPaymentMethod,
     setSaveInfo,
   };

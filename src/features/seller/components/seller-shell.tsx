@@ -62,10 +62,19 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Overview
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/seller/orders"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Orders
             </NavLink>
             <NavLink
               to="/seller/products"
+              end
               className={({ isActive }) =>
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }

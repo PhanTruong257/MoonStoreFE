@@ -32,6 +32,8 @@ export const CheckoutPage = () => {
     subTotal,
     total,
     orderMessage,
+    isLoading,
+    isSubmitting,
     applyCoupon,
     placeOrder,
     setBillingField,
@@ -80,6 +82,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("firstName", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -92,6 +95,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("companyName", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -104,6 +108,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("streetAddress", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -116,6 +121,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("apartment", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -128,6 +134,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("city", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -140,6 +147,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("phone", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -153,6 +161,7 @@ export const CheckoutPage = () => {
                   onChange={(event) =>
                     setBillingField("email", event.target.value)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -162,6 +171,7 @@ export const CheckoutPage = () => {
                 type="checkbox"
                 checked={saveInfo}
                 onChange={(event) => setSaveInfo(event.target.checked)}
+                disabled={isSubmitting}
               />
               Save this information for faster check-out next time
             </label>
@@ -209,6 +219,7 @@ export const CheckoutPage = () => {
                     name="payment"
                     checked={paymentMethod === "bank"}
                     onChange={() => setPaymentMethod("bank")}
+                    disabled={isSubmitting}
                   />
                   Bank
                 </label>
@@ -227,6 +238,7 @@ export const CheckoutPage = () => {
                     name="payment"
                     checked={paymentMethod === "cod"}
                     onChange={() => setPaymentMethod("cod")}
+                    disabled={isSubmitting}
                   />
                   Cash on delivery
                 </label>
@@ -238,11 +250,13 @@ export const CheckoutPage = () => {
                 placeholder={CHECKOUT_TEXT.couponPlaceholder}
                 value={couponCode}
                 onChange={(event) => setCouponCode(event.target.value)}
+                disabled={isSubmitting}
               />
               <SharedButton
                 variant="primary"
                 label={CHECKOUT_TEXT.applyCouponLabel}
                 onClick={applyCoupon}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -255,6 +269,7 @@ export const CheckoutPage = () => {
               variant="primary"
               onClick={placeOrder}
               label={CHECKOUT_TEXT.placeOrderLabel}
+              disabled={isLoading || isSubmitting || checkoutItems.length === 0}
             />
 
             {orderMessage ? (

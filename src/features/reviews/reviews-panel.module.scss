@@ -1,0 +1,86 @@
+.panel {
+  margin-top: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.summary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.formBlock {
+  padding: 16px;
+  border-radius: 12px;
+  background: #f9fafb;
+  margin-bottom: 18px;
+}
+
+.ratingRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.noEligible {
+  padding: 12px;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.empty {
+  padding: 20px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.reviewItem {
+  padding: 14px 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.reviewItem:last-child {
+  border-bottom: 0;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.reviewUser {
+  font-weight: 600;
+  color: #111827;
+}
+
+.reviewComment {
+  color: #374151;
+  font-size: 14px;
+  margin: 4px 0 0;
+}

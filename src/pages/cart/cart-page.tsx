@@ -74,7 +74,16 @@ export const CartPage = () => {
                 x
               </button>
               <img src={item.image} alt={item.name} />
-              <span>{item.name}</span>
+              <div>
+                <span>{item.name}</span>
+                {item.selectedOptions.length > 0 ? (
+                  <small className={styles.optionLine}>
+                    {item.selectedOptions
+                      .map((opt) => `${opt.groupName}: ${opt.optionName}`)
+                      .join(" · ")}
+                  </small>
+                ) : null}
+              </div>
             </div>
 
             <span>{formatMoney(item.price)}</span>

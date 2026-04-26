@@ -7,6 +7,13 @@ import { authReducer } from "@/features/auth/auth-slice";
 import { homeCategoryReducer } from "@/features/home/category/category.slice";
 import { flashSaleReducer } from "@/features/home/flash-sale/flash-sale.slice";
 import { productListReducer } from "@/features/home/product-list/product-list.slice";
+import { reviewsReducer } from "@/features/reviews/reviews.slice";
+import { sellerDashboardReducer } from "@/features/seller/seller-dashboard/seller-dashboard.slice";
+import { sellerOrderDetailReducer } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
+import { sellerOrdersReducer } from "@/features/seller/seller-orders/seller-orders.slice";
+import { sellerProductEditReducer } from "@/features/seller/seller-product-edit/seller-product-edit.slice";
+import { sellerProductsReducer } from "@/features/seller/seller-products/seller-products.slice";
+import { vouchersReducer } from "@/features/vouchers/vouchers.slice";
 
 type AppState = {
   isBootstrapped: boolean;
@@ -35,6 +42,13 @@ export const store = configureStore({
     homeCategory: homeCategoryReducer,
     flashSale: flashSaleReducer,
     productList: productListReducer,
+    reviews: reviewsReducer,
+    sellerDashboard: sellerDashboardReducer,
+    sellerOrderDetail: sellerOrderDetailReducer,
+    sellerOrders: sellerOrdersReducer,
+    sellerProductEdit: sellerProductEditReducer,
+    sellerProducts: sellerProductsReducer,
+    vouchers: vouchersReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

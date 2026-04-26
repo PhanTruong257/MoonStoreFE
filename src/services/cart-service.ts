@@ -2,32 +2,39 @@ import { http } from "@/app/api/http";
 
 export type AddToCartPayload = {
   userId?: number;
-  skuId?: number;
-  productId?: number;
-  productName?: string;
+  productId: number;
+  optionIds?: number[];
   quantity?: number;
 };
 
 export type AddToCartResponse = {
   cartId: number;
   itemId: number;
-  skuId: number;
+  productId: number;
   quantity: number;
+};
+
+export type CartItemSelectedOption = {
+  optionId: number;
+  groupName: string;
+  optionName: string;
+  priceDelta: number;
+};
+
+export type CartItemProduct = {
+  id: number;
+  name: string;
+  basePrice: number;
+  stock: number;
+  imageUrl: string;
 };
 
 export type CartItemResponse = {
   id: number;
   quantity: number;
-  sku: {
-    id: number;
-    price: number;
-    stock: number;
-    imageUrl: string;
-    product: {
-      id: number;
-      name: string;
-    };
-  };
+  unitPrice: number;
+  product: CartItemProduct;
+  selectedOptions: CartItemSelectedOption[];
 };
 
 export type CartResponse = {

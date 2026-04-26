@@ -12,6 +12,19 @@ import {
 import type { CatalogCategory } from "@/services/catalog-service";
 import { fetchCategories } from "@/services/catalog-service";
 import { createProduct, createSellerProfile } from "@/services/seller-service";
+import type { SellerProductOptionGroupInput } from "@/services/seller-service";
+
+const safeParseGroups = (raw: string): SellerProductOptionGroupInput[] | undefined => {
+  if (!raw.trim()) {
+    return undefined;
+  }
+  try {
+    const parsed = JSON.parse(raw) as SellerProductOptionGroupInput[];
+    return Array.isArray(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+};
 
 export const SellerProductNewPage = () => {
   const user = getStoredUser();
@@ -23,10 +36,10 @@ export const SellerProductNewPage = () => {
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState(1);
   const [brandId, setBrandId] = useState(1);
-  const [price, setPrice] = useState(0);
+  const [basePrice, setBasePrice] = useState(0);
   const [stock, setStock] = useState(10);
   const [imageUrl, setImageUrl] = useState("/images/products/product-1.jpg");
-  const [skuCode, setSkuCode] = useState("");
+  const [optionGroupsJson, setOptionGroupsJson] = useState("");
   const [status, setStatus] = useState("active");
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -112,17 +125,19 @@ export const SellerProductNewPage = () => {
     setError("");
 
     try {
+      const optionGroups = safeParseGroups(optionGroupsJson);
+
       const response = await createProduct({
         userId: user.id,
         name,
         description,
         categoryId,
         brandId,
-        price,
+        basePrice,
         stock,
         imageUrl,
-        skuCode,
         status,
+        optionGroups,
       });
 
       const current = loadSellerProducts(user.id);
@@ -130,10 +145,9 @@ export const SellerProductNewPage = () => {
         id: response.product.id,
         name: response.product.name,
         status: response.product.status,
-        price: response.sku.price,
-        stock: response.sku.stock,
-        imageUrl: response.sku.imageUrl,
-        skuCode: response.sku.skuCode,
+        basePrice: response.product.basePrice,
+        stock: response.product.stock,
+        imageUrl: response.product.imageUrl,
         createdAt: new Date().toISOString(),
       };
       saveSellerProducts(user.id, [nextItem, ...current]);
@@ -197,25 +211,14 @@ export const SellerProductNewPage = () => {
           void handleSubmit();
         }}
       >
-        <div className={styles.fieldRow}>
-          <div className={styles.field}>
-            <label htmlFor="name">Product name</label>
-            <input
-              id="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="iPhone 17 Pro Max"
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="skuCode">SKU code</label>
-            <input
-              id="skuCode"
-              value={skuCode}
-              onChange={(event) => setSkuCode(event.target.value)}
-              placeholder="IP17PM-256"
-            />
-          </div>
+        <div className={styles.field}>
+          <label htmlFor="name">Product name</label>
+          <input
+            id="name"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="iPhone 17 Pro Max"
+          />
         </div>
 
         <div className={styles.field}>
@@ -261,12 +264,12 @@ export const SellerProductNewPage = () => {
 
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor="price">Price</label>
+            <label htmlFor="basePrice">Base price</label>
             <input
-              id="price"
+              id="basePrice"
               type="number"
-              value={price}
-              onChange={(event) => setPrice(Number(event.target.value))}
+              value={basePrice}
+              onChange={(event) => setBasePrice(Number(event.target.value))}
             />
           </div>
           <div className={styles.field}>
@@ -300,6 +303,17 @@ export const SellerProductNewPage = () => {
               <option value="draft">Draft</option>
             </select>
           </div>
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="optionGroupsJson">Option groups (JSON, optional)</label>
+          <textarea
+            id="optionGroupsJson"
+            value={optionGroupsJson}
+            onChange={(event) => setOptionGroupsJson(event.target.value)}
+            placeholder='[{"name":"Size","required":true,"multiSelect":false,"options":[{"name":"S","priceDelta":0},{"name":"M","priceDelta":0}]}]'
+            rows={6}
+          />
         </div>
 
         {categoriesError ? (

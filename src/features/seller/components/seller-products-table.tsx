@@ -25,9 +25,9 @@ export const SellerProductsTable = ({ items }: SellerProductsTableProps) => {
           <img src={item.imageUrl} alt={item.name} />
           <div>
             <strong>{item.name}</strong>
-            <p>SKU: {item.skuCode}</p>
+            <p>ID: {item.id}</p>
           </div>
-          <span>${item.price.toFixed(0)}</span>
+          <span>${item.basePrice.toFixed(0)}</span>
           <span>{item.stock} units</span>
           <span
             className={`${styles.badge} ${

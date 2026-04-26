@@ -2,10 +2,9 @@ export type SellerProductItem = {
   id: number;
   name: string;
   status: string;
-  price: number;
+  basePrice: number;
   stock: number;
   imageUrl: string;
-  skuCode: string;
   createdAt: string;
 };
 

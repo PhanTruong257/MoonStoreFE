@@ -15,7 +15,7 @@ type Countdown = {
   seconds: number;
 };
 
-export type FlashProduct = HomeProduct & { defaultSkuId?: number };
+export type FlashProduct = HomeProduct & { productIdNumber?: number };
 
 type FlashSaleInitPayload = {
   categories: HomeCategory[];
@@ -24,7 +24,7 @@ type FlashSaleInitPayload = {
 
 type AddToCartPayload = {
   productId: string;
-  skuId?: number;
+  productIdNumber?: number;
   productName: string;
 };
 
@@ -130,6 +130,7 @@ const flashSaleSlice = createSlice({
       state,
       action: PayloadAction<AddToCartPayload>,
     ) => {
+      void state;
       void action.payload;
     },
     flashSaleAddToCartSucceeded: (

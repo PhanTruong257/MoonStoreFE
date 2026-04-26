@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
 
 import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
+import { ReviewsPanel } from "@/features/reviews";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
@@ -23,25 +20,22 @@ export const ProductDetailPage = () => {
     quantity,
     relatedProducts,
     selectedImage,
-    selectedOptions,
-    selectedSku,
+    unitPrice,
+    missingRequiredGroups,
     addSelectedToCart,
     decreaseQuantity,
     increaseQuantity,
-    setSelectedOption,
+    isOptionSelected,
+    setOption,
     setSelectedImage,
     toggleWishlist,
   } = useProductDetailData();
 
   const navigate = useNavigate();
-  const effectivePrice = selectedSku
-    ? Number(selectedSku.price)
-    : (product?.price ?? 0);
-  const fallbackOldPrice = Math.round(effectivePrice * 1.15);
-  const oldPrice = product?.oldPrice ?? fallbackOldPrice;
+  const oldPrice = product ? Math.round(unitPrice * 1.15) : 0;
   const discountPercent =
     oldPrice > 0
-      ? Math.round(((oldPrice - effectivePrice) / oldPrice) * 100)
+      ? Math.round(((oldPrice - unitPrice) / oldPrice) * 100)
       : 0;
 
   if (!product && !isLoading) {
@@ -103,6 +97,8 @@ export const ProductDetailPage = () => {
     );
   }
 
+  const canAddToCart = missingRequiredGroups.length === 0;
+
   return (
     <main className={styles.page}>
       <SiteHeader
@@ -162,7 +158,7 @@ export const ProductDetailPage = () => {
 
             <div className={styles.priceCard}>
               <div className={styles.priceMain}>
-                <strong>{formatMoney(effectivePrice)}</strong>
+                <strong>{formatMoney(unitPrice)}</strong>
                 {discountPercent > 0 ? (
                   <span className={styles.priceBadge}>-{discountPercent}%</span>
                 ) : null}
@@ -174,7 +170,7 @@ export const ProductDetailPage = () => {
               <div className={styles.installment}>
                 Tra gop tu{" "}
                 <strong>
-                  {formatMoney(Math.max(effectivePrice / 8, 0))}/thang
+                  {formatMoney(Math.max(unitPrice / 8, 0))}/thang
                 </strong>
               </div>
             </div>
@@ -182,43 +178,45 @@ export const ProductDetailPage = () => {
             <p className={styles.description}>{product.description}</p>
 
             <div className={styles.optionsPanel}>
-              {(product.optionGroups ?? []).map((group) => {
+              {product.optionGroups.map((group) => {
                 const isColor = group.name.toLowerCase() === "color";
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const selectedValue = selectedOptions[group.name];
 
                 return (
-                  <div key={group.name} className={styles.optionGroup}>
+                  <div key={group.id} className={styles.optionGroup}>
                     <div className={styles.optionLabel}>
-                      <strong>{group.name}</strong>
-                      {selectedValue ? <span>{selectedValue}</span> : null}
+                      <strong>
+                        {group.name}
+                        {group.required ? " *" : ""}
+                      </strong>
+                      {group.multiSelect ? <em>(chon nhieu)</em> : null}
                     </div>
                     <div className={styles.optionWrap}>
                       {group.options.map((option) => {
-                        const isSelected = option.value === selectedValue;
+                        const isSelected = isOptionSelected(group.id, option.id);
                         const buttonClass = isColor
                           ? `${styles.optionButton} ${styles.optionButtonSwatch} ${isSelected ? styles.optionSwatchActive : ""}`
                           : `${styles.optionButton} ${isSelected ? styles.optionActive : ""}`;
 
                         return (
                           <button
-                            key={option.value}
+                            key={option.id}
                             type="button"
                             className={buttonClass}
-                            onClick={() =>
-                              setSelectedOption(group.name, option.value)
-                            }
-                            aria-label={`Select ${option.value} ${group.name}`}
+                            onClick={() => setOption(group, option.id)}
+                            aria-label={`Select ${option.name} ${group.name}`}
                           >
                             {isColor ? (
                               <span
                                 className={styles.optionSwatch}
-                                style={{
-                                  background: option.swatch ?? "#8abdcf",
-                                }}
+                                style={{ background: option.swatch ?? "#8abdcf" }}
                               />
                             ) : (
-                              option.value
+                              <span>
+                                {option.name}
+                                {option.priceDelta !== 0
+                                  ? ` (+${formatMoney(option.priceDelta)})`
+                                  : ""}
+                              </span>
                             )}
                           </button>
                         );
@@ -228,6 +226,13 @@ export const ProductDetailPage = () => {
                 );
               })}
             </div>
+
+            {missingRequiredGroups.length > 0 ? (
+              <p className={styles.missingHint}>
+                Vui long chon:{" "}
+                {missingRequiredGroups.map((g) => g.name).join(", ")}
+              </p>
+            ) : null}
 
             <div className={styles.buyRow}>
               <div className={styles.quantityBox}>
@@ -243,6 +248,7 @@ export const ProductDetailPage = () => {
               <button
                 type="button"
                 className={styles.buyNowButton}
+                disabled={!canAddToCart}
                 onClick={() => {
                   void addSelectedToCart().then((ok) => {
                     if (ok) {
@@ -257,6 +263,7 @@ export const ProductDetailPage = () => {
               <button
                 type="button"
                 className={styles.buyNowButton}
+                disabled={!canAddToCart}
                 onClick={() => {
                   void addSelectedToCart();
                 }}
@@ -285,6 +292,8 @@ export const ProductDetailPage = () => {
             </div>
           </aside>
         </div>
+
+        <ReviewsPanel productId={product.rawId} />
 
         <section className={styles.relatedSection}>
           <header>
