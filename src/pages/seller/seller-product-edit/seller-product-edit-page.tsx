@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   Button,
   Form,
@@ -8,6 +7,7 @@ import {
   Select,
   Skeleton,
 } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./seller-product-edit-page.module.scss";
 import { useSellerProductEdit } from "./use-seller-product-edit";

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Skeleton } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./admin-dashboard-page.module.scss";
 import { useAdminDashboard } from "./use-admin-dashboard";

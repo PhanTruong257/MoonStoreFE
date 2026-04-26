@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Modal, Skeleton, Tag } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./seller-order-detail-page.module.scss";
 import { useSellerOrderDetail } from "./use-seller-order-detail";
@@ -49,7 +49,11 @@ export const SellerOrderDetailPage = () => {
     return (
       <SellerShell title="Order detail" subtitle={error || "Order not found."}>
         <div className={styles.card}>
-          <Button onClick={() => navigate(SELLER_ROUTES.orders)}>
+          <Button
+            onClick={() => {
+              void navigate(SELLER_ROUTES.orders);
+            }}
+          >
             Back to orders
           </Button>
         </div>

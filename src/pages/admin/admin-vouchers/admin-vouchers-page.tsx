@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Button,
   DatePicker,
@@ -12,6 +11,7 @@ import {
   Tag,
 } from "antd";
 import dayjs, { type Dayjs } from "dayjs";
+import { useState } from "react";
 
 import styles from "./admin-vouchers-page.module.scss";
 import { useAdminVouchers } from "./use-admin-vouchers";
@@ -87,7 +87,8 @@ export const AdminVouchersPage = () => {
     setIsOpen(false);
   };
 
-  const isExpired = (iso: string) => new Date(iso).getTime() < Date.now();
+  const [nowMs] = useState(() => Date.now());
+  const isExpired = (iso: string) => new Date(iso).getTime() < nowMs;
 
   return (
     <AdminShell

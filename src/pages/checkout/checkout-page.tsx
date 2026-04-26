@@ -298,7 +298,9 @@ export const CheckoutPage = () => {
             <SharedButton
               className={styles.placeOrderButton}
               variant="primary"
-              onClick={placeOrder}
+              onClick={() => {
+                void placeOrder();
+              }}
               label={CHECKOUT_TEXT.placeOrderLabel}
               disabled={isLoading || isSubmitting || checkoutItems.length === 0}
             />

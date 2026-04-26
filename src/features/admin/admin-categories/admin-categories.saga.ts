@@ -1,9 +1,10 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { adminCategoriesActions } from "./admin-categories.slice";
 
+import { extractApiErrorMessage } from "@/app/utils/error-message";
 import {
   createAdminCategory,
   deleteAdminCategory,
@@ -31,10 +32,8 @@ function* handleCreate(action: PayloadAction<CreateAdminCategoryPayload>) {
     void message.success("Category created.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to create category.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to create category.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }
@@ -48,10 +47,8 @@ function* handleUpdate(
     void message.success("Category updated.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to update category.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to update category.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }
@@ -63,10 +60,8 @@ function* handleDelete(action: PayloadAction<number>) {
     void message.success("Category deleted.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to delete category.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to delete category.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }

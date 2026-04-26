@@ -27,7 +27,7 @@ export const Breadcrumb = ({
         );
 
         return (
-          <span key={`${index}-${String(item.label)}`}>
+          <span key={`crumb-${index}`}>
             {content}
             {index < items.length - 1 ? <span>{separator}</span> : null}
           </span>

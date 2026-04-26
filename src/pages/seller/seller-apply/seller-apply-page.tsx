@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Alert, Button, Form, Input, Skeleton, Tag } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./seller-apply-page.module.scss";
 import { useSellerApply } from "./use-seller-apply";

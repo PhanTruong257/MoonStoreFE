@@ -4,7 +4,6 @@ import styles from "./admin-users-page.module.scss";
 import {
   ADMIN_USER_ROLE_OPTIONS,
   useAdminUsers,
-  type RoleFilter,
 } from "./use-admin-users";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
@@ -40,7 +39,7 @@ export const AdminUsersPage = () => {
       actions={
         <Segmented
           value={roleFilter}
-          onChange={(value) => setRoleFilter(value as RoleFilter)}
+          onChange={(value) => setRoleFilter(value)}
           options={ADMIN_USER_ROLE_OPTIONS.map((role) => ({
             label: role.toUpperCase(),
             value: role,

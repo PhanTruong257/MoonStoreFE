@@ -33,16 +33,19 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    createRequested: (state, _action: PayloadAction<{ name: string }>) => {
+    createRequested: (state, action: PayloadAction<{ name: string }>) => {
+      void action.payload;
       state.isSubmitting = true;
     },
     updateRequested: (
       state,
-      _action: PayloadAction<{ id: number; name: string }>,
+      action: PayloadAction<{ id: number; name: string }>,
     ) => {
+      void action.payload;
       state.isSubmitting = true;
     },
-    deleteRequested: (state, _action: PayloadAction<number>) => {
+    deleteRequested: (state, action: PayloadAction<number>) => {
+      void action.payload;
       state.isSubmitting = true;
     },
     actionSucceeded: (state) => {

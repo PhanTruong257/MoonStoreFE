@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Button, Empty, Popconfirm, Skeleton, Tag } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./order-detail-page.module.scss";
 import { useOrderDetail } from "./use-order-detail";

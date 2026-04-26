@@ -32,12 +32,24 @@ export const useLogin = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      const state = location.state as { from?: string } | null;
-      const target =
-        state?.from && state.from !== "/login" ? state.from : "/home";
-      void navigate(target, { replace: true });
+    if (!user) {
+      return;
     }
+
+    const state = location.state as { from?: string } | null;
+    const fromPath =
+      state?.from && state.from !== "/login" ? state.from : null;
+
+    let target: string;
+    if (user.role === "admin") {
+      target = "/admin";
+    } else if (user.role === "seller") {
+      target = "/seller";
+    } else {
+      target = fromPath ?? "/home";
+    }
+
+    void navigate(target, { replace: true });
   }, [user, navigate, location.state]);
 
   const submit = () => {

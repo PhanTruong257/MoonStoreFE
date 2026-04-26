@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
+ 
 import type { MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { toCategorySlug } from "@/app/utils/category-slug";
 import { ProductCard } from "@/component/product-card/product-card";
+import { getStoredUser } from "@/features/auth/auth-storage";
 import styles from "@/features/home/product-list/product-list-section.module.scss";
 import { useProductList } from "@/features/home/product-list/use-product-list";
-import { getStoredUser } from "@/features/auth/auth-storage";
 import { addToCart } from "@/services/cart-service";
 
 type ProductListSectionProps = {

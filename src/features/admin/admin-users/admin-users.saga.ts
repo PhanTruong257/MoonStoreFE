@@ -1,6 +1,6 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { call, put, select, takeLatest } from "redux-saga/effects";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { adminUsersActions, type RoleFilter } from "./admin-users.slice";
 

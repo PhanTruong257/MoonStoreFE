@@ -1,8 +1,8 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { appConfig } from "@/app/config/app-config";
 import type { RootState } from "@/app/app-store";
+import { appConfig } from "@/app/config/app-config";
 
 export const RequireAuth = () => {
   const location = useLocation();
@@ -28,6 +28,10 @@ export const RequireSeller = () => {
 
   if (!user) {
     return <Navigate to="/" replace />;
+  }
+
+  if (user.role === "admin") {
+    return <Navigate to="/admin" replace />;
   }
 
   if (user.role !== "seller") {

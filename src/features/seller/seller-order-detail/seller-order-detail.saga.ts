@@ -1,6 +1,6 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { sellerOrderDetailActions } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
 import {

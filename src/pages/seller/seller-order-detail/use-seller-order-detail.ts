@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { SELLER_ORDER_STATUS, getNextOrderStatus } from "@/const/seller.const";
@@ -41,7 +41,9 @@ export const useSellerOrderDetail = () => {
     }
     return Object.entries(group.shippingAddress).map(([key, value]) => ({
       key,
-      value: String(value ?? ""),
+      value: typeof value === "string" || typeof value === "number"
+        ? String(value)
+        : "",
     }));
   }, [group]);
 

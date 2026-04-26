@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Button, Select, Table } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./seller-products-page.module.scss";
 import { useSellerProducts } from "./use-seller-products";

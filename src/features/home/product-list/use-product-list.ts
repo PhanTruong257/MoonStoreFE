@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
+ 
 import { useEffect, useMemo } from "react";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +28,7 @@ type UseProductListResult = {
 };
 
 const selectProductList = (state: RootState): ProductListState =>
-  state.productList as ProductListState;
+  state.productList;
 
 export const useProductList = (
   searchQuery: string,

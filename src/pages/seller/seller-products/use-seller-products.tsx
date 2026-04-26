@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { Button, Popconfirm, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import styles from "./seller-products-page.module.scss";
 

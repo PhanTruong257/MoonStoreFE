@@ -39,20 +39,23 @@ const slice = createSlice({
     },
     createRequested: (
       state,
-      _action: PayloadAction<CreateAdminVoucherPayload>,
+      action: PayloadAction<CreateAdminVoucherPayload>,
     ) => {
+      void action.payload;
       state.isSubmitting = true;
     },
     updateRequested: (
       state,
-      _action: PayloadAction<{
+      action: PayloadAction<{
         id: number;
         payload: UpdateAdminVoucherPayload;
       }>,
     ) => {
+      void action.payload;
       state.isSubmitting = true;
     },
-    deleteRequested: (state, _action: PayloadAction<number>) => {
+    deleteRequested: (state, action: PayloadAction<number>) => {
+      void action.payload;
       state.isSubmitting = true;
     },
     actionSucceeded: (state) => {

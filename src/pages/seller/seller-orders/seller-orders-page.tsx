@@ -3,8 +3,8 @@ import { Select, Table } from "antd";
 import styles from "./seller-orders-page.module.scss";
 import { useSellerOrders } from "./use-seller-orders";
 
-import { SellerShell } from "@/features/seller/components/seller-shell";
 import { SELLER_ORDER_STATUS_FILTER_OPTIONS } from "@/const/seller.const";
+import { SellerShell } from "@/features/seller/components/seller-shell";
 import type { SellerOrderGroup } from "@/services/seller-service";
 
 export const SellerOrdersPage = () => {

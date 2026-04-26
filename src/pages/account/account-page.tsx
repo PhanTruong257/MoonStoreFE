@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Button,
   Empty,
@@ -11,6 +9,8 @@ import {
   Skeleton,
   Tag,
 } from "antd";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import styles from "./account-page.module.scss";
 
@@ -130,12 +130,14 @@ export const AccountPage = () => {
     }
   };
 
+  const accountUserId = storedUser?.id;
+
   useEffect(() => {
-    if (!storedUser) {
+    if (!accountUserId) {
       return;
     }
     void reloadAddresses();
-  }, [storedUser?.id]);
+  }, [accountUserId]);
 
   const resetForm = () => {
     setFirstName(initialProfile.firstName);
@@ -333,7 +335,9 @@ export const AccountPage = () => {
                         {!address.isDefault ? (
                           <Button
                             size="small"
-                            onClick={() => handleSetDefault(address.id)}
+                            onClick={() => {
+                              void handleSetDefault(address.id);
+                            }}
                           >
                             Set default
                           </Button>
@@ -348,7 +352,9 @@ export const AccountPage = () => {
                           title="Remove this address?"
                           okText="Remove"
                           okButtonProps={{ danger: true }}
-                          onConfirm={() => handleDeleteAddress(address.id)}
+                          onConfirm={() => {
+                            void handleDeleteAddress(address.id);
+                          }}
                         >
                           <Button size="small" danger>
                             Remove
@@ -463,7 +469,9 @@ export const AccountPage = () => {
         <Form
           form={addressForm}
           layout="vertical"
-          onFinish={submitAddress}
+          onFinish={(values) => {
+            void submitAddress(values);
+          }}
           initialValues={{ isDefault: false }}
         >
           <Form.Item

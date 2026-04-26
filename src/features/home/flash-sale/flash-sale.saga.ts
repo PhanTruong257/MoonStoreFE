@@ -6,13 +6,14 @@ import {
   type FlashProduct,
 } from "@/features/home/flash-sale/flash-sale.slice";
 import { addToCart as addToCartApi } from "@/services/cart-service";
+import type { CatalogCategory, CatalogProduct } from "@/services/catalog-service";
 import { fetchCategories, fetchProducts } from "@/services/catalog-service";
 
 function* handleFlashSaleInit() {
   try {
     const [categoryList, productList] = (yield call(() =>
       Promise.all([fetchCategories(), fetchProducts()]),
-    )) as [Array<{ id: number; name: string }>, Array<any>];
+    )) as [CatalogCategory[], CatalogProduct[]];
 
     const categories = [
       { id: "all", label: "All" },

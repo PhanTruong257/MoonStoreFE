@@ -4,11 +4,11 @@ import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
 
 import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
-import { ReviewsPanel } from "@/features/reviews";
+import { ProductCard } from "@/component/product-card/product-card";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
+import { ReviewsPanel } from "@/features/reviews";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
-import { ProductCard } from "@/component/product-card/product-card";
 
 const formatMoney = (value: number) => `$${value.toFixed(2)}`;
 

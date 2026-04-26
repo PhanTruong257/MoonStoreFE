@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Empty, Skeleton, Tag } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./admin-order-detail-page.module.scss";
 import { useAdminOrderDetail } from "./use-admin-order-detail";

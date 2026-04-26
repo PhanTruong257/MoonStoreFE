@@ -1,9 +1,10 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { adminVouchersActions } from "./admin-vouchers.slice";
 
+import { extractApiErrorMessage } from "@/app/utils/error-message";
 import {
   createAdminVoucher,
   deleteAdminVoucher,
@@ -31,10 +32,8 @@ function* handleCreate(action: PayloadAction<CreateAdminVoucherPayload>) {
     void message.success("Voucher created.");
     yield put(adminVouchersActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to create voucher.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to create voucher.");
     void message.error(msg);
     yield put(adminVouchersActions.actionFailed(msg));
   }
@@ -48,10 +47,8 @@ function* handleUpdate(
     void message.success("Voucher updated.");
     yield put(adminVouchersActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to update voucher.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to update voucher.");
     void message.error(msg);
     yield put(adminVouchersActions.actionFailed(msg));
   }
@@ -63,10 +60,8 @@ function* handleDelete(action: PayloadAction<number>) {
     void message.success("Voucher deleted.");
     yield put(adminVouchersActions.actionSucceeded());
     yield call(loadList);
-  } catch (e) {
-    const msg =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e as any)?.response?.data?.message ?? "Unable to delete voucher.";
+  } catch (error) {
+    const msg = extractApiErrorMessage(error, "Unable to delete voucher.");
     void message.error(msg);
     yield put(adminVouchersActions.actionFailed(msg));
   }

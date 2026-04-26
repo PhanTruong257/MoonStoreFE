@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Empty, Segmented, Skeleton, Tag } from "antd";
+import { Link } from "react-router-dom";
 
 import styles from "./orders-page.module.scss";
 import { useOrdersList } from "./use-orders-list";

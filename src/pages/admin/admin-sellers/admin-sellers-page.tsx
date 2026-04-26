@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Button,
   Empty,
@@ -9,12 +8,12 @@ import {
   Skeleton,
   Tag,
 } from "antd";
+import { useState } from "react";
 
 import styles from "./admin-sellers-page.module.scss";
 import {
   ADMIN_SELLER_STATUS_OPTIONS,
   useAdminSellers,
-  type SellerStatusFilter,
 } from "./use-admin-sellers";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
@@ -51,7 +50,7 @@ export const AdminSellersPage = () => {
         <Segmented
           value={statusFilter}
           onChange={(value) =>
-            setStatusFilter(value as SellerStatusFilter)
+            setStatusFilter(value)
           }
           options={ADMIN_SELLER_STATUS_OPTIONS.map((status) => ({
             label: status.toUpperCase(),

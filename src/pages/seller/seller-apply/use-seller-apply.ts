@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { message } from "antd";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
-import { setStoredUser } from "@/features/auth/auth-storage";
 import { authActions } from "@/features/auth/auth-slice";
+import { setStoredUser } from "@/features/auth/auth-storage";
 import {
   createSellerProfile,
   fetchMySellerProfile,
@@ -57,6 +57,10 @@ export const useSellerApply = () => {
   }, []);
 
   useEffect(() => {
+    if (user?.role === "admin") {
+      void navigate("/admin", { replace: true });
+      return;
+    }
     if (profile?.status === "active" && user?.role === "seller") {
       void navigate("/seller", { replace: true });
     }
@@ -78,20 +82,15 @@ export const useSellerApply = () => {
 
     setIsSubmitting(true);
     try {
-      let next: SellerProfile | null;
+      let next: SellerProfile | null = null;
       if (profile && profile.status !== "active") {
-        next = await updateMySellerProfile({
-          shopName,
-          description,
-        }).catch(async () => {
-          // status was active or other server-side block — fallback to register
-          return null;
-        });
-
-        if (!next) {
-          next = (await createSellerProfile({ shopName, description })).seller;
+        try {
+          next = await updateMySellerProfile({ shopName, description });
+        } catch {
+          next = null;
         }
-      } else {
+      }
+      if (!next) {
         next = (await createSellerProfile({ shopName, description })).seller;
       }
 

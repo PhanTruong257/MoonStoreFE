@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -45,11 +45,9 @@ type SiteHeaderProps = {
 
 export const SiteHeader = ({
   brand,
-  navLinks: _navLinks,
   search,
   categoryLink,
   categoryItems,
-
   cartCount,
 }: SiteHeaderProps) => {
   const navigate = useNavigate();
@@ -86,13 +84,16 @@ export const SiteHeader = ({
   const storedUser = getStoredUser();
   const isLoggedIn = Boolean(user ?? storedUser);
   const [apiCartCount, setApiCartCount] = useState(0);
-  const resolvedCartCount =
-    typeof cartCount === "number" ? cartCount : apiCartCount;
+  const resolvedCartCount = !isLoggedIn
+    ? 0
+    : typeof cartCount === "number"
+      ? cartCount
+      : apiCartCount;
+
+  const activeUserId = user?.id ?? storedUser?.id;
 
   useEffect(() => {
-    const userId = (user ?? storedUser)?.id;
-    if (!isLoggedIn || !userId) {
-      setApiCartCount(0);
+    if (!isLoggedIn || !activeUserId) {
       return;
     }
 
@@ -100,7 +101,7 @@ export const SiteHeader = ({
 
     const loadCartCount = async () => {
       try {
-        const cart = await fetchCartByUser(userId);
+        const cart = await fetchCartByUser(activeUserId);
         if (!isMounted) {
           return;
         }
@@ -128,7 +129,7 @@ export const SiteHeader = ({
       isMounted = false;
       window.removeEventListener("cart:updated", handleCartUpdated);
     };
-  }, [isLoggedIn, storedUser?.id, user?.id]);
+  }, [isLoggedIn, activeUserId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -317,7 +318,7 @@ export const SiteHeader = ({
                       >
                         Seller hub
                       </Link>
-                    ) : (
+                    ) : user.role === "user" ? (
                       <Link
                         to="/seller/apply"
                         className={styles.accountItem}
@@ -325,7 +326,7 @@ export const SiteHeader = ({
                       >
                         Become a seller
                       </Link>
-                    )}
+                    ) : null}
                     <button
                       type="button"
                       className={styles.accountItem}
