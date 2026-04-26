@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Button,
+  Empty,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  Skeleton,
+  Tag,
+} from "antd";
 
 import styles from "./account-page.module.scss";
 
@@ -16,7 +27,14 @@ import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 import { fetchProfile, updateProfile } from "@/services/auth-service";
-import { createSellerProfile } from "@/services/seller-service";
+import {
+  createMyAddress,
+  deleteMyAddress,
+  fetchMyAddresses,
+  setDefaultAddress,
+  updateMyAddress,
+  type UserAddress,
+} from "@/services/users-service";
 
 const splitName = (fullName: string) => {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
@@ -34,6 +52,13 @@ const joinName = (firstName: string, lastName: string) => {
   return `${firstName} ${lastName}`.trim();
 };
 
+type AddressFormValues = {
+  addressLine: string;
+  city: string;
+  district: string;
+  isDefault?: boolean;
+};
+
 export const AccountPage = () => {
   const storedUser = getStoredUser();
   const initialName = splitName(storedUser?.fullName ?? "");
@@ -41,22 +66,24 @@ export const AccountPage = () => {
   const [firstName, setFirstName] = useState(initialName.firstName);
   const [lastName, setLastName] = useState(initialName.lastName);
   const [email, setEmail] = useState(storedUser?.email ?? "");
-  const [address, setAddress] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [sellerShopName, setSellerShopName] = useState("");
-  const [sellerDescription, setSellerDescription] = useState("");
-  const [sellerMessage, setSellerMessage] = useState("");
   const [initialProfile, setInitialProfile] = useState({
     firstName: initialName.firstName,
     lastName: initialName.lastName,
     email: storedUser?.email ?? "",
-    address: "",
   });
+
+  const [addresses, setAddresses] = useState<UserAddress[]>([]);
+  const [isAddressLoading, setIsAddressLoading] = useState(true);
+  const [editing, setEditing] = useState<UserAddress | null>(null);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [addressForm] = Form.useForm<AddressFormValues>();
+  const [isAddressSaving, setIsAddressSaving] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -71,12 +98,10 @@ export const AccountPage = () => {
         setFirstName(parsedName.firstName);
         setLastName(parsedName.lastName);
         setEmail(profile.user.email ?? "");
-        setAddress(profile.address ?? "");
         setInitialProfile({
           firstName: parsedName.firstName,
           lastName: parsedName.lastName,
           email: profile.user.email ?? "",
-          address: profile.address ?? "",
         });
       } catch (error) {
         if (!isMounted) {
@@ -93,11 +118,29 @@ export const AccountPage = () => {
     };
   }, []);
 
+  const reloadAddresses = async () => {
+    setIsAddressLoading(true);
+    try {
+      const data = await fetchMyAddresses();
+      setAddresses(data);
+    } catch {
+      void message.error("Unable to load addresses.");
+    } finally {
+      setIsAddressLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!storedUser) {
+      return;
+    }
+    void reloadAddresses();
+  }, [storedUser?.id]);
+
   const resetForm = () => {
     setFirstName(initialProfile.firstName);
     setLastName(initialProfile.lastName);
     setEmail(initialProfile.email);
-    setAddress(initialProfile.address);
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -124,15 +167,9 @@ export const AccountPage = () => {
       const response = await updateProfile({
         fullName: joinName(firstName, lastName),
         email,
-        address,
       });
       setStoredUser(response.user);
-      setInitialProfile({
-        firstName,
-        lastName,
-        email,
-        address,
-      });
+      setInitialProfile({ firstName, lastName, email });
       setSuccessMessage("Profile updated.");
     } catch (error) {
       setError(getAuthErrorMessage(error, "Unable to save profile."));
@@ -141,25 +178,58 @@ export const AccountPage = () => {
     }
   };
 
-  const registerSeller = async () => {
-    if (!storedUser) {
-      return;
-    }
+  const openCreateAddress = () => {
+    setEditing(null);
+    addressForm.resetFields();
+    setIsAddressModalOpen(true);
+  };
 
-    if (!sellerShopName.trim()) {
-      setSellerMessage("Please enter a shop name.");
-      return;
-    }
+  const openEditAddress = (address: UserAddress) => {
+    setEditing(address);
+    addressForm.setFieldsValue({
+      addressLine: address.addressLine,
+      city: address.city,
+      district: address.district,
+      isDefault: address.isDefault,
+    });
+    setIsAddressModalOpen(true);
+  };
 
-    setSellerMessage("");
+  const submitAddress = async (values: AddressFormValues) => {
+    setIsAddressSaving(true);
     try {
-      await createSellerProfile({
-        shopName: sellerShopName,
-        description: sellerDescription,
-      });
-      setSellerMessage("Application submitted. Awaiting admin review.");
+      if (editing) {
+        await updateMyAddress(editing.id, values);
+        void message.success("Address updated.");
+      } else {
+        await createMyAddress(values);
+        void message.success("Address added.");
+      }
+      setIsAddressModalOpen(false);
+      await reloadAddresses();
     } catch {
-      setSellerMessage("Unable to submit seller application.");
+      void message.error("Unable to save address.");
+    } finally {
+      setIsAddressSaving(false);
+    }
+  };
+
+  const handleDeleteAddress = async (id: number) => {
+    try {
+      await deleteMyAddress(id);
+      void message.success("Address removed.");
+      await reloadAddresses();
+    } catch {
+      void message.error("Unable to remove address.");
+    }
+  };
+
+  const handleSetDefault = async (id: number) => {
+    try {
+      await setDefaultAddress(id);
+      await reloadAddresses();
+    } catch {
+      void message.error("Unable to set default.");
     }
   };
 
@@ -204,11 +274,9 @@ export const AccountPage = () => {
             ))}
 
             <h4>{ACCOUNT_MENU.orderTitle}</h4>
-            {ACCOUNT_MENU.orderItems.map((item) => (
-              <button key={item} type="button">
-                {item}
-              </button>
-            ))}
+            <Link to="/orders" className={styles.menuLink}>
+              My orders
+            </Link>
 
             <h4>{ACCOUNT_MENU.wishlistTitle}</h4>
           </aside>
@@ -220,7 +288,7 @@ export const AccountPage = () => {
                 <p>
                   {storedUser?.role === "seller"
                     ? "Manage your product catalog and launch new items."
-                    : "Activate seller mode to publish products."}
+                    : "Submit an application to become a seller. Admin will review."}
                 </p>
               </div>
               {storedUser?.role === "seller" ? (
@@ -228,29 +296,70 @@ export const AccountPage = () => {
                   Open seller hub
                 </Link>
               ) : (
-                <div className={styles.sellerForm}>
-                  <SharedInput
-                    placeholder="Shop name"
-                    value={sellerShopName}
-                    onChange={(event) => setSellerShopName(event.target.value)}
-                  />
-                  <SharedInput
-                    placeholder="Shop description"
-                    value={sellerDescription}
-                    onChange={(event) =>
-                      setSellerDescription(event.target.value)
-                    }
-                  />
-                  <SharedButton
-                    label="Activate seller"
-                    onClick={registerSeller}
-                  />
-                  {sellerMessage ? (
-                    <p className={styles.sellerMessage}>{sellerMessage}</p>
-                  ) : null}
-                </div>
+                <Link className={styles.sellerLink} to="/seller/apply">
+                  Become a seller
+                </Link>
               )}
             </div>
+
+            <section className={styles.addressSection}>
+              <header>
+                <h3>My addresses</h3>
+                <Button type="primary" onClick={openCreateAddress}>
+                  Add address
+                </Button>
+              </header>
+
+              {isAddressLoading ? (
+                <Skeleton active paragraph={{ rows: 2 }} />
+              ) : addresses.length === 0 ? (
+                <Empty description="No saved addresses" />
+              ) : (
+                <div className={styles.addressList}>
+                  {addresses.map((address) => (
+                    <article key={address.id} className={styles.addressRow}>
+                      <div>
+                        <div className={styles.addressTitle}>
+                          <strong>{address.addressLine}</strong>
+                          {address.isDefault ? (
+                            <Tag color="blue">Default</Tag>
+                          ) : null}
+                        </div>
+                        <div className={styles.addressMeta}>
+                          {address.district}, {address.city}
+                        </div>
+                      </div>
+                      <div className={styles.addressActions}>
+                        {!address.isDefault ? (
+                          <Button
+                            size="small"
+                            onClick={() => handleSetDefault(address.id)}
+                          >
+                            Set default
+                          </Button>
+                        ) : null}
+                        <Button
+                          size="small"
+                          onClick={() => openEditAddress(address)}
+                        >
+                          Edit
+                        </Button>
+                        <Popconfirm
+                          title="Remove this address?"
+                          okText="Remove"
+                          okButtonProps={{ danger: true }}
+                          onConfirm={() => handleDeleteAddress(address.id)}
+                        >
+                          <Button size="small" danger>
+                            Remove
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
 
             <h2>{ACCOUNT_TEXT.profileTitle}</h2>
 
@@ -285,16 +394,6 @@ export const AccountPage = () => {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder={PROFILE_FIELDS.emailLabel}
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label htmlFor="address">{PROFILE_FIELDS.addressLabel}</label>
-                <SharedInput
-                  id="address"
-                  value={address}
-                  onChange={(event) => setAddress(event.target.value)}
-                  placeholder={PROFILE_FIELDS.addressLabel}
                 />
               </div>
             </div>
@@ -351,6 +450,52 @@ export const AccountPage = () => {
         sections={homeFooterSections}
         copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
       />
+
+      <Modal
+        open={isAddressModalOpen}
+        title={editing ? "Edit address" : "Add address"}
+        okText="Save"
+        onOk={() => addressForm.submit()}
+        onCancel={() => setIsAddressModalOpen(false)}
+        confirmLoading={isAddressSaving}
+        destroyOnHidden
+      >
+        <Form
+          form={addressForm}
+          layout="vertical"
+          onFinish={submitAddress}
+          initialValues={{ isDefault: false }}
+        >
+          <Form.Item
+            label="Address line"
+            name="addressLine"
+            rules={[{ required: true, message: "Address line is required" }]}
+          >
+            <Input placeholder="123 Le Loi street" />
+          </Form.Item>
+          <Form.Item
+            label="District"
+            name="district"
+            rules={[{ required: true, message: "District is required" }]}
+          >
+            <Input placeholder="District 1" />
+          </Form.Item>
+          <Form.Item
+            label="City"
+            name="city"
+            rules={[{ required: true, message: "City is required" }]}
+          >
+            <Input placeholder="Ho Chi Minh" />
+          </Form.Item>
+          <Form.Item
+            label="Set as default"
+            name="isDefault"
+            valuePropName="checked"
+          >
+            <input type="checkbox" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </main>
   );
 };

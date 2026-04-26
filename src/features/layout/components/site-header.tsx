@@ -293,6 +293,13 @@ export const SiteHeader = ({
                     >
                       Account settings
                     </Link>
+                    <Link
+                      to="/orders"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
+                      My orders
+                    </Link>
                     {user.role === "admin" ? (
                       <Link
                         to="/admin"

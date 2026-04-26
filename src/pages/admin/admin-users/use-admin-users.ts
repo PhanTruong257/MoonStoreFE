@@ -1,61 +1,43 @@
-import { useEffect, useState } from "react";
-import { message } from "antd";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import type { AppDispatch, RootState } from "@/app/app-store";
 import {
-  fetchAdminUsers,
-  promoteUserToAdmin,
-} from "@/services/admin-service";
-import type { AdminUser } from "@/services/admin-service";
+  adminUsersActions,
+  type RoleFilter,
+} from "@/features/admin/admin-users/admin-users.slice";
 
-const ROLE_OPTIONS = ["all", "user", "seller", "admin"] as const;
-export type RoleFilter = (typeof ROLE_OPTIONS)[number];
+export const ADMIN_USER_ROLE_OPTIONS: RoleFilter[] = [
+  "all",
+  "user",
+  "seller",
+  "admin",
+];
 
-export const ADMIN_USER_ROLE_OPTIONS: RoleFilter[] = [...ROLE_OPTIONS];
+export type { RoleFilter };
 
 export const useAdminUsers = () => {
-  const [users, setUsers] = useState<AdminUser[]>([]);
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [actingId, setActingId] = useState<number | null>(null);
-
-  const load = async (role: RoleFilter) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await fetchAdminUsers(role === "all" ? undefined : role);
-      setUsers(data);
-    } catch {
-      setError("Unable to load users.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const { users, roleFilter, isLoading, isActing, actingId, error } =
+    useSelector((state: RootState) => state.adminUsers);
 
   useEffect(() => {
-    void load(roleFilter);
-  }, [roleFilter]);
-
-  const handlePromote = async (userId: number) => {
-    setActingId(userId);
-    try {
-      await promoteUserToAdmin(userId);
-      void message.success("User promoted to admin.");
-      await load(roleFilter);
-    } catch {
-      void message.error("Unable to promote user.");
-    } finally {
-      setActingId(null);
-    }
-  };
+    dispatch(adminUsersActions.requested());
+  }, [dispatch]);
 
   return {
     users,
     roleFilter,
     isLoading,
+    actingId: isActing ? actingId : null,
     error,
-    actingId,
-    setRoleFilter,
-    handlePromote,
+    setRoleFilter: (next: RoleFilter) =>
+      dispatch(adminUsersActions.roleFilterChanged(next)),
+    handlePromote: (userId: number) =>
+      dispatch(adminUsersActions.promoteRequested(userId)),
+    handleDisable: (userId: number) =>
+      dispatch(adminUsersActions.disableRequested(userId)),
+    handleEnable: (userId: number) =>
+      dispatch(adminUsersActions.enableRequested(userId)),
   };
 };

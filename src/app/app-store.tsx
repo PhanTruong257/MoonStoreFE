@@ -3,10 +3,18 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { rootSaga } from "@/app/app-saga";
+import { adminBrandsReducer } from "@/features/admin/admin-brands/admin-brands.slice";
+import { adminCategoriesReducer } from "@/features/admin/admin-categories/admin-categories.slice";
+import { adminDashboardReducer } from "@/features/admin/admin-dashboard/admin-dashboard.slice";
+import { adminOrdersReducer } from "@/features/admin/admin-orders/admin-orders.slice";
+import { adminSellersReducer } from "@/features/admin/admin-sellers/admin-sellers.slice";
+import { adminUsersReducer } from "@/features/admin/admin-users/admin-users.slice";
+import { adminVouchersReducer } from "@/features/admin/admin-vouchers/admin-vouchers.slice";
 import { authReducer } from "@/features/auth/auth-slice";
 import { homeCategoryReducer } from "@/features/home/category/category.slice";
 import { flashSaleReducer } from "@/features/home/flash-sale/flash-sale.slice";
 import { productListReducer } from "@/features/home/product-list/product-list.slice";
+import { ordersReducer } from "@/features/orders/orders.slice";
 import { reviewsReducer } from "@/features/reviews/reviews.slice";
 import { sellerDashboardReducer } from "@/features/seller/seller-dashboard/seller-dashboard.slice";
 import { sellerOrderDetailReducer } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
@@ -42,6 +50,7 @@ export const store = configureStore({
     homeCategory: homeCategoryReducer,
     flashSale: flashSaleReducer,
     productList: productListReducer,
+    orders: ordersReducer,
     reviews: reviewsReducer,
     sellerDashboard: sellerDashboardReducer,
     sellerOrderDetail: sellerOrderDetailReducer,
@@ -49,6 +58,13 @@ export const store = configureStore({
     sellerProductEdit: sellerProductEditReducer,
     sellerProducts: sellerProductsReducer,
     vouchers: vouchersReducer,
+    adminDashboard: adminDashboardReducer,
+    adminSellers: adminSellersReducer,
+    adminUsers: adminUsersReducer,
+    adminCategories: adminCategoriesReducer,
+    adminBrands: adminBrandsReducer,
+    adminVouchers: adminVouchersReducer,
+    adminOrders: adminOrdersReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

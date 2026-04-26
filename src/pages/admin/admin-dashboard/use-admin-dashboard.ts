@@ -1,41 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { fetchAdminStats } from "@/services/admin-service";
-import type { AdminStats } from "@/services/admin-service";
+import type { AppDispatch, RootState } from "@/app/app-store";
+import { adminDashboardActions } from "@/features/admin/admin-dashboard/admin-dashboard.slice";
 
 export const useAdminDashboard = () => {
-  const [stats, setStats] = useState<AdminStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { stats, isLoading, error } = useSelector(
+    (state: RootState) => state.adminDashboard,
+  );
 
   useEffect(() => {
-    let isMounted = true;
-
-    const load = async () => {
-      try {
-        const result = await fetchAdminStats();
-        if (!isMounted) {
-          return;
-        }
-        setStats(result);
-      } catch {
-        if (!isMounted) {
-          return;
-        }
-        setError("Unable to load admin stats.");
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void load();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    dispatch(adminDashboardActions.requested());
+  }, [dispatch]);
 
   return { stats, isLoading, error };
 };

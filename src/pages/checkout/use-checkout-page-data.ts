@@ -4,6 +4,8 @@ import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
 import { fetchCartByUser } from "@/services/cart-service";
 import { createOrder } from "@/services/orders-service";
+import { fetchMyAddresses } from "@/services/users-service";
+import type { UserAddress } from "@/services/users-service";
 
 type CheckoutItem = {
   id: string;
@@ -30,6 +32,7 @@ type BillingField =
 type BillingForm = Record<BillingField, string>;
 
 const SHIPPING_FEE = 0;
+const NEW_ADDRESS = "__new__";
 
 const initialBillingForm: BillingForm = {
   firstName: "",
@@ -49,6 +52,9 @@ export const useCheckoutPageData = () => {
   const [paymentMethod, setPaymentMethod] = useState<"bank" | "cod">("cod");
   const [saveInfo, setSaveInfo] = useState(true);
   const [orderMessage, setOrderMessage] = useState("");
+
+  const [savedAddresses, setSavedAddresses] = useState<UserAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>(NEW_ADDRESS);
 
   const voucherState = useVoucher();
 
@@ -95,7 +101,31 @@ export const useCheckoutPageData = () => {
       }
     };
 
+    const loadAddresses = async () => {
+      try {
+        const data = await fetchMyAddresses();
+        if (!isMounted) {
+          return;
+        }
+        setSavedAddresses(data);
+        const defaultAddr = data.find((a) => a.isDefault);
+        if (defaultAddr) {
+          setSelectedAddressId(String(defaultAddr.id));
+        } else if (data.length > 0) {
+          setSelectedAddressId(String(data[0].id));
+        } else {
+          setSelectedAddressId(NEW_ADDRESS);
+        }
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+        setSavedAddresses([]);
+      }
+    };
+
     void loadCart();
+    void loadAddresses();
 
     return () => {
       isMounted = false;
@@ -116,21 +146,26 @@ export const useCheckoutPageData = () => {
     voucherState.apply(subTotal);
   };
 
-  const placeOrder = async () => {
-    if (
-      !billing.firstName ||
-      !billing.streetAddress ||
-      !billing.city ||
-      !billing.phone ||
-      !billing.email
-    ) {
-      setOrderMessage("Please fill all required billing fields.");
-      return;
-    }
+  const isUsingSavedAddress =
+    selectedAddressId !== NEW_ADDRESS && savedAddresses.length > 0;
 
+  const placeOrder = async () => {
     if (items.length === 0) {
       setOrderMessage("Cart is empty.");
       return;
+    }
+
+    if (!isUsingSavedAddress) {
+      if (
+        !billing.firstName ||
+        !billing.streetAddress ||
+        !billing.city ||
+        !billing.phone ||
+        !billing.email
+      ) {
+        setOrderMessage("Please fill all required billing fields.");
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -139,10 +174,14 @@ export const useCheckoutPageData = () => {
         shippingFee: SHIPPING_FEE,
         voucherCode: voucherState.voucher?.code,
         paymentMethod: paymentMethod === "cod" ? "COD" : "BANK",
-        shippingAddress: {
-          ...billing,
-          saveInfo,
-        },
+        ...(isUsingSavedAddress
+          ? { addressId: Number(selectedAddressId) }
+          : {
+              shippingAddress: {
+                ...billing,
+                saveInfo,
+              },
+            }),
       });
 
       setOrderMessage(
@@ -174,6 +213,11 @@ export const useCheckoutPageData = () => {
     orderMessage,
     isLoading,
     isSubmitting,
+    savedAddresses,
+    selectedAddressId,
+    isUsingSavedAddress,
+    NEW_ADDRESS,
+    setSelectedAddressId,
     applyCoupon,
     placeOrder,
     setBillingField,

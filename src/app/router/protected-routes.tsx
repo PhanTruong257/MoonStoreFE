@@ -6,11 +6,19 @@ import {
   RequireSeller,
 } from "@/app/router/route-guards";
 import { AccountPage } from "@/pages/account/account-page";
+import { AdminBrandsPage } from "@/pages/admin/admin-brands";
+import { AdminCategoriesPage } from "@/pages/admin/admin-categories";
 import { AdminDashboardPage } from "@/pages/admin/admin-dashboard";
+import {
+  AdminOrderDetailPage,
+  AdminOrdersPage,
+} from "@/pages/admin/admin-orders";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
+import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
 import { CartPage } from "@/pages/cart/cart-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
+import { OrderDetailPage, OrdersPage } from "@/pages/orders";
 import { SellerApplyPage } from "@/pages/seller/seller-apply";
 import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
 import { SellerOrderDetailPage } from "@/pages/seller/seller-order-detail";
@@ -37,6 +45,16 @@ export const protectedRoutes: RouteObject[] = [
         path: "/checkout",
         element: <CheckoutPage />,
         handle: { title: "Checkout" },
+      },
+      {
+        path: "/orders",
+        element: <OrdersPage />,
+        handle: { title: "My Orders" },
+      },
+      {
+        path: "/orders/:orderId",
+        element: <OrderDetailPage />,
+        handle: { title: "Order Detail" },
       },
       {
         path: "/seller/apply",
@@ -97,6 +115,31 @@ export const protectedRoutes: RouteObject[] = [
         path: "/admin/users",
         element: <AdminUsersPage />,
         handle: { title: "Users" },
+      },
+      {
+        path: "/admin/orders",
+        element: <AdminOrdersPage />,
+        handle: { title: "Orders" },
+      },
+      {
+        path: "/admin/orders/:orderId",
+        element: <AdminOrderDetailPage />,
+        handle: { title: "Order Detail" },
+      },
+      {
+        path: "/admin/categories",
+        element: <AdminCategoriesPage />,
+        handle: { title: "Categories" },
+      },
+      {
+        path: "/admin/brands",
+        element: <AdminBrandsPage />,
+        handle: { title: "Brands" },
+      },
+      {
+        path: "/admin/vouchers",
+        element: <AdminVouchersPage />,
+        handle: { title: "Vouchers" },
       },
     ],
   },

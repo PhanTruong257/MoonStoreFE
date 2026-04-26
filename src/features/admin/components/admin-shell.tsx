@@ -68,7 +68,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Seller applications
+              Sellers
             </NavLink>
             <NavLink
               to="/admin/users"
@@ -77,6 +77,38 @@ export const AdminShell = ({
               }
             >
               Users
+            </NavLink>
+            <NavLink
+              to="/admin/orders"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Orders
+            </NavLink>
+            <NavLink
+              to="/admin/categories"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Categories
+            </NavLink>
+            <NavLink
+              to="/admin/brands"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Brands
+            </NavLink>
+            <NavLink
+              to="/admin/vouchers"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Vouchers
             </NavLink>
           </nav>
         </aside>

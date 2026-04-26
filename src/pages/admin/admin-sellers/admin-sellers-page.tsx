@@ -4,6 +4,7 @@ import {
   Empty,
   Input,
   Modal,
+  Popconfirm,
   Segmented,
   Skeleton,
   Tag,
@@ -30,11 +31,13 @@ export const AdminSellersPage = () => {
     sellers,
     statusFilter,
     isLoading,
-    error,
     actingId,
+    error,
     setStatusFilter,
     handleApprove,
     handleReject,
+    handleDisable,
+    handleEnable,
   } = useAdminSellers();
 
   const [rejectTarget, setRejectTarget] = useState<number | null>(null);
@@ -43,7 +46,7 @@ export const AdminSellersPage = () => {
   return (
     <AdminShell
       title="Seller applications"
-      subtitle="Review pending applications and approve or reject them."
+      subtitle="Review pending applications and approve, reject or disable sellers."
       actions={
         <Segmented
           value={statusFilter}
@@ -88,18 +91,18 @@ export const AdminSellersPage = () => {
                 ) : null}
               </div>
               <div className={styles.actions}>
-                {seller.status !== "active" ? (
+                {seller.status === "pending" ||
+                seller.status === "rejected" ? (
                   <Button
                     type="primary"
                     loading={actingId === seller.id}
-                    onClick={() => {
-                      void handleApprove(seller.id);
-                    }}
+                    onClick={() => handleApprove(seller.id)}
                   >
                     Approve
                   </Button>
                 ) : null}
-                {seller.status !== "rejected" ? (
+                {seller.status === "pending" ||
+                seller.status === "active" ? (
                   <Button
                     danger
                     disabled={actingId === seller.id}
@@ -109,6 +112,25 @@ export const AdminSellersPage = () => {
                     }}
                   >
                     Reject
+                  </Button>
+                ) : null}
+                {seller.status === "active" ? (
+                  <Popconfirm
+                    title="Disable this seller? Their products will be hidden."
+                    okText="Disable"
+                    okButtonProps={{ danger: true }}
+                    onConfirm={() => handleDisable(seller.id)}
+                  >
+                    <Button loading={actingId === seller.id}>Disable</Button>
+                  </Popconfirm>
+                ) : null}
+                {seller.status === "disabled" ? (
+                  <Button
+                    type="primary"
+                    loading={actingId === seller.id}
+                    onClick={() => handleEnable(seller.id)}
+                  >
+                    Enable
                   </Button>
                 ) : null}
               </div>
@@ -123,14 +145,14 @@ export const AdminSellersPage = () => {
         okText="Reject"
         okButtonProps={{ danger: true }}
         onCancel={() => setRejectTarget(null)}
-        onOk={async () => {
+        onOk={() => {
           if (rejectTarget === null) {
             return;
           }
-          await handleReject(rejectTarget, rejectReason.trim());
+          handleReject(rejectTarget, rejectReason);
           setRejectTarget(null);
         }}
-        confirmLoading={actingId !== null && actingId === rejectTarget}
+        confirmLoading={actingId === rejectTarget}
       >
         <p>Tell the seller why their application is rejected (optional).</p>
         <Input.TextArea

@@ -15,21 +15,28 @@ const ROLE_TAG_COLOR: Record<string, string> = {
   admin: "purple",
 };
 
+const STATUS_TAG_COLOR: Record<string, string> = {
+  active: "green",
+  disabled: "red",
+};
+
 export const AdminUsersPage = () => {
   const {
     users,
     roleFilter,
     isLoading,
-    error,
     actingId,
+    error,
     setRoleFilter,
     handlePromote,
+    handleDisable,
+    handleEnable,
   } = useAdminUsers();
 
   return (
     <AdminShell
       title="Users"
-      subtitle="Manage user roles. Promote users to admin if needed."
+      subtitle="Manage user roles and account status."
       actions={
         <Segmented
           value={roleFilter}
@@ -57,6 +64,9 @@ export const AdminUsersPage = () => {
                   <Tag color={ROLE_TAG_COLOR[user.role] ?? "default"}>
                     {user.role.toUpperCase()}
                   </Tag>
+                  <Tag color={STATUS_TAG_COLOR[user.status] ?? "default"}>
+                    {user.status.toUpperCase()}
+                  </Tag>
                 </div>
                 <div className={styles.meta}>
                   #{user.id} · {user.email} · {user.phone}
@@ -67,9 +77,7 @@ export const AdminUsersPage = () => {
                   <Popconfirm
                     title="Promote this user to admin?"
                     okText="Promote"
-                    onConfirm={() => {
-                      void handlePromote(user.id);
-                    }}
+                    onConfirm={() => handlePromote(user.id)}
                   >
                     <Button loading={actingId === user.id}>
                       Promote to admin
@@ -77,6 +85,26 @@ export const AdminUsersPage = () => {
                   </Popconfirm>
                 ) : (
                   <span className={styles.adminBadge}>Already admin</span>
+                )}
+                {user.status === "active" ? (
+                  <Popconfirm
+                    title="Disable this user? They will not be able to login."
+                    okText="Disable"
+                    okButtonProps={{ danger: true }}
+                    onConfirm={() => handleDisable(user.id)}
+                  >
+                    <Button danger loading={actingId === user.id}>
+                      Disable
+                    </Button>
+                  </Popconfirm>
+                ) : (
+                  <Button
+                    type="primary"
+                    loading={actingId === user.id}
+                    onClick={() => handleEnable(user.id)}
+                  >
+                    Enable
+                  </Button>
                 )}
               </div>
             </article>

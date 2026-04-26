@@ -34,6 +34,11 @@ export const CheckoutPage = () => {
     orderMessage,
     isLoading,
     isSubmitting,
+    savedAddresses,
+    selectedAddressId,
+    isUsingSavedAddress,
+    NEW_ADDRESS,
+    setSelectedAddressId,
     applyCoupon,
     placeOrder,
     setBillingField,
@@ -72,6 +77,29 @@ export const CheckoutPage = () => {
           <section className={styles.billing}>
             <h1>Billing Details</h1>
 
+            {savedAddresses.length > 0 ? (
+              <div className={styles.addressPicker}>
+                <label htmlFor="savedAddress">Saved addresses</label>
+                <select
+                  id="savedAddress"
+                  value={selectedAddressId}
+                  onChange={(event) =>
+                    setSelectedAddressId(event.target.value)
+                  }
+                  disabled={isSubmitting}
+                >
+                  {savedAddresses.map((addr) => (
+                    <option key={addr.id} value={String(addr.id)}>
+                      {addr.addressLine}, {addr.district}, {addr.city}
+                      {addr.isDefault ? " (default)" : ""}
+                    </option>
+                  ))}
+                  <option value={NEW_ADDRESS}>+ Use a new address</option>
+                </select>
+              </div>
+            ) : null}
+
+            {isUsingSavedAddress ? null : (
             <div className={styles.fieldList}>
               <div className={styles.field}>
                 <label htmlFor="firstName">{CHECKOUT_TEXT.firstName}</label>
@@ -165,16 +193,19 @@ export const CheckoutPage = () => {
                 />
               </div>
             </div>
+            )}
 
-            <label className={styles.saveInfo}>
-              <input
-                type="checkbox"
-                checked={saveInfo}
-                onChange={(event) => setSaveInfo(event.target.checked)}
-                disabled={isSubmitting}
-              />
-              Save this information for faster check-out next time
-            </label>
+            {isUsingSavedAddress ? null : (
+              <label className={styles.saveInfo}>
+                <input
+                  type="checkbox"
+                  checked={saveInfo}
+                  onChange={(event) => setSaveInfo(event.target.checked)}
+                  disabled={isSubmitting}
+                />
+                Save this information for faster check-out next time
+              </label>
+            )}
           </section>
 
           <aside className={styles.orderSummary}>

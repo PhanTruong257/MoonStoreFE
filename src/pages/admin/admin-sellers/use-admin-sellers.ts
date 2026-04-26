@@ -1,81 +1,50 @@
-import { useEffect, useState } from "react";
-import { message } from "antd";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import type { AppDispatch, RootState } from "@/app/app-store";
 import {
-  approveSeller,
-  fetchAdminSellers,
-  rejectSeller,
-} from "@/services/admin-service";
-import type { AdminSeller } from "@/services/admin-service";
-
-const STATUS_OPTIONS = ["pending", "active", "rejected", "all"] as const;
-export type SellerStatusFilter = (typeof STATUS_OPTIONS)[number];
+  adminSellersActions,
+  type SellerStatusFilter,
+} from "@/features/admin/admin-sellers/admin-sellers.slice";
 
 export const ADMIN_SELLER_STATUS_OPTIONS: SellerStatusFilter[] = [
-  ...STATUS_OPTIONS,
+  "pending",
+  "active",
+  "rejected",
+  "all",
 ];
 
-export const useAdminSellers = () => {
-  const [sellers, setSellers] = useState<AdminSeller[]>([]);
-  const [statusFilter, setStatusFilter] = useState<SellerStatusFilter>(
-    "pending",
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [actingId, setActingId] = useState<number | null>(null);
+export type { SellerStatusFilter };
 
-  const load = async (status: SellerStatusFilter) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await fetchAdminSellers(status === "all" ? undefined : status);
-      setSellers(data);
-    } catch {
-      setError("Unable to load seller applications.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export const useAdminSellers = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { sellers, statusFilter, isLoading, isActing, actingId, error } =
+    useSelector((state: RootState) => state.adminSellers);
 
   useEffect(() => {
-    void load(statusFilter);
-  }, [statusFilter]);
-
-  const handleApprove = async (sellerId: number) => {
-    setActingId(sellerId);
-    try {
-      await approveSeller(sellerId);
-      void message.success("Seller approved.");
-      await load(statusFilter);
-    } catch {
-      void message.error("Unable to approve seller.");
-    } finally {
-      setActingId(null);
-    }
-  };
-
-  const handleReject = async (sellerId: number, reason: string) => {
-    setActingId(sellerId);
-    try {
-      await rejectSeller(sellerId, reason);
-      void message.success("Seller rejected.");
-      await load(statusFilter);
-    } catch {
-      void message.error("Unable to reject seller.");
-    } finally {
-      setActingId(null);
-    }
-  };
+    dispatch(adminSellersActions.requested());
+  }, [dispatch]);
 
   return {
     sellers,
     statusFilter,
     isLoading,
+    actingId: isActing ? actingId : null,
     error,
-    actingId,
-    setStatusFilter,
-    handleApprove,
-    handleReject,
-    reload: () => load(statusFilter),
+    setStatusFilter: (next: SellerStatusFilter) =>
+      dispatch(adminSellersActions.statusFilterChanged(next)),
+    handleApprove: (sellerId: number) =>
+      dispatch(adminSellersActions.approveRequested(sellerId)),
+    handleReject: (sellerId: number, reason: string) =>
+      dispatch(
+        adminSellersActions.rejectRequested({
+          sellerId,
+          reason: reason.trim() || undefined,
+        }),
+      ),
+    handleDisable: (sellerId: number) =>
+      dispatch(adminSellersActions.disableRequested(sellerId)),
+    handleEnable: (sellerId: number) =>
+      dispatch(adminSellersActions.enableRequested(sellerId)),
   };
 };
