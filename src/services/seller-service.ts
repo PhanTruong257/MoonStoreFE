@@ -1,19 +1,30 @@
 import { http } from "@/app/api/http";
 
-export type CreateSellerPayload = {
+export type SellerProfile = {
+  id: number;
   userId: number;
+  shopName: string;
+  description: string | null;
+  status: string;
+  rejectReason: string | null;
+};
+
+export type CreateSellerPayload = {
   shopName: string;
   description?: string;
 };
 
 export type CreateSellerResponse = {
-  seller: {
-    id: number;
-    userId: number;
-    shopName: string;
-    description: string | null;
-    status: string;
-  };
+  seller: SellerProfile;
+};
+
+export type SellerProfileMeResponse = {
+  seller: SellerProfile | null;
+};
+
+export type UpdateSellerProfilePayload = {
+  shopName?: string;
+  description?: string;
 };
 
 export type SellerProductOptionInput = {
@@ -29,7 +40,6 @@ export type SellerProductOptionGroupInput = {
 };
 
 export type CreateProductPayload = {
-  userId: number;
   name: string;
   description?: string;
   categoryId: number;
@@ -159,6 +169,23 @@ export const createSellerProfile = async (payload: CreateSellerPayload) => {
     payload,
   );
   return response.data;
+};
+
+export const fetchMySellerProfile = async () => {
+  const response = await http.get<SellerProfileMeResponse>(
+    "/sellers/me/profile",
+  );
+  return response.data.seller;
+};
+
+export const updateMySellerProfile = async (
+  payload: UpdateSellerProfilePayload,
+) => {
+  const response = await http.patch<SellerProfileMeResponse>(
+    "/sellers/me/profile",
+    payload,
+  );
+  return response.data.seller;
 };
 
 export const createProduct = async (payload: CreateProductPayload) => {

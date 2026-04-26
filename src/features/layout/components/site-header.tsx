@@ -293,6 +293,32 @@ export const SiteHeader = ({
                     >
                       Account settings
                     </Link>
+                    {user.role === "admin" ? (
+                      <Link
+                        to="/admin"
+                        className={styles.accountItem}
+                        onClick={closeMenu}
+                      >
+                        Admin console
+                      </Link>
+                    ) : null}
+                    {user.role === "seller" ? (
+                      <Link
+                        to="/seller"
+                        className={styles.accountItem}
+                        onClick={closeMenu}
+                      >
+                        Seller hub
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/seller/apply"
+                        className={styles.accountItem}
+                        onClick={closeMenu}
+                      >
+                        Become a seller
+                      </Link>
+                    )}
                     <button
                       type="button"
                       className={styles.accountItem}

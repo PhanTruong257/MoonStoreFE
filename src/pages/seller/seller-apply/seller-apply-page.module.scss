@@ -1,0 +1,29 @@
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 640px;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.rejectAlert {
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.secondaryLink {
+  color: #6b7280;
+  font-size: 14px;
+}

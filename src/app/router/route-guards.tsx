@@ -1,16 +1,14 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { appConfig } from "@/app/config/app-config";
-import { getStoredUser } from "@/features/auth/auth-storage";
-
-const isAuthenticated = () => {
-  return Boolean(getStoredUser());
-};
+import type { RootState } from "@/app/app-store";
 
 export const RequireAuth = () => {
   const location = useLocation();
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  if (!isAuthenticated()) {
+  if (!user) {
     return (
       <Navigate
         to={appConfig.loginPath}
@@ -26,23 +24,28 @@ export const RequireAuth = () => {
 };
 
 export const RequireSeller = () => {
-  const location = useLocation();
-  const user = getStoredUser();
+  const user = useSelector((state: RootState) => state.auth.user);
 
   if (!user) {
-    return (
-      <Navigate
-        to={appConfig.loginPath}
-        replace
-        state={{
-          from: `${location.pathname}${location.search}${location.hash}`,
-        }}
-      />
-    );
+    return <Navigate to="/" replace />;
   }
 
   if (user.role !== "seller") {
-    return <Navigate to="/seller/products/new" replace />;
+    return <Navigate to="/seller/apply" replace />;
+  }
+
+  return <Outlet />;
+};
+
+export const RequireAdmin = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (user.role !== "admin") {
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./seller-product-new-page.module.scss";
 
-import { getStoredUser, setStoredUser } from "@/features/auth/auth-storage";
+import { getStoredUser } from "@/features/auth/auth-storage";
 import { SellerShell } from "@/features/seller/components/seller-shell";
 import {
   loadSellerProducts,
@@ -11,7 +11,7 @@ import {
 } from "@/features/seller/seller-storage";
 import type { CatalogCategory } from "@/services/catalog-service";
 import { fetchCategories } from "@/services/catalog-service";
-import { createProduct, createSellerProfile } from "@/services/seller-service";
+import { createProduct } from "@/services/seller-service";
 import type { SellerProductOptionGroupInput } from "@/services/seller-service";
 
 const safeParseGroups = (raw: string): SellerProductOptionGroupInput[] | undefined => {
@@ -30,8 +30,6 @@ export const SellerProductNewPage = () => {
   const user = getStoredUser();
   const navigate = useNavigate();
 
-  const [shopName, setShopName] = useState("");
-  const [shopDescription, setShopDescription] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState(1);
@@ -45,10 +43,6 @@ export const SellerProductNewPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [categories, setCategories] = useState<CatalogCategory[]>([]);
   const [categoriesError, setCategoriesError] = useState("");
-
-  const canRegisterSeller = useMemo(() => {
-    return Boolean(user && user.role !== "seller");
-  }, [user]);
 
   useEffect(() => {
     let isMounted = true;
@@ -83,36 +77,9 @@ export const SellerProductNewPage = () => {
     };
   }, []);
 
-  const handleRegisterSeller = async () => {
-    if (!user) {
-      return;
-    }
-    if (!shopName.trim()) {
-      setError("Please enter your shop name.");
-      return;
-    }
-
-    setError("");
-    try {
-      await createSellerProfile({
-        userId: user.id,
-        shopName,
-        description: shopDescription,
-      });
-      setStoredUser({ ...user, role: "seller" });
-    } catch {
-      setError("Unable to register seller profile.");
-    }
-  };
-
   const handleSubmit = async () => {
     if (!user) {
       setError("Please login to continue.");
-      return;
-    }
-
-    if (user.role !== "seller") {
-      setError("Please register a seller profile first.");
       return;
     }
 
@@ -128,7 +95,6 @@ export const SellerProductNewPage = () => {
       const optionGroups = safeParseGroups(optionGroupsJson);
 
       const response = await createProduct({
-        userId: user.id,
         name,
         description,
         categoryId,
@@ -170,40 +136,6 @@ export const SellerProductNewPage = () => {
         </Link>
       }
     >
-      {canRegisterSeller ? (
-        <div className={styles.banner}>
-          <strong>Seller profile required</strong>
-          <p>Create your seller profile to start listing products.</p>
-          <div className={styles.fieldRow}>
-            <div className={styles.field}>
-              <label htmlFor="shopName">Shop name</label>
-              <input
-                id="shopName"
-                value={shopName}
-                onChange={(event) => setShopName(event.target.value)}
-                placeholder="Moon Store"
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="shopDesc">Shop description</label>
-              <input
-                id="shopDesc"
-                value={shopDescription}
-                onChange={(event) => setShopDescription(event.target.value)}
-                placeholder="Fast delivery, authentic devices"
-              />
-            </div>
-          </div>
-          <button
-            type="button"
-            className={styles.primaryButton}
-            onClick={handleRegisterSeller}
-          >
-            Activate seller profile
-          </button>
-        </div>
-      ) : null}
-
       <form
         className={styles.form}
         onSubmit={(event) => {

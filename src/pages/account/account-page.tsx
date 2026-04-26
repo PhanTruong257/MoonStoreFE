@@ -154,14 +154,12 @@ export const AccountPage = () => {
     setSellerMessage("");
     try {
       await createSellerProfile({
-        userId: storedUser.id,
         shopName: sellerShopName,
         description: sellerDescription,
       });
-      setStoredUser({ ...storedUser, role: "seller" });
-      setSellerMessage("Seller profile activated.");
+      setSellerMessage("Application submitted. Awaiting admin review.");
     } catch {
-      setSellerMessage("Unable to activate seller profile.");
+      setSellerMessage("Unable to submit seller application.");
     }
   };
 
