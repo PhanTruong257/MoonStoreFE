@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { USER_ROLE } from "@/const/role.const";
+import { SELLER_APPLICATION_STATUS } from "@/const/seller-status.const";
 import { authActions } from "@/features/auth/auth-slice";
 import { setStoredUser } from "@/features/auth/auth-storage";
 import {
@@ -57,18 +59,25 @@ export const useSellerApply = () => {
   }, []);
 
   useEffect(() => {
-    if (user?.role === "admin") {
+    if (user?.role === USER_ROLE.ADMIN) {
       void navigate("/admin", { replace: true });
       return;
     }
-    if (profile?.status === "active" && user?.role === "seller") {
+    if (
+      profile?.status === SELLER_APPLICATION_STATUS.ACTIVE &&
+      user?.role === USER_ROLE.SELLER
+    ) {
       void navigate("/seller", { replace: true });
     }
   }, [profile, user, navigate]);
 
   useEffect(() => {
-    if (profile?.status === "active" && user && user.role !== "seller") {
-      const synced = { ...user, role: "seller" };
+    if (
+      profile?.status === SELLER_APPLICATION_STATUS.ACTIVE &&
+      user &&
+      user.role !== USER_ROLE.SELLER
+    ) {
+      const synced = { ...user, role: USER_ROLE.SELLER };
       setStoredUser(synced);
       dispatch(authActions.loginSucceeded(synced));
     }
@@ -83,7 +92,10 @@ export const useSellerApply = () => {
     setIsSubmitting(true);
     try {
       let next: SellerProfile | null = null;
-      if (profile && profile.status !== "active") {
+      if (
+        profile &&
+        profile.status !== SELLER_APPLICATION_STATUS.ACTIVE
+      ) {
         try {
           next = await updateMySellerProfile({ shopName, description });
         } catch {
@@ -96,7 +108,7 @@ export const useSellerApply = () => {
 
       setProfile(next);
       void message.success(
-        next?.status === "rejected"
+        next?.status === SELLER_APPLICATION_STATUS.REJECTED
           ? "Application updated and resubmitted."
           : "Application submitted. Awaiting admin review.",
       );
@@ -116,6 +128,7 @@ export const useSellerApply = () => {
     setShopName,
     setDescription,
     submit,
-    isAlreadyActive: profile?.status === "active",
+    isAlreadyActive:
+      profile?.status === SELLER_APPLICATION_STATUS.ACTIVE,
   };
 };

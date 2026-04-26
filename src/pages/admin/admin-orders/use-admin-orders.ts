@@ -2,23 +2,25 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import {
+  ADMIN_FILTER_ALL,
+  ADMIN_ORDER_STATUS_OPTIONS,
+} from "@/const/admin.const";
 import { adminOrdersActions } from "@/features/admin/admin-orders/admin-orders.slice";
 
-const STATUS_OPTIONS = ["all", "PENDING", "CONFIRMED", "DELIVERED", "CANCELLED"];
-
-export const ADMIN_ORDER_STATUS_OPTIONS = STATUS_OPTIONS;
+export { ADMIN_ORDER_STATUS_OPTIONS };
 
 export const useAdminOrders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list, isListLoading, error } = useSelector(
     (state: RootState) => state.adminOrders,
   );
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>(ADMIN_FILTER_ALL);
 
   useEffect(() => {
     dispatch(
       adminOrdersActions.listRequested(
-        statusFilter === "all" ? {} : { status: statusFilter },
+        statusFilter === ADMIN_FILTER_ALL ? {} : { status: statusFilter },
       ),
     );
   }, [dispatch, statusFilter]);

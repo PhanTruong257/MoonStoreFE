@@ -13,16 +13,19 @@ import {
 import dayjs, { type Dayjs } from "dayjs";
 import { useState } from "react";
 
-import styles from "./admin-vouchers-page.module.scss";
 import { useAdminVouchers } from "./use-admin-vouchers";
 
+import { formatDate, formatMoneyShort } from "@/app/utils/format";
+import {
+  VOUCHER_DISCOUNT_TYPE,
+  VOUCHER_DISCOUNT_TYPE_OPTIONS,
+} from "@/const/voucher.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminVoucher } from "@/services/admin-service";
+import styles from "@/styles/admin-list.module.scss";
 
-const DISCOUNT_TYPE_OPTIONS = [
-  { label: "Percent (%)", value: "percent" },
-  { label: "Fixed amount", value: "fixed" },
-];
+const DEFAULT_PERCENT_VALUE = 10;
+const DEFAULT_EXPIRY_DAYS = 30;
 
 type FormValues = {
   code: string;
@@ -32,10 +35,10 @@ type FormValues = {
   expiredAt: Dayjs;
 };
 
-const formatExpiry = (iso: string) => {
-  const d = new Date(iso);
-  return d.toLocaleDateString();
-};
+const formatDiscountValue = (voucher: AdminVoucher) =>
+  voucher.discountType === VOUCHER_DISCOUNT_TYPE.PERCENT
+    ? `${voucher.value}%`
+    : `-${formatMoneyShort(voucher.value)}`;
 
 export const AdminVouchersPage = () => {
   const { items, isLoading, isSubmitting, create, update, remove } =
@@ -44,14 +47,16 @@ export const AdminVouchersPage = () => {
   const [editing, setEditing] = useState<AdminVoucher | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm<FormValues>();
+  const [nowMs] = useState(() => Date.now());
+  const isExpired = (iso: string) => new Date(iso).getTime() < nowMs;
 
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
     form.setFieldsValue({
-      discountType: "percent",
-      value: 10,
-      expiredAt: dayjs().add(30, "day"),
+      discountType: VOUCHER_DISCOUNT_TYPE.PERCENT,
+      value: DEFAULT_PERCENT_VALUE,
+      expiredAt: dayjs().add(DEFAULT_EXPIRY_DAYS, "day"),
     });
     setIsOpen(true);
   };
@@ -87,9 +92,6 @@ export const AdminVouchersPage = () => {
     setIsOpen(false);
   };
 
-  const [nowMs] = useState(() => Date.now());
-  const isExpired = (iso: string) => new Date(iso).getTime() < nowMs;
-
   return (
     <AdminShell
       title="Vouchers"
@@ -109,10 +111,14 @@ export const AdminVouchersPage = () => {
               <div className={styles.info}>
                 <div className={styles.titleRow}>
                   <strong>{voucher.code}</strong>
-                  <Tag color={voucher.discountType === "percent" ? "blue" : "geekblue"}>
-                    {voucher.discountType === "percent"
-                      ? `${voucher.value}%`
-                      : `-$${voucher.value}`}
+                  <Tag
+                    color={
+                      voucher.discountType === VOUCHER_DISCOUNT_TYPE.PERCENT
+                        ? "blue"
+                        : "geekblue"
+                    }
+                  >
+                    {formatDiscountValue(voucher)}
                   </Tag>
                   {isExpired(voucher.expiredAt) ? (
                     <Tag color="red">EXPIRED</Tag>
@@ -121,10 +127,10 @@ export const AdminVouchersPage = () => {
                   )}
                 </div>
                 <div className={styles.meta}>
-                  Expires {formatExpiry(voucher.expiredAt)} · Used{" "}
+                  Expires {formatDate(voucher.expiredAt)} · Used{" "}
                   {voucher.usageCount} time(s)
                   {voucher.maxDiscount !== null
-                    ? ` · max -$${voucher.maxDiscount}`
+                    ? ` · max -${formatMoneyShort(voucher.maxDiscount)}`
                     : ""}
                 </div>
               </div>
@@ -182,7 +188,7 @@ export const AdminVouchersPage = () => {
             name="discountType"
             rules={[{ required: true }]}
           >
-            <Select options={DISCOUNT_TYPE_OPTIONS} />
+            <Select options={VOUCHER_DISCOUNT_TYPE_OPTIONS} />
           </Form.Item>
           <Form.Item
             label="Value"

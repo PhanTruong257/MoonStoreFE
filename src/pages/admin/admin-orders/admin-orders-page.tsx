@@ -1,24 +1,16 @@
 import { Empty, Segmented, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
-import styles from "./admin-orders-page.module.scss";
 import {
   ADMIN_ORDER_STATUS_OPTIONS,
   useAdminOrders,
 } from "./use-admin-orders";
 
+import { formatDateTime, formatMoney } from "@/app/utils/format";
+import { ADMIN_ROUTES } from "@/const/admin.const";
+import { ORDER_STATUS_COLORS } from "@/const/orders.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
-
-const STATUS_TAG_COLOR: Record<string, string> = {
-  PENDING: "gold",
-  CONFIRMED: "blue",
-  SHIPPING: "geekblue",
-  DELIVERED: "green",
-  CANCELLED: "red",
-};
-
-const formatMoney = (value: number) => `$${value.toFixed(2)}`;
-const formatDateTime = (iso: string) => new Date(iso).toLocaleString();
+import styles from "@/styles/admin-list.module.scss";
 
 export const AdminOrdersPage = () => {
   const { orders, isLoading, error, statusFilter, setStatusFilter } =
@@ -51,10 +43,10 @@ export const AdminOrdersPage = () => {
             <article key={order.id} className={styles.row}>
               <div className={styles.info}>
                 <div className={styles.titleRow}>
-                  <Link to={`/admin/orders/${order.id}`}>
+                  <Link to={ADMIN_ROUTES.orderDetail(order.id)}>
                     <strong>Order #{order.id}</strong>
                   </Link>
-                  <Tag color={STATUS_TAG_COLOR[order.status] ?? "default"}>
+                  <Tag color={ORDER_STATUS_COLORS[order.status] ?? "default"}>
                     {order.status}
                   </Tag>
                   <Tag>{order.paymentStatus}</Tag>
@@ -66,7 +58,10 @@ export const AdminOrdersPage = () => {
               </div>
               <div className={styles.totals}>
                 <strong>{formatMoney(order.finalAmount)}</strong>
-                <Link to={`/admin/orders/${order.id}`} className={styles.link}>
+                <Link
+                  to={ADMIN_ROUTES.orderDetail(order.id)}
+                  className={styles.link}
+                >
                   View →
                 </Link>
               </div>

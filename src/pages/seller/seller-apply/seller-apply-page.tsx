@@ -4,14 +4,11 @@ import { Link } from "react-router-dom";
 import styles from "./seller-apply-page.module.scss";
 import { useSellerApply } from "./use-seller-apply";
 
+import {
+  SELLER_APPLICATION_STATUS,
+  SELLER_APPLICATION_STATUS_COLORS,
+} from "@/const/seller-status.const";
 import { SellerShell } from "@/features/seller/components/seller-shell";
-
-const STATUS_TAG_COLOR: Record<string, string> = {
-  pending: "gold",
-  active: "green",
-  rejected: "red",
-  disabled: "default",
-};
 
 export const SellerApplyPage = () => {
   const {
@@ -50,7 +47,7 @@ export const SellerApplyPage = () => {
     );
   }
 
-  const isPending = profile?.status === "pending";
+  const isPending = profile?.status === SELLER_APPLICATION_STATUS.PENDING;
 
   return (
     <SellerShell
@@ -61,13 +58,18 @@ export const SellerApplyPage = () => {
         {profile ? (
           <div className={styles.statusRow}>
             <strong>Status:</strong>
-            <Tag color={STATUS_TAG_COLOR[profile.status] ?? "default"}>
+            <Tag
+              color={
+                SELLER_APPLICATION_STATUS_COLORS[profile.status] ?? "default"
+              }
+            >
               {profile.status.toUpperCase()}
             </Tag>
           </div>
         ) : null}
 
-        {profile?.status === "rejected" && profile.rejectReason ? (
+        {profile?.status === SELLER_APPLICATION_STATUS.REJECTED &&
+        profile.rejectReason ? (
           <Alert
             type="error"
             showIcon
@@ -115,7 +117,7 @@ export const SellerApplyPage = () => {
               loading={isSubmitting}
               disabled={isPending}
             >
-              {profile?.status === "rejected"
+              {profile?.status === SELLER_APPLICATION_STATUS.REJECTED
                 ? "Resubmit application"
                 : profile
                   ? "Update application"

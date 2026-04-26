@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+import type { AdminSellerStatusFilter as SellerStatusFilter } from "@/const/admin.const";
+import { SELLER_APPLICATION_STATUS } from "@/const/seller-status.const";
 import type { AdminSeller } from "@/services/admin-service";
 
-export type SellerStatusFilter = "pending" | "active" | "rejected" | "all";
+export type { SellerStatusFilter };
 
 export type AdminSellersState = {
   sellers: AdminSeller[];
@@ -16,7 +18,7 @@ export type AdminSellersState = {
 
 const initialState: AdminSellersState = {
   sellers: [],
-  statusFilter: "pending",
+  statusFilter: SELLER_APPLICATION_STATUS.PENDING,
   isLoading: false,
   isActing: false,
   actingId: null,

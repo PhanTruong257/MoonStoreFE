@@ -1,23 +1,15 @@
 import { Button, Empty, Popconfirm, Segmented, Skeleton, Tag } from "antd";
 
-import styles from "./admin-users-page.module.scss";
+import { ADMIN_USER_ROLE_OPTIONS, useAdminUsers } from "./use-admin-users";
+
 import {
-  ADMIN_USER_ROLE_OPTIONS,
-  useAdminUsers,
-} from "./use-admin-users";
-
+  USER_ROLE,
+  USER_ROLE_TAG_COLORS,
+  USER_STATUS,
+  USER_STATUS_TAG_COLORS,
+} from "@/const/role.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
-
-const ROLE_TAG_COLOR: Record<string, string> = {
-  user: "default",
-  seller: "blue",
-  admin: "purple",
-};
-
-const STATUS_TAG_COLOR: Record<string, string> = {
-  active: "green",
-  disabled: "red",
-};
+import styles from "@/styles/admin-list.module.scss";
 
 export const AdminUsersPage = () => {
   const {
@@ -60,10 +52,10 @@ export const AdminUsersPage = () => {
               <div className={styles.info}>
                 <div className={styles.titleRow}>
                   <strong>{user.fullName}</strong>
-                  <Tag color={ROLE_TAG_COLOR[user.role] ?? "default"}>
+                  <Tag color={USER_ROLE_TAG_COLORS[user.role] ?? "default"}>
                     {user.role.toUpperCase()}
                   </Tag>
-                  <Tag color={STATUS_TAG_COLOR[user.status] ?? "default"}>
+                  <Tag color={USER_STATUS_TAG_COLORS[user.status] ?? "default"}>
                     {user.status.toUpperCase()}
                   </Tag>
                 </div>
@@ -72,7 +64,7 @@ export const AdminUsersPage = () => {
                 </div>
               </div>
               <div className={styles.actions}>
-                {user.role !== "admin" ? (
+                {user.role !== USER_ROLE.ADMIN ? (
                   <Popconfirm
                     title="Promote this user to admin?"
                     okText="Promote"
@@ -85,7 +77,7 @@ export const AdminUsersPage = () => {
                 ) : (
                   <span className={styles.adminBadge}>Already admin</span>
                 )}
-                {user.status === "active" ? (
+                {user.status === USER_STATUS.ACTIVE ? (
                   <Popconfirm
                     title="Disable this user? They will not be able to login."
                     okText="Disable"

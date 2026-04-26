@@ -3,18 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import {
-  adminSellersActions,
-  type SellerStatusFilter,
-} from "@/features/admin/admin-sellers/admin-sellers.slice";
+  ADMIN_SELLER_STATUS_OPTIONS,
+  type AdminSellerStatusFilter,
+} from "@/const/admin.const";
+import { adminSellersActions } from "@/features/admin/admin-sellers/admin-sellers.slice";
 
-export const ADMIN_SELLER_STATUS_OPTIONS: SellerStatusFilter[] = [
-  "pending",
-  "active",
-  "rejected",
-  "all",
-];
-
-export type { SellerStatusFilter };
+export { ADMIN_SELLER_STATUS_OPTIONS };
+export type { AdminSellerStatusFilter };
 
 export const useAdminSellers = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +26,7 @@ export const useAdminSellers = () => {
     isLoading,
     actingId: isActing ? actingId : null,
     error,
-    setStatusFilter: (next: SellerStatusFilter) =>
+    setStatusFilter: (next: AdminSellerStatusFilter) =>
       dispatch(adminSellersActions.statusFilterChanged(next)),
     handleApprove: (sellerId: number) =>
       dispatch(adminSellersActions.approveRequested(sellerId)),

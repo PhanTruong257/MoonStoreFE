@@ -10,11 +10,11 @@ import {
 } from "antd";
 import { useMemo, useState } from "react";
 
-import styles from "./admin-categories-page.module.scss";
 import { useAdminCategories } from "./use-admin-categories";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminCategory } from "@/services/admin-service";
+import styles from "@/styles/admin-list.module.scss";
 
 type FormValues = {
   name: string;

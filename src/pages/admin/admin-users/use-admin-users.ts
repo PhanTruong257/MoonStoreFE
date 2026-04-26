@@ -3,18 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import {
-  adminUsersActions,
-  type RoleFilter,
-} from "@/features/admin/admin-users/admin-users.slice";
+  ADMIN_USER_ROLE_OPTIONS,
+  type AdminUserRoleFilter,
+} from "@/const/admin.const";
+import { adminUsersActions } from "@/features/admin/admin-users/admin-users.slice";
 
-export const ADMIN_USER_ROLE_OPTIONS: RoleFilter[] = [
-  "all",
-  "user",
-  "seller",
-  "admin",
-];
-
-export type { RoleFilter };
+export { ADMIN_USER_ROLE_OPTIONS };
+export type RoleFilter = AdminUserRoleFilter;
 
 export const useAdminUsers = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +26,7 @@ export const useAdminUsers = () => {
     isLoading,
     actingId: isActing ? actingId : null,
     error,
-    setRoleFilter: (next: RoleFilter) =>
+    setRoleFilter: (next: AdminUserRoleFilter) =>
       dispatch(adminUsersActions.roleFilterChanged(next)),
     handlePromote: (userId: number) =>
       dispatch(adminUsersActions.promoteRequested(userId)),

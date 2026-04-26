@@ -1,11 +1,11 @@
 import { Button, Form, Input, Modal, Popconfirm, Skeleton, Tag } from "antd";
 import { useState } from "react";
 
-import styles from "./admin-brands-page.module.scss";
 import { useAdminBrands } from "./use-admin-brands";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminBrand } from "@/services/admin-service";
+import styles from "@/styles/admin-list.module.scss";
 
 type FormValues = { name: string };
 
@@ -55,8 +55,11 @@ export const AdminBrandsPage = () => {
           {items.map((brand) => (
             <article key={brand.id} className={styles.row}>
               <div className={styles.info}>
-                <strong>{brand.name}</strong>
-                <Tag>{brand.productCount} products</Tag>
+                <div className={styles.titleRow}>
+                  <strong>{brand.name}</strong>
+                  <Tag>{brand.productCount} products</Tag>
+                </div>
+                <div className={styles.meta}>ID #{brand.id}</div>
               </div>
               <div className={styles.actions}>
                 <Button size="small" onClick={() => openEdit(brand)}>

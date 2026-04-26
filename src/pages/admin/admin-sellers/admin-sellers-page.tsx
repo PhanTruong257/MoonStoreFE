@@ -10,20 +10,17 @@ import {
 } from "antd";
 import { useState } from "react";
 
-import styles from "./admin-sellers-page.module.scss";
 import {
   ADMIN_SELLER_STATUS_OPTIONS,
   useAdminSellers,
 } from "./use-admin-sellers";
 
+import {
+  SELLER_APPLICATION_STATUS,
+  SELLER_APPLICATION_STATUS_COLORS,
+} from "@/const/seller-status.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
-
-const STATUS_TAG_COLOR: Record<string, string> = {
-  pending: "gold",
-  active: "green",
-  rejected: "red",
-  disabled: "default",
-};
+import styles from "@/styles/admin-list.module.scss";
 
 export const AdminSellersPage = () => {
   const {
@@ -49,9 +46,7 @@ export const AdminSellersPage = () => {
       actions={
         <Segmented
           value={statusFilter}
-          onChange={(value) =>
-            setStatusFilter(value)
-          }
+          onChange={(value) => setStatusFilter(value)}
           options={ADMIN_SELLER_STATUS_OPTIONS.map((status) => ({
             label: status.toUpperCase(),
             value: status,
@@ -72,7 +67,12 @@ export const AdminSellersPage = () => {
               <div className={styles.info}>
                 <div className={styles.titleRow}>
                   <strong>{seller.shopName}</strong>
-                  <Tag color={STATUS_TAG_COLOR[seller.status] ?? "default"}>
+                  <Tag
+                    color={
+                      SELLER_APPLICATION_STATUS_COLORS[seller.status] ??
+                      "default"
+                    }
+                  >
                     {seller.status.toUpperCase()}
                   </Tag>
                 </div>
@@ -83,15 +83,16 @@ export const AdminSellersPage = () => {
                 {seller.description ? (
                   <p className={styles.description}>{seller.description}</p>
                 ) : null}
-                {seller.status === "rejected" && seller.rejectReason ? (
+                {seller.status === SELLER_APPLICATION_STATUS.REJECTED &&
+                seller.rejectReason ? (
                   <p className={styles.rejectReason}>
                     Reject reason: {seller.rejectReason}
                   </p>
                 ) : null}
               </div>
               <div className={styles.actions}>
-                {seller.status === "pending" ||
-                seller.status === "rejected" ? (
+                {seller.status === SELLER_APPLICATION_STATUS.PENDING ||
+                seller.status === SELLER_APPLICATION_STATUS.REJECTED ? (
                   <Button
                     type="primary"
                     loading={actingId === seller.id}
@@ -100,8 +101,8 @@ export const AdminSellersPage = () => {
                     Approve
                   </Button>
                 ) : null}
-                {seller.status === "pending" ||
-                seller.status === "active" ? (
+                {seller.status === SELLER_APPLICATION_STATUS.PENDING ||
+                seller.status === SELLER_APPLICATION_STATUS.ACTIVE ? (
                   <Button
                     danger
                     disabled={actingId === seller.id}
@@ -113,7 +114,7 @@ export const AdminSellersPage = () => {
                     Reject
                   </Button>
                 ) : null}
-                {seller.status === "active" ? (
+                {seller.status === SELLER_APPLICATION_STATUS.ACTIVE ? (
                   <Popconfirm
                     title="Disable this seller? Their products will be hidden."
                     okText="Disable"
@@ -123,7 +124,7 @@ export const AdminSellersPage = () => {
                     <Button loading={actingId === seller.id}>Disable</Button>
                   </Popconfirm>
                 ) : null}
-                {seller.status === "disabled" ? (
+                {seller.status === SELLER_APPLICATION_STATUS.DISABLED ? (
                   <Button
                     type="primary"
                     loading={actingId === seller.id}

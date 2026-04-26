@@ -4,18 +4,10 @@ import { Link } from "react-router-dom";
 import styles from "./admin-order-detail-page.module.scss";
 import { useAdminOrderDetail } from "./use-admin-order-detail";
 
+import { formatDateTime, formatMoney } from "@/app/utils/format";
+import { ADMIN_ROUTES } from "@/const/admin.const";
+import { ORDER_STATUS_COLORS } from "@/const/orders.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
-
-const STATUS_TAG_COLOR: Record<string, string> = {
-  PENDING: "gold",
-  CONFIRMED: "blue",
-  SHIPPING: "geekblue",
-  DELIVERED: "green",
-  CANCELLED: "red",
-};
-
-const formatMoney = (value: number) => `$${value.toFixed(2)}`;
-const formatDateTime = (iso: string) => new Date(iso).toLocaleString();
 
 const renderAddress = (address: Record<string, unknown> | null) => {
   if (!address) {
@@ -37,7 +29,7 @@ export const AdminOrderDetailPage = () => {
       title={order ? `Order #${order.id}` : "Order detail"}
       subtitle={order ? formatDateTime(order.createdAt) : "Loading..."}
       actions={
-        <Link to="/admin/orders" className={styles.backLink}>
+        <Link to={ADMIN_ROUTES.orders} className={styles.backLink}>
           ← Back to orders
         </Link>
       }
@@ -53,7 +45,7 @@ export const AdminOrderDetailPage = () => {
               <article key={group.id} className={styles.card}>
                 <div className={styles.cardHeader}>
                   <h3>{group.sellerShopName}</h3>
-                  <Tag color={STATUS_TAG_COLOR[group.status] ?? "default"}>
+                  <Tag color={ORDER_STATUS_COLORS[group.status] ?? "default"}>
                     {group.status}
                   </Tag>
                 </div>

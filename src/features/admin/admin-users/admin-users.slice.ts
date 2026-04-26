@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+import { ADMIN_FILTER_ALL } from "@/const/admin.const";
+import type { AdminUserRoleFilter as RoleFilter } from "@/const/admin.const";
 import type { AdminUser } from "@/services/admin-service";
 
-export type RoleFilter = "all" | "user" | "seller" | "admin";
+export type { RoleFilter };
 
 export type AdminUsersState = {
   users: AdminUser[];
@@ -16,7 +18,7 @@ export type AdminUsersState = {
 
 const initialState: AdminUsersState = {
   users: [],
-  roleFilter: "all",
+  roleFilter: ADMIN_FILTER_ALL,
   isLoading: false,
   isActing: false,
   actingId: null,
