@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
 import { fetchCartByUser } from "@/services/cart-service";
@@ -191,7 +192,7 @@ export const useCheckoutPageData = () => {
       );
       setItems([]);
       voucherState.reset();
-      window.dispatchEvent(new CustomEvent("cart:updated"));
+      dispatchCartUpdated();
     } catch {
       setOrderMessage("Unable to place order. Please try again.");
     } finally {

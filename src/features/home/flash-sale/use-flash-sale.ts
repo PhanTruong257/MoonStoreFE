@@ -2,54 +2,25 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { cycleSlice } from "@/app/utils/array";
+import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import { readJsonFromStorage, writeJsonToStorage } from "@/app/utils/storage";
+import { STORAGE_KEYS } from "@/const/storage.const";
 import {
   flashSaleActions,
   getCountdown,
 } from "@/features/home/flash-sale/flash-sale.slice";
 import { flashSaleDeadline } from "@/pages/home/mock-data";
 
-const CART_STORAGE_KEY = "cart_items";
-const WISHLIST_STORAGE_KEY = "wishlist_items";
+const FLASH_VISIBLE_COUNT = 5;
+const COUNTDOWN_INTERVAL_MS = 1000;
+const ALL_CATEGORY_ID = "all";
 
-const cycleSlice = <T>(list: T[], start: number, count: number): T[] => {
-  if (list.length <= count) {
-    return list;
-  }
+const readCartItems = () =>
+  readJsonFromStorage<Record<string, number>>(STORAGE_KEYS.CART_ITEMS, {});
 
-  return Array.from({ length: count }, (_, index) => {
-    return list[(start + index) % list.length];
-  });
-};
-
-const readCartItems = (): Record<string, number> => {
-  const raw = localStorage.getItem(CART_STORAGE_KEY);
-  if (!raw) {
-    return {};
-  }
-
-  try {
-    const parsed = JSON.parse(raw) as Record<string, number>;
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    localStorage.removeItem(CART_STORAGE_KEY);
-    return {};
-  }
-};
-
-const readWishlist = (): Record<string, boolean> => {
-  const raw = localStorage.getItem(WISHLIST_STORAGE_KEY);
-  if (!raw) {
-    return {};
-  }
-
-  try {
-    const parsed = JSON.parse(raw) as Record<string, boolean>;
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    localStorage.removeItem(WISHLIST_STORAGE_KEY);
-    return {};
-  }
-};
+const readWishlist = () =>
+  readJsonFromStorage<Record<string, boolean>>(STORAGE_KEYS.WISHLIST_ITEMS, {});
 
 export const useFlashSale = (
   searchQuery: string,
@@ -86,7 +57,7 @@ export const useFlashSale = (
       dispatch(
         flashSaleActions.flashSaleSetCountdown(getCountdown(flashSaleDeadline)),
       );
-    }, 1000);
+    }, COUNTDOWN_INTERVAL_MS);
 
     return () => {
       window.clearInterval(timerId);
@@ -94,17 +65,17 @@ export const useFlashSale = (
   }, [dispatch]);
 
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
-    window.dispatchEvent(new CustomEvent("cart:updated"));
+    writeJsonToStorage(STORAGE_KEYS.CART_ITEMS, cartItems);
+    dispatchCartUpdated();
   }, [cartItems]);
 
   useEffect(() => {
-    localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(wishlistMap));
+    writeJsonToStorage(STORAGE_KEYS.WISHLIST_ITEMS, wishlistMap);
   }, [wishlistMap]);
 
   const flashSaleProducts = useMemo(() => {
     const byCategory =
-      activeCategory === "all"
+      activeCategory === ALL_CATEGORY_ID
         ? products
         : products.filter((item) => item.categoryId === activeCategory);
 
@@ -113,7 +84,9 @@ export const useFlashSale = (
     }
 
     const query = searchQuery.trim().toLowerCase();
-    return byCategory.filter((item) => item.name.toLowerCase().includes(query));
+    return byCategory.filter((item) =>
+      item.name.toLowerCase().includes(query),
+    );
   }, [activeCategory, products, searchQuery]);
 
   useEffect(() => {
@@ -129,7 +102,7 @@ export const useFlashSale = (
   const visibleFlashProducts = useMemo(() => {
     return showAll
       ? flashSaleProducts
-      : cycleSlice(flashSaleProducts, flashStart, 5);
+      : cycleSlice(flashSaleProducts, flashStart, FLASH_VISIBLE_COUNT);
   }, [flashSaleProducts, flashStart, showAll]);
 
   const cartCount = useMemo(() => {

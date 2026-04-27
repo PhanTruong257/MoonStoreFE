@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { subscribeCartUpdated } from "@/app/utils/cart-event";
 import { toCategorySlug } from "@/app/utils/category-slug";
 import { HEADER_TEXT } from "@/const/header.const";
 import type { AuthState } from "@/features/auth/auth-slice";
@@ -118,16 +119,14 @@ export const SiteHeader = ({
       }
     };
 
-    const handleCartUpdated = () => {
-      void loadCartCount();
-    };
-
     void loadCartCount();
-    window.addEventListener("cart:updated", handleCartUpdated);
+    const unsubscribe = subscribeCartUpdated(() => {
+      void loadCartCount();
+    });
 
     return () => {
       isMounted = false;
-      window.removeEventListener("cart:updated", handleCartUpdated);
+      unsubscribe();
     };
   }, [isLoggedIn, activeUserId]);
 

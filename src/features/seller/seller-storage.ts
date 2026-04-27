@@ -1,3 +1,8 @@
+import {
+  readJsonFromStorage,
+  writeJsonToStorage,
+} from "@/app/utils/storage";
+
 export type SellerProductItem = {
   id: number;
   name: string;
@@ -11,23 +16,13 @@ export type SellerProductItem = {
 const buildKey = (userId: number) => `seller_products_${userId}`;
 
 export const loadSellerProducts = (userId: number): SellerProductItem[] => {
-  const raw = localStorage.getItem(buildKey(userId));
-  if (!raw) {
-    return [];
-  }
-
-  try {
-    const parsed = JSON.parse(raw) as SellerProductItem[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    localStorage.removeItem(buildKey(userId));
-    return [];
-  }
+  const items = readJsonFromStorage<SellerProductItem[]>(buildKey(userId), []);
+  return Array.isArray(items) ? items : [];
 };
 
 export const saveSellerProducts = (
   userId: number,
   items: SellerProductItem[],
 ) => {
-  localStorage.setItem(buildKey(userId), JSON.stringify(items));
+  writeJsonToStorage(buildKey(userId), items);
 };

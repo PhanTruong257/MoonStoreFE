@@ -4,22 +4,14 @@ import { Link } from "react-router-dom";
 import styles from "./admin-order-detail-page.module.scss";
 import { useAdminOrderDetail } from "./use-admin-order-detail";
 
-import { formatDateTime, formatMoney } from "@/app/utils/format";
+import {
+  formatDateTime,
+  formatMoney,
+  renderAddressLine,
+} from "@/app/utils/format";
 import { ADMIN_ROUTES } from "@/const/admin.const";
 import { ORDER_STATUS_COLORS } from "@/const/orders.const";
 import { AdminShell } from "@/features/admin/components/admin-shell";
-
-const renderAddress = (address: Record<string, unknown> | null) => {
-  if (!address) {
-    return "(none)";
-  }
-  const parts = [
-    address.addressLine ?? address.streetAddress,
-    address.district,
-    address.city,
-  ].filter(Boolean);
-  return parts.join(", ") || "(empty)";
-};
 
 export const AdminOrderDetailPage = () => {
   const { order, isLoading, error } = useAdminOrderDetail();
@@ -127,7 +119,7 @@ export const AdminOrderDetailPage = () => {
             <article className={styles.card}>
               <h3>Shipping</h3>
               <p className={styles.address}>
-                {renderAddress(order.shippingAddress)}
+                {renderAddressLine(order.shippingAddress)}
               </p>
             </article>
           </div>

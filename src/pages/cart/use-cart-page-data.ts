@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { writeJsonToStorage } from "@/app/utils/storage";
+import { STORAGE_KEYS } from "@/const/storage.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
 import {
@@ -21,7 +23,6 @@ type CartItem = {
   }>;
 };
 
-const CART_STORAGE_KEY = "cart_items";
 const SHIPPING_FEE = 0;
 
 export const useCartPageData = () => {
@@ -61,7 +62,7 @@ export const useCartPageData = () => {
           acc[String(item.id)] = item.quantity;
           return acc;
         }, {});
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(map));
+        writeJsonToStorage(STORAGE_KEYS.CART_ITEMS, map);
       } catch {
         if (!isMounted) {
           return;

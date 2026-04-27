@@ -2,6 +2,7 @@
 import type { MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import { toCategorySlug } from "@/app/utils/category-slug";
 import { ProductCard } from "@/component/product-card/product-card";
 import { getStoredUser } from "@/features/auth/auth-storage";
@@ -59,7 +60,7 @@ export const ProductListSection = ({
         productId: productIdNumber,
         quantity: 1,
       });
-      window.dispatchEvent(new CustomEvent("cart:updated"));
+      dispatchCartUpdated();
     } catch {
       // Ignore add errors for now.
     }

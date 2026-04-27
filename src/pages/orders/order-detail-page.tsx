@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styles from "./order-detail-page.module.scss";
 import { useOrderDetail } from "./use-order-detail";
 
+import { renderAddressLine } from "@/app/utils/format";
 import {
   ORDER_STATUS,
   ORDER_STATUS_COLORS,
@@ -13,20 +14,6 @@ import {
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
-
-const renderAddressLine = (
-  address: Record<string, unknown> | null,
-): string | null => {
-  if (!address) {
-    return null;
-  }
-  const parts = [
-    address.addressLine ?? address.streetAddress ?? address.firstName,
-    address.district,
-    address.city,
-  ].filter(Boolean);
-  return parts.join(", ");
-};
 
 export const OrderDetailPage = () => {
   const { order, isLoading, isCancelling, error, cancelGroup } =
@@ -184,8 +171,7 @@ export const OrderDetailPage = () => {
                   <h3>Shipping address</h3>
                   {order.shippingAddress ? (
                     <p className={styles.address}>
-                      {renderAddressLine(order.shippingAddress) ??
-                        "(unknown address)"}
+                      {renderAddressLine(order.shippingAddress)}
                     </p>
                   ) : (
                     <p className={styles.address}>(none)</p>

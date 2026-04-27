@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { safeParseJsonArray } from "@/app/utils/safe-parse";
 import { SELLER_ROUTES } from "@/const/seller.const";
 import { sellerProductEditActions } from "@/features/seller/seller-product-edit/seller-product-edit.slice";
 import type {
@@ -21,18 +22,6 @@ export type SellerProductEditFormValues = {
   stock: number;
   imageUrl: string;
   optionGroupsJson?: string;
-};
-
-const safeParseGroups = (raw?: string): SellerProductOptionGroupInput[] | undefined => {
-  if (!raw || !raw.trim()) {
-    return undefined;
-  }
-  try {
-    const parsed = JSON.parse(raw) as SellerProductOptionGroupInput[];
-    return Array.isArray(parsed) ? parsed : undefined;
-  } catch {
-    return undefined;
-  }
 };
 
 export const useSellerProductEdit = () => {
@@ -102,7 +91,9 @@ export const useSellerProductEdit = () => {
         imageUrl: values.imageUrl,
       };
 
-      const parsedGroups = safeParseGroups(values.optionGroupsJson);
+      const parsedGroups = safeParseJsonArray<SellerProductOptionGroupInput>(
+        values.optionGroupsJson,
+      );
       if (parsedGroups !== undefined) {
         payload.optionGroups = parsedGroups;
       }

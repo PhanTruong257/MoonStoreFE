@@ -24,7 +24,7 @@ import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
 import { SellerOrderDetailPage } from "@/pages/seller/seller-order-detail";
 import { SellerOrdersPage } from "@/pages/seller/seller-orders";
 import { SellerProductEditPage } from "@/pages/seller/seller-product-edit";
-import { SellerProductNewPage } from "@/pages/seller/seller-product-new-page";
+import { SellerProductNewPage } from "@/pages/seller/seller-product-new";
 import { SellerProductsPage } from "@/pages/seller/seller-products";
 
 export const protectedRoutes: RouteObject[] = [

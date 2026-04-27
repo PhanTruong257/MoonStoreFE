@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { homeProducts } from "@/pages/home/mock-data";
 import { addToCart } from "@/services/cart-service";
@@ -239,7 +240,7 @@ export const useProductDetailData = () => {
         optionIds: selectedOptionIds,
         quantity,
       });
-      window.dispatchEvent(new CustomEvent("cart:updated"));
+      dispatchCartUpdated();
       return true;
     } catch {
       return false;

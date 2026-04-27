@@ -278,51 +278,139 @@
 }
 
 .buyRow {
-  margin-top: 6px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
 }
 
 .quantityBox {
-  border: 1px solid var(--color-gray-260);
-  border-radius: 6px;
-  min-width: 130px;
-  display: grid;
-  grid-template-columns: 40px 1fr 40px;
+  display: flex;
   align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  height: 48px;
+  overflow: hidden;
+  flex-shrink: 0;
 
   button {
+    width: 40px;
+    height: 100%;
     border: 0;
-    height: 42px;
-    background: #fff;
+    background: transparent;
     cursor: pointer;
     font-size: 18px;
+    color: var(--color-text);
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--color-gray-100);
+    }
   }
 
   strong {
+    min-width: 44px;
     text-align: center;
+    font-weight: 600;
+    color: var(--color-text);
   }
 }
 
-.buyNowButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  background: #c51e1e;
+.primaryAction {
+  flex: 2 1 180px;
+  height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-primary);
   color: #fff;
-  font-weight: 700;
-  min-height: 44px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 4px 12px rgba(222, 91, 44, 0.25);
+
+  &:hover:not(:disabled) {
+    background: #c95025;
+    box-shadow: 0 6px 16px rgba(222, 91, 44, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.secondaryAction {
+  flex: 2 1 160px;
+  height: 48px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(222, 91, 44, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
 }
 
 .wishButton {
-  border: 1px solid var(--color-gray-260);
-  border-radius: 6px;
-  padding: 0 16px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   background: #fff;
+  color: var(--color-muted);
   cursor: pointer;
-  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
+  flex-shrink: 0;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}
+
+.wishButtonActive {
+  border-color: var(--color-primary);
+  background: rgba(222, 91, 44, 0.08);
+  color: var(--color-primary);
+
+  svg {
+    fill: currentColor;
+  }
 }
 
 .policyCard {

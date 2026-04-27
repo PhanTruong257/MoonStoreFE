@@ -1,39 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { cycleSlice } from "@/app/utils/array";
+import { readJsonFromStorage, writeJsonToStorage } from "@/app/utils/storage";
+import { STORAGE_KEYS } from "@/const/storage.const";
 import { homeBanners, homeProducts } from "@/pages/home/mock-data";
 import type { HomeProduct } from "@/pages/home/mock-data";
 import { fetchProducts } from "@/services/catalog-service";
 
-const cycleSlice = <T>(list: T[], start: number, count: number): T[] => {
-  if (list.length <= count) {
-    return list;
-  }
-
-  return Array.from({ length: count }, (_, index) => {
-    return list[(start + index) % list.length];
-  });
-};
-
-const WISHLIST_STORAGE_KEY = "wishlist_items";
+const ALL_CATEGORY_ID = "all";
+const BEST_SELLING_VISIBLE = 4;
+const PRODUCT_LIMIT = 8;
+const HERO_INTERVAL_MS = 5000;
+const FALLBACK_PRODUCT_IMAGE = "/images/products/product-1.jpg";
+const PRICE_OLD_RATIO = 1.2;
+const SOLD_FALLBACK_MIN = 10;
 
 type HomeProductView = HomeProduct & { productIdNumber?: number };
 
-const readWishlist = (): Record<string, boolean> => {
-  const raw = localStorage.getItem(WISHLIST_STORAGE_KEY);
-  if (!raw) {
-    return {};
-  }
+const readWishlist = () =>
+  readJsonFromStorage<Record<string, boolean>>(STORAGE_KEYS.WISHLIST_ITEMS, {});
 
-  try {
-    const parsed = JSON.parse(raw) as Record<string, boolean>;
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    localStorage.removeItem(WISHLIST_STORAGE_KEY);
-    return {};
-  }
-};
-
-export const useHomePageData = (selectedCategoryId = "all") => {
+export const useHomePageData = (selectedCategoryId = ALL_CATEGORY_ID) => {
   const [heroIndex, setHeroIndex] = useState(0);
   const [bestSellingStart, setBestSellingStart] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,11 +46,11 @@ export const useHomePageData = (selectedCategoryId = "all") => {
             id: String(item.id),
             name: item.name,
             price,
-            oldPrice: Math.round(price * 1.2),
+            oldPrice: Math.round(price * PRICE_OLD_RATIO),
             categoryId: String(item.categoryId),
-            image: item.imageUrl ?? "/images/products/product-1.jpg",
+            image: item.imageUrl ?? FALLBACK_PRODUCT_IMAGE,
             rating: 4,
-            sold: Math.max(10, (item.stock ?? 0) / 2),
+            sold: Math.max(SOLD_FALLBACK_MIN, (item.stock ?? 0) / 2),
             productIdNumber: item.id,
           };
         });
@@ -87,7 +74,7 @@ export const useHomePageData = (selectedCategoryId = "all") => {
 
   const filteredProducts = useMemo(() => {
     const byCategory =
-      selectedCategoryId === "all"
+      selectedCategoryId === ALL_CATEGORY_ID
         ? products
         : products.filter((item) => item.categoryId === selectedCategoryId);
 
@@ -96,29 +83,33 @@ export const useHomePageData = (selectedCategoryId = "all") => {
     }
 
     const query = searchQuery.trim().toLowerCase();
-    return byCategory.filter((item) => item.name.toLowerCase().includes(query));
+    return byCategory.filter((item) =>
+      item.name.toLowerCase().includes(query),
+    );
   }, [products, searchQuery, selectedCategoryId]);
 
   const bestSellingProducts = useMemo(() => {
-    return [...filteredProducts].sort((a, b) => b.sold - a.sold).slice(0, 8);
+    return [...filteredProducts]
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, PRODUCT_LIMIT);
   }, [filteredProducts]);
 
   const productSpotlight = useMemo(() => {
-    return filteredProducts.slice(0, 8);
+    return filteredProducts.slice(0, PRODUCT_LIMIT);
   }, [filteredProducts]);
 
   const visibleBestSellingProducts = useMemo(() => {
-    return cycleSlice(bestSellingProducts, bestSellingStart, 4);
+    return cycleSlice(bestSellingProducts, bestSellingStart, BEST_SELLING_VISIBLE);
   }, [bestSellingProducts, bestSellingStart]);
 
   useEffect(() => {
-    localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(wishlistMap));
+    writeJsonToStorage(STORAGE_KEYS.WISHLIST_ITEMS, wishlistMap);
   }, [wishlistMap]);
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % homeBanners.length);
-    }, 5000);
+    }, HERO_INTERVAL_MS);
 
     return () => {
       window.clearInterval(timerId);

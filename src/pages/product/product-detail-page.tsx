@@ -236,18 +236,26 @@ export const ProductDetailPage = () => {
 
             <div className={styles.buyRow}>
               <div className={styles.quantityBox}>
-                <button type="button" onClick={decreaseQuantity}>
-                  -
+                <button
+                  type="button"
+                  onClick={decreaseQuantity}
+                  aria-label="Decrease quantity"
+                >
+                  −
                 </button>
                 <strong>{quantity}</strong>
-                <button type="button" onClick={increaseQuantity}>
+                <button
+                  type="button"
+                  onClick={increaseQuantity}
+                  aria-label="Increase quantity"
+                >
                   +
                 </button>
               </div>
 
               <button
                 type="button"
-                className={styles.buyNowButton}
+                className={styles.primaryAction}
                 disabled={!canAddToCart}
                 onClick={() => {
                   void addSelectedToCart().then((ok) => {
@@ -262,21 +270,33 @@ export const ProductDetailPage = () => {
 
               <button
                 type="button"
-                className={styles.buyNowButton}
+                className={styles.secondaryAction}
                 disabled={!canAddToCart}
                 onClick={() => {
                   void addSelectedToCart();
                 }}
               >
-                Add To Cart
+                Add to cart
               </button>
 
               <button
                 type="button"
-                className={styles.wishButton}
+                className={`${styles.wishButton} ${isWishlisted ? styles.wishButtonActive : ""}`}
                 onClick={toggleWishlist}
+                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                title={isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
               >
-                {isWishlisted ? "Saved" : "Wish"}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill={isWishlisted ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
               </button>
             </div>
 
