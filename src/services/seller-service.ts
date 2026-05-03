@@ -141,6 +141,9 @@ export type SellerOrderStatusLog = {
 
 export type SellerOrderDetail = SellerOrderGroup & {
   shippingAddress: Record<string, unknown> | null;
+  paymentMethod: string;
+  paymentStatus: string;
+  qrPaymentId: number | null;
   statusLogs: SellerOrderStatusLog[];
 };
 

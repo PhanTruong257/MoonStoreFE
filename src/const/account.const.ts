@@ -12,9 +12,40 @@ export const ACCOUNT_TEXT = {
   saveLabel: "Save Changes",
 } as const;
 
+export const ACCOUNT_SECTION_IDS = {
+  profile: "account-profile-section",
+  address: "account-address-section",
+} as const;
+
+export type AccountManageItemKey = "profile" | "address" | "payment";
+
+export type AccountManageItem = {
+  key: AccountManageItemKey;
+  label: string;
+  anchorId?: string;
+  disabled?: boolean;
+};
+
+export const ACCOUNT_MANAGE_ITEMS: readonly AccountManageItem[] = [
+  {
+    key: "profile",
+    label: "My Profile",
+    anchorId: ACCOUNT_SECTION_IDS.profile,
+  },
+  {
+    key: "address",
+    label: "Address Book",
+    anchorId: ACCOUNT_SECTION_IDS.address,
+  },
+  {
+    key: "payment",
+    label: "My Payment Options",
+    disabled: true,
+  },
+];
+
 export const ACCOUNT_MENU = {
   manageTitle: "Manage My Account",
-  manageItems: ["My Profile", "Address Book", "My Payment Options"],
   orderTitle: "My Orders",
   orderItems: ["My Returns", "My Cancellations"],
   wishlistTitle: "My Wishlist",

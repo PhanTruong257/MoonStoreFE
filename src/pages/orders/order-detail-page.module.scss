@@ -153,6 +153,17 @@
   }
 }
 
+.productLink {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.15s ease;
+
+  &:hover strong {
+    color: var(--color-primary);
+  }
+}
+
 .groupTotals {
   display: flex;
   justify-content: space-between;

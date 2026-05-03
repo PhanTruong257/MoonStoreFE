@@ -63,6 +63,11 @@
   color: var(--color-danger) !important;
 }
 
+.menuDisabled {
+  color: var(--color-gray-220) !important;
+  cursor: not-allowed !important;
+}
+
 .panel {
   border: 1px solid var(--color-gray-220);
   border-radius: 10px;

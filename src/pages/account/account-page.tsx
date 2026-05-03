@@ -16,7 +16,9 @@ import { useAccount } from "./use-account";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import {
+  ACCOUNT_MANAGE_ITEMS,
   ACCOUNT_MENU,
+  ACCOUNT_SECTION_IDS,
   ACCOUNT_TEXT,
   PROFILE_FIELDS,
 } from "@/const/account.const";
@@ -57,6 +59,8 @@ export const AccountPage = () => {
     submitAddress,
     handleDeleteAddress,
     handleSetDefault,
+    activeManageKey,
+    selectManageItem,
   } = useAccount();
 
   const welcomeName = storedUser?.fullName ?? ACCOUNT_TEXT.welcomeName;
@@ -89,13 +93,21 @@ export const AccountPage = () => {
         <div className={styles.content}>
           <aside className={styles.sideMenu}>
             <h3>{ACCOUNT_MENU.manageTitle}</h3>
-            {ACCOUNT_MENU.manageItems.map((item, index) => (
+            {ACCOUNT_MANAGE_ITEMS.map((item) => (
               <button
-                key={item}
+                key={item.key}
                 type="button"
-                className={index === 0 ? styles.menuActive : ""}
+                disabled={item.disabled}
+                onClick={() => selectManageItem(item)}
+                className={
+                  item.disabled
+                    ? styles.menuDisabled
+                    : item.key === activeManageKey
+                      ? styles.menuActive
+                      : ""
+                }
               >
-                {item}
+                {item.label}
               </button>
             ))}
 
@@ -128,7 +140,10 @@ export const AccountPage = () => {
               )}
             </div>
 
-            <section className={styles.addressSection}>
+            <section
+              id={ACCOUNT_SECTION_IDS.address}
+              className={styles.addressSection}
+            >
               <header>
                 <h3>My addresses</h3>
                 <Button type="primary" onClick={openCreateAddress}>
@@ -191,7 +206,9 @@ export const AccountPage = () => {
               )}
             </section>
 
-            <h2>{ACCOUNT_TEXT.profileTitle}</h2>
+            <h2 id={ACCOUNT_SECTION_IDS.profile}>
+              {ACCOUNT_TEXT.profileTitle}
+            </h2>
 
             <div className={styles.formGrid}>
               <div className={styles.field}>

@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { PAYMENT_METHOD, PAYMENT_STATUS } from "@/const/payment.const";
 import { SELLER_ORDER_STATUS, getNextOrderStatus } from "@/const/seller.const";
+import { paymentsActions } from "@/features/payments/payments.slice";
 import { sellerOrderDetailActions } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
 
 const CANCEL_NOTE_DEFAULT = "Cancelled by seller";
@@ -15,17 +17,36 @@ export const useSellerOrderDetail = () => {
   const { group, isLoading, isSubmitting, error } = useSelector(
     (state: RootState) => state.sellerOrderDetail,
   );
+  const { isConfirming, qrInfo } = useSelector(
+    (state: RootState) => state.payments,
+  );
 
   const [advanceOpen, setAdvanceOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [note, setNote] = useState("");
+  const lastConfirmedPaymentRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!groupId) {
       return;
     }
     dispatch(sellerOrderDetailActions.sellerOrderDetailRequested(groupId));
+
+    return () => {
+      dispatch(paymentsActions.qrInfoReset());
+    };
   }, [dispatch, groupId]);
+
+  useEffect(() => {
+    if (!qrInfo || qrInfo.paymentStatus !== PAYMENT_STATUS.PAID) {
+      return;
+    }
+    if (lastConfirmedPaymentRef.current === qrInfo.paymentId) {
+      return;
+    }
+    lastConfirmedPaymentRef.current = qrInfo.paymentId;
+    dispatch(sellerOrderDetailActions.sellerOrderDetailRequested(groupId));
+  }, [dispatch, groupId, qrInfo]);
 
   const nextStatus = group ? getNextOrderStatus(group.status) : null;
   const canCancel = Boolean(
@@ -74,6 +95,25 @@ export const useSellerOrderDetail = () => {
     setAdvanceOpen(false);
   }, [dispatch, groupId, nextStatus, note]);
 
+  const canConfirmManualPayment = Boolean(
+    group &&
+      group.paymentMethod === PAYMENT_METHOD.QR &&
+      group.paymentStatus === PAYMENT_STATUS.PENDING &&
+      group.qrPaymentId,
+  );
+
+  const confirmManualPayment = useCallback(() => {
+    if (!group?.qrPaymentId) {
+      return;
+    }
+    dispatch(
+      paymentsActions.manualConfirmRequested({
+        paymentId: group.qrPaymentId,
+        orderId: group.orderId,
+      }),
+    );
+  }, [dispatch, group]);
+
   const confirmCancel = useCallback(() => {
     dispatch(
       sellerOrderDetailActions.sellerOrderStatusUpdateRequested({
@@ -105,5 +145,8 @@ export const useSellerOrderDetail = () => {
     closeCancel,
     confirmAdvance,
     confirmCancel,
+    canConfirmManualPayment,
+    confirmingManualPayment: isConfirming,
+    confirmManualPayment,
   };
 };

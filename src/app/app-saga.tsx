@@ -12,6 +12,7 @@ import { homeCategorySaga } from "@/features/home/category/category.saga";
 import { flashSaleSaga } from "@/features/home/flash-sale/flash-sale.saga";
 import { productListSaga } from "@/features/home/product-list/product-list.saga";
 import { ordersSaga } from "@/features/orders/orders.saga";
+import { paymentsSaga } from "@/features/payments/payments.saga";
 import { reviewsSaga } from "@/features/reviews/reviews.saga";
 import { sellerDashboardSaga } from "@/features/seller/seller-dashboard/seller-dashboard.saga";
 import { sellerOrderDetailSaga } from "@/features/seller/seller-order-detail/seller-order-detail.saga";
@@ -27,6 +28,7 @@ export function* rootSaga() {
     fork(flashSaleSaga),
     fork(productListSaga),
     fork(ordersSaga),
+    fork(paymentsSaga),
     fork(reviewsSaga),
     fork(sellerDashboardSaga),
     fork(sellerOrderDetailSaga),

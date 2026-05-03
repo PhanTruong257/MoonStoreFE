@@ -15,6 +15,7 @@ import { homeCategoryReducer } from "@/features/home/category/category.slice";
 import { flashSaleReducer } from "@/features/home/flash-sale/flash-sale.slice";
 import { productListReducer } from "@/features/home/product-list/product-list.slice";
 import { ordersReducer } from "@/features/orders/orders.slice";
+import { paymentsReducer } from "@/features/payments/payments.slice";
 import { reviewsReducer } from "@/features/reviews/reviews.slice";
 import { sellerDashboardReducer } from "@/features/seller/seller-dashboard/seller-dashboard.slice";
 import { sellerOrderDetailReducer } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
@@ -51,6 +52,7 @@ export const store = configureStore({
     flashSale: flashSaleReducer,
     productList: productListReducer,
     orders: ordersReducer,
+    payments: paymentsReducer,
     reviews: reviewsReducer,
     sellerDashboard: sellerDashboardReducer,
     sellerOrderDetail: sellerOrderDetailReducer,

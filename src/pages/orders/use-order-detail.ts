@@ -4,7 +4,9 @@ import { useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { ORDER_STATUS } from "@/const/orders.const";
+import { PAYMENT_METHOD, PAYMENT_STATUS } from "@/const/payment.const";
 import { ordersActions } from "@/features/orders/orders.slice";
+import { paymentsActions } from "@/features/payments/payments.slice";
 
 export const useOrderDetail = () => {
   const params = useParams<{ orderId: string }>();
@@ -12,6 +14,9 @@ export const useOrderDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { detail, isDetailLoading, isCancelling, error } = useSelector(
     (state: RootState) => state.orders,
+  );
+  const { qrInfo, isQrLoading } = useSelector(
+    (state: RootState) => state.payments,
   );
 
   useEffect(() => {
@@ -22,8 +27,30 @@ export const useOrderDetail = () => {
 
     return () => {
       dispatch(ordersActions.orderDetailReset());
+      dispatch(paymentsActions.qrInfoReset());
     };
   }, [dispatch, orderId]);
+
+  useEffect(() => {
+    if (!detail) {
+      return;
+    }
+    if (
+      detail.paymentMethod === PAYMENT_METHOD.QR &&
+      detail.paymentStatus === PAYMENT_STATUS.PENDING
+    ) {
+      dispatch(paymentsActions.qrInfoRequested(detail.id));
+    } else {
+      dispatch(paymentsActions.qrInfoReset());
+    }
+  }, [
+    dispatch,
+    detail,
+    detail?.id,
+    detail?.paymentMethod,
+    detail?.paymentStatus,
+  ]);
+
 
   const canCancel = useMemo(() => {
     if (!detail) {
@@ -55,5 +82,7 @@ export const useOrderDetail = () => {
     error,
     canCancel,
     cancelGroup,
+    qrInfo,
+    isQrLoading,
   };
 };

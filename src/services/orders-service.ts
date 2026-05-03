@@ -8,8 +8,21 @@ export type CreateOrderPayload = {
   addressId?: number;
 };
 
+export type CreateOrderQrInfo = {
+  paymentId: number;
+  amount: number;
+  bankBin: string;
+  bankName: string;
+  accountNo: string;
+  accountName: string;
+  transferContent: string;
+  qrUrl: string;
+};
+
 export type CreateOrderResponse = {
   orderId: number;
+  paymentUrl?: string;
+  qrInfo?: CreateOrderQrInfo;
 };
 
 export type OrderItemSelectedOption = {

@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import type { RootState } from "@/app/app-store";
+import {
+  type AccountManageItem,
+  type AccountManageItemKey,
+} from "@/const/account.const";
 import { USER_ROLE } from "@/const/role.const";
 import { getAuthErrorMessage } from "@/features/auth/auth-errors";
 import { setStoredUser } from "@/features/auth/auth-storage";
@@ -62,6 +66,19 @@ export const useAccount = () => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressForm] = Form.useForm<AccountAddressFormValues>();
   const [isAddressSaving, setIsAddressSaving] = useState(false);
+  const [activeManageKey, setActiveManageKey] =
+    useState<AccountManageItemKey>("profile");
+
+  const selectManageItem = (item: AccountManageItem) => {
+    if (item.disabled || !item.anchorId) {
+      return;
+    }
+    setActiveManageKey(item.key);
+    const target = document.getElementById(item.anchorId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -246,5 +263,7 @@ export const useAccount = () => {
     submitAddress,
     handleDeleteAddress,
     handleSetDefault,
+    activeManageKey,
+    selectManageItem,
   };
 };

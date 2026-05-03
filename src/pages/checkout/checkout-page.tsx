@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CHECKOUT_TEXT } from "@/const/checkout.const";
+import { CHECKOUT_PAYMENT_OPTIONS } from "@/const/payment.const";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections } from "@/pages/home/mock-data";
@@ -248,8 +249,10 @@ export const CheckoutPage = () => {
                   <input
                     type="radio"
                     name="payment"
-                    checked={paymentMethod === "bank"}
-                    onChange={() => setPaymentMethod("bank")}
+                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.BANK}
+                    onChange={() =>
+                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.BANK)
+                    }
                     disabled={isSubmitting}
                   />
                   Bank
@@ -267,8 +270,40 @@ export const CheckoutPage = () => {
                   <input
                     type="radio"
                     name="payment"
-                    checked={paymentMethod === "cod"}
-                    onChange={() => setPaymentMethod("cod")}
+                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY}
+                    onChange={() =>
+                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.VNPAY)
+                    }
+                    disabled={isSubmitting}
+                  />
+                  VNPay (online)
+                </label>
+              </div>
+
+              <div className={styles.paymentRow}>
+                <label>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.QR}
+                    onChange={() =>
+                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.QR)
+                    }
+                    disabled={isSubmitting}
+                  />
+                  QR bank transfer
+                </label>
+              </div>
+
+              <div className={styles.paymentRow}>
+                <label>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.COD}
+                    onChange={() =>
+                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.COD)
+                    }
                     disabled={isSubmitting}
                   />
                   Cash on delivery

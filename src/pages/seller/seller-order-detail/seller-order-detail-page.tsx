@@ -1,9 +1,10 @@
-import { Button, Input, Modal, Skeleton, Tag } from "antd";
+import { Button, Input, Modal, Popconfirm, Skeleton, Tag } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./seller-order-detail-page.module.scss";
 import { useSellerOrderDetail } from "./use-seller-order-detail";
 
+import { PAYMENT_STATUS } from "@/const/payment.const";
 import {
   SELLER_ORDER_STATUS_COLORS,
   SELLER_ROUTES,
@@ -32,6 +33,9 @@ export const SellerOrderDetailPage = () => {
     closeCancel,
     confirmAdvance,
     confirmCancel,
+    canConfirmManualPayment,
+    confirmingManualPayment,
+    confirmManualPayment,
   } = useSellerOrderDetail();
   const navigate = useNavigate();
 
@@ -166,6 +170,45 @@ export const SellerOrderDetailPage = () => {
               <span className={styles.rowLabel}>Phone</span>
               <span className={styles.rowValue}>{group.buyer.phone}</span>
             </div>
+          </div>
+
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Payment</h3>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Method</span>
+              <span className={styles.rowValue}>{group.paymentMethod}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Status</span>
+              <span className={styles.rowValue}>
+                <Tag
+                  color={
+                    group.paymentStatus === PAYMENT_STATUS.PAID
+                      ? "green"
+                      : "gold"
+                  }
+                >
+                  {group.paymentStatus}
+                </Tag>
+              </span>
+            </div>
+            {canConfirmManualPayment ? (
+              <Popconfirm
+                title="Mark this QR payment as received?"
+                description="Make sure the transfer with the matching note has arrived in your account."
+                okText="Confirm"
+                onConfirm={confirmManualPayment}
+              >
+                <Button
+                  type="primary"
+                  block
+                  loading={confirmingManualPayment}
+                  style={{ marginTop: 8 }}
+                >
+                  I have received the transfer
+                </Button>
+              </Popconfirm>
+            ) : null}
           </div>
 
           <div className={styles.card}>

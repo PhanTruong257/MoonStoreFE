@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import {
+  CHECKOUT_PAYMENT_OPTIONS,
+  type CheckoutPaymentOption,
+  checkoutOptionToApiMethod,
+} from "@/const/payment.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
 import { fetchCartByUser } from "@/services/cart-service";
@@ -50,7 +56,9 @@ export const useCheckoutPageData = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [billing, setBilling] = useState<BillingForm>(initialBillingForm);
-  const [paymentMethod, setPaymentMethod] = useState<"bank" | "cod">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentOption>(
+    CHECKOUT_PAYMENT_OPTIONS.COD,
+  );
   const [saveInfo, setSaveInfo] = useState(true);
   const [orderMessage, setOrderMessage] = useState("");
 
@@ -58,6 +66,7 @@ export const useCheckoutPageData = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string>(NEW_ADDRESS);
 
   const voucherState = useVoucher();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -171,10 +180,10 @@ export const useCheckoutPageData = () => {
 
     setIsSubmitting(true);
     try {
-      await createOrder({
+      const response = await createOrder({
         shippingFee: SHIPPING_FEE,
         voucherCode: voucherState.voucher?.code,
-        paymentMethod: paymentMethod === "cod" ? "COD" : "BANK",
+        paymentMethod: checkoutOptionToApiMethod(paymentMethod),
         ...(isUsingSavedAddress
           ? { addressId: Number(selectedAddressId) }
           : {
@@ -185,14 +194,30 @@ export const useCheckoutPageData = () => {
             }),
       });
 
-      setOrderMessage(
-        paymentMethod === "cod"
-          ? "Order placed successfully. Payment method: Cash on delivery."
-          : "Order placed successfully. Payment method: Bank transfer.",
-      );
       setItems([]);
       voucherState.reset();
       dispatchCartUpdated();
+
+      if (
+        paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY &&
+        response.paymentUrl
+      ) {
+        setOrderMessage("Redirecting to VNPay...");
+        window.location.href = response.paymentUrl;
+        return;
+      }
+
+      if (paymentMethod === CHECKOUT_PAYMENT_OPTIONS.QR) {
+        setOrderMessage("Order placed. Redirecting to QR payment...");
+        void navigate(`/orders/${response.orderId}`);
+        return;
+      }
+
+      setOrderMessage(
+        paymentMethod === CHECKOUT_PAYMENT_OPTIONS.COD
+          ? "Order placed successfully. Payment method: Cash on delivery."
+          : "Order placed successfully. Payment method: Bank transfer.",
+      );
     } catch {
       setOrderMessage("Unable to place order. Please try again.");
     } finally {

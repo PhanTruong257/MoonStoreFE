@@ -2,6 +2,7 @@ import { Button, Empty, Popconfirm, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 import styles from "./order-detail-page.module.scss";
+import { QrPaymentCard } from "./qr-payment-card";
 import { useOrderDetail } from "./use-order-detail";
 
 import { renderAddressLine } from "@/app/utils/format";
@@ -16,8 +17,15 @@ import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
 export const OrderDetailPage = () => {
-  const { order, isLoading, isCancelling, error, cancelGroup } =
-    useOrderDetail();
+  const {
+    order,
+    isLoading,
+    isCancelling,
+    error,
+    cancelGroup,
+    qrInfo,
+    isQrLoading,
+  } = useOrderDetail();
 
   return (
     <main className={styles.page}>
@@ -96,9 +104,19 @@ export const OrderDetailPage = () => {
 
                     {group.items?.map((item) => (
                       <div key={item.id} className={styles.item}>
-                        <img src={item.imageUrlAtTime} alt={item.productName} />
+                        <Link
+                          to={`/product/${item.productId}`}
+                          className={styles.productLink}
+                        >
+                          <img src={item.imageUrlAtTime} alt={item.productName} />
+                        </Link>
                         <div className={styles.itemInfo}>
-                          <strong>{item.productName}</strong>
+                          <Link
+                            to={`/product/${item.productId}`}
+                            className={styles.productLink}
+                          >
+                            <strong>{item.productName}</strong>
+                          </Link>
                           {item.selectedOptions.length > 0 ? (
                             <small>
                               {item.selectedOptions
@@ -131,6 +149,8 @@ export const OrderDetailPage = () => {
               </div>
 
               <div className={styles.column}>
+                <QrPaymentCard qrInfo={qrInfo} isLoading={isQrLoading} />
+
                 <article className={styles.card}>
                   <h3>Totals</h3>
                   <div className={styles.row}>
