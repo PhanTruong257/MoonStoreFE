@@ -53,6 +53,8 @@ export type CatalogProductListParams = {
 export type CatalogProductDetail = CatalogProduct & {
   averageRating: number;
   totalReviews: number;
+  sellerId: number;
+  sellerShopName: string;
   optionGroups: CatalogOptionGroup[];
 };
 

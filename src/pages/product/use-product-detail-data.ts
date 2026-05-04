@@ -1,7 +1,10 @@
+import { message } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import { extractApiErrorMessage } from "@/app/utils/error-message";
+import { CHAT_ROUTES } from "@/const/chat.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { homeProducts } from "@/pages/home/mock-data";
 import { addToCart } from "@/services/cart-service";
@@ -11,6 +14,7 @@ import type {
   CatalogOptionGroup,
   CatalogProductDetail,
 } from "@/services/catalog-service";
+import { createOrGetConversation } from "@/services/chat-service";
 
 const colorMap: Record<string, string> = {
   Red: "#e07575",
@@ -43,6 +47,8 @@ type ProductView = {
   inStock: boolean;
   description: string;
   gallery: string[];
+  sellerId: number;
+  sellerShopName: string;
   optionGroups: ProductOptionGroupView[];
 };
 
@@ -100,6 +106,8 @@ export const useProductDetailData = () => {
       inStock: catalogProduct.stock > 0,
       description: catalogProduct.description ?? "",
       gallery: [catalogProduct.imageUrl],
+      sellerId: catalogProduct.sellerId,
+      sellerShopName: catalogProduct.sellerShopName,
       optionGroups,
     };
   }, [catalogProduct, productId]);
@@ -223,6 +231,37 @@ export const useProductDetailData = () => {
     setIsWishlisted((prev) => !prev);
   };
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isStartingChat, setIsStartingChat] = useState(false);
+
+  const chatWithSeller = async () => {
+    if (!product) {
+      return;
+    }
+    const user = getStoredUser();
+    if (!user) {
+      void navigate("/login", {
+        state: { from: location.pathname + location.search },
+      });
+      return;
+    }
+    setIsStartingChat(true);
+    try {
+      const conversation = await createOrGetConversation({
+        sellerId: product.sellerId,
+        productId: product.rawId,
+      });
+      void navigate(CHAT_ROUTES.buyerDetail(conversation.id));
+    } catch (error) {
+      void message.error(
+        extractApiErrorMessage(error, "Không thể bắt đầu trò chuyện."),
+      );
+    } finally {
+      setIsStartingChat(false);
+    }
+  };
+
   const addSelectedToCart = async () => {
     if (!product) {
       return false;
@@ -257,7 +296,9 @@ export const useProductDetailData = () => {
     selectedOptions,
     unitPrice,
     missingRequiredGroups,
+    isStartingChat,
     addSelectedToCart,
+    chatWithSeller,
     decreaseQuantity,
     increaseQuantity,
     isOptionSelected,

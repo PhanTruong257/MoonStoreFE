@@ -1,0 +1,24 @@
+.composer {
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+
+  :global(.ant-input) {
+    border-radius: 12px;
+  }
+}
+
+.error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 13px;
+}

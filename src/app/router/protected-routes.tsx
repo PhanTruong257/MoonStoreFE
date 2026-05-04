@@ -17,9 +17,11 @@ import { AdminSellersPage } from "@/pages/admin/admin-sellers";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
 import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
 import { CartPage } from "@/pages/cart/cart-page";
+import { ChatPage } from "@/pages/chat/chat-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
 import { OrderDetailPage, OrdersPage } from "@/pages/orders";
 import { SellerApplyPage } from "@/pages/seller/seller-apply";
+import { SellerChatPage } from "@/pages/seller/seller-chat";
 import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
 import { SellerOrderDetailPage } from "@/pages/seller/seller-order-detail";
 import { SellerOrdersPage } from "@/pages/seller/seller-orders";
@@ -61,6 +63,16 @@ export const protectedRoutes: RouteObject[] = [
         element: <SellerApplyPage />,
         handle: { title: "Become a Seller" },
       },
+      {
+        path: "/chat",
+        element: <ChatPage />,
+        handle: { title: "Messages" },
+      },
+      {
+        path: "/chat/:conversationId",
+        element: <ChatPage />,
+        handle: { title: "Messages" },
+      },
     ],
   },
   {
@@ -95,6 +107,16 @@ export const protectedRoutes: RouteObject[] = [
         path: "/seller/products/:productId/edit",
         element: <SellerProductEditPage />,
         handle: { title: "Edit Product" },
+      },
+      {
+        path: "/seller/chat",
+        element: <SellerChatPage />,
+        handle: { title: "Seller Messages" },
+      },
+      {
+        path: "/seller/chat/:conversationId",
+        element: <SellerChatPage />,
+        handle: { title: "Seller Messages" },
       },
     ],
   },

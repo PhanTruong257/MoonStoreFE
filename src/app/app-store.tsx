@@ -11,6 +11,7 @@ import { adminSellersReducer } from "@/features/admin/admin-sellers/admin-seller
 import { adminUsersReducer } from "@/features/admin/admin-users/admin-users.slice";
 import { adminVouchersReducer } from "@/features/admin/admin-vouchers/admin-vouchers.slice";
 import { authReducer } from "@/features/auth/auth-slice";
+import { chatReducer } from "@/features/chat/chat.slice";
 import { homeCategoryReducer } from "@/features/home/category/category.slice";
 import { flashSaleReducer } from "@/features/home/flash-sale/flash-sale.slice";
 import { productListReducer } from "@/features/home/product-list/product-list.slice";
@@ -48,6 +49,7 @@ export const store = configureStore({
   reducer: {
     app: appSlice.reducer,
     auth: authReducer,
+    chat: chatReducer,
     homeCategory: homeCategoryReducer,
     flashSale: flashSaleReducer,
     productList: productListReducer,

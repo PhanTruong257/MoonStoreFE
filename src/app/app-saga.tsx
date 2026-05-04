@@ -8,6 +8,7 @@ import { adminSellersSaga } from "@/features/admin/admin-sellers/admin-sellers.s
 import { adminUsersSaga } from "@/features/admin/admin-users/admin-users.saga";
 import { adminVouchersSaga } from "@/features/admin/admin-vouchers/admin-vouchers.saga";
 import { authSaga } from "@/features/auth/auth-saga";
+import { chatSaga } from "@/features/chat/chat.saga";
 import { homeCategorySaga } from "@/features/home/category/category.saga";
 import { flashSaleSaga } from "@/features/home/flash-sale/flash-sale.saga";
 import { productListSaga } from "@/features/home/product-list/product-list.saga";
@@ -24,6 +25,7 @@ import { vouchersSaga } from "@/features/vouchers/vouchers.saga";
 export function* rootSaga() {
   yield all([
     fork(authSaga),
+    fork(chatSaga),
     fork(homeCategorySaga),
     fork(flashSaleSaga),
     fork(productListSaga),

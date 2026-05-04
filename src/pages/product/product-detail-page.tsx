@@ -22,7 +22,9 @@ export const ProductDetailPage = () => {
     selectedImage,
     unitPrice,
     missingRequiredGroups,
+    isStartingChat,
     addSelectedToCart,
+    chatWithSeller,
     decreaseQuantity,
     increaseQuantity,
     isOptionSelected,
@@ -154,6 +156,31 @@ export const ProductDetailPage = () => {
                 <small>{product.reviews} danh gia</small>
                 <em>{product.inStock ? "Con hang" : "Het hang"}</em>
               </div>
+            </div>
+
+            <div className={styles.sellerBar}>
+              <div className={styles.sellerInfo}>
+                <small>Cửa hàng</small>
+                <strong>{product.sellerShopName}</strong>
+              </div>
+              <button
+                type="button"
+                className={styles.chatSellerButton}
+                onClick={() => {
+                  void chatWithSeller();
+                }}
+                disabled={isStartingChat}
+                aria-label="Chat với shop"
+                title="Chat với shop"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7l-5 4V6a2 2 0 0 1 2-2zm3 6h10v2H7v-2zm0-3h10v2H7V7z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span>{isStartingChat ? "Đang mở..." : "Chat với shop"}</span>
+              </button>
             </div>
 
             <div className={styles.priceCard}>

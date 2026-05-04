@@ -1,0 +1,23 @@
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  height: calc(100vh - 320px);
+  min-height: 520px;
+}
+
+.threadArea {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}

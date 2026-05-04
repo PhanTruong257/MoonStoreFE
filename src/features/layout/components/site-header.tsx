@@ -6,10 +6,12 @@ import { Link, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { subscribeCartUpdated } from "@/app/utils/cart-event";
 import { toCategorySlug } from "@/app/utils/category-slug";
+import { CHAT_ROUTES } from "@/const/chat.const";
 import { HEADER_TEXT } from "@/const/header.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
+import { useUnreadCount } from "@/features/chat/use-unread-count";
 import styles from "@/features/layout/components/site-header.module.scss";
 import { fetchCartByUser } from "@/services/cart-service";
 import { fetchCategories } from "@/services/catalog-service";
@@ -92,6 +94,7 @@ export const SiteHeader = ({
       : apiCartCount;
 
   const activeUserId = user?.id ?? storedUser?.id;
+  const unreadChatCount = useUnreadCount(isLoggedIn);
 
   useEffect(() => {
     if (!isLoggedIn || !activeUserId) {
@@ -300,6 +303,18 @@ export const SiteHeader = ({
                     >
                       My orders
                     </Link>
+                    <Link
+                      to={CHAT_ROUTES.buyerList}
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
+                      Tin nhắn
+                      {unreadChatCount > 0 ? (
+                        <span className={styles.accountItemBadge}>
+                          {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                        </span>
+                      ) : null}
+                    </Link>
                     {user.role === "admin" ? (
                       <Link
                         to="/admin"
@@ -350,6 +365,32 @@ export const SiteHeader = ({
               </Link>
             )}
           </div>
+
+          {isLoggedIn ? (
+            <button
+              type="button"
+              className={styles.chatButton}
+              onClick={() => {
+                void navigate(CHAT_ROUTES.buyerList);
+              }}
+              aria-label="Tin nhắn"
+            >
+              <span className={styles.chatIcon}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7l-5 4V6a2 2 0 0 1 2-2zm3 6h10v2H7v-2zm0-3h10v2H7V7z"
+                    fill="currentColor"
+                  />
+                </svg>
+                {unreadChatCount > 0 ? (
+                  <span className={styles.cartBadge}>
+                    {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                  </span>
+                ) : null}
+              </span>
+              <span>Tin nhắn</span>
+            </button>
+          ) : null}
 
           <button
             type="button"
