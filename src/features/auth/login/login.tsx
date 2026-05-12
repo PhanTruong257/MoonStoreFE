@@ -15,41 +15,46 @@ export const Login = () => {
       <h1>{LOGIN_TEXT.title}</h1>
       <p>{LOGIN_TEXT.subtitle}</p>
 
-      <SharedInput
-        className={styles.field}
-        kind="email"
-        placeholder={LOGIN_TEXT.emailPlaceholder}
-        value={form.email}
-        onChange={(event) => setField("email", event.target.value)}
-      />
-
-      <SharedInput
-        className={styles.field}
-        kind="password"
-        placeholder={LOGIN_TEXT.passwordPlaceholder}
-        value={form.password}
-        onChange={(event) => setField("password", event.target.value)}
-      />
-
-      {error ? <p className={styles.error}>{error}</p> : null}
-
-      <div className={styles.actionRow}>
-        <SharedButton
-          className={styles.button}
-          variant="primary"
-          disabled={isSubmitting}
-          onClick={() => {
-            void submit();
-          }}
-          label={
-            isSubmitting ? LOGIN_TEXT.loadingLabel : LOGIN_TEXT.submitLabel
-          }
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          submit();
+        }}
+      >
+        <SharedInput
+          className={styles.field}
+          kind="text"
+          placeholder={LOGIN_TEXT.emailPlaceholder}
+          value={form.email}
+          onChange={(event) => setField("email", event.target.value)}
         />
 
-        <Link className={styles.link} to="/register">
-          {LOGIN_TEXT.forgotPassword}
-        </Link>
-      </div>
+        <SharedInput
+          className={styles.field}
+          kind="password"
+          placeholder={LOGIN_TEXT.passwordPlaceholder}
+          value={form.password}
+          onChange={(event) => setField("password", event.target.value)}
+        />
+
+        {error ? <p className={styles.error}>{error}</p> : null}
+
+        <div className={styles.actionRow}>
+          <SharedButton
+            className={styles.button}
+            variant="primary"
+            htmlType="submit"
+            disabled={isSubmitting}
+            label={
+              isSubmitting ? LOGIN_TEXT.loadingLabel : LOGIN_TEXT.submitLabel
+            }
+          />
+
+          <Link className={styles.link} to="/register">
+            {LOGIN_TEXT.forgotPassword}
+          </Link>
+        </div>
+      </form>
 
       <div className={styles.bottom}>
         {LOGIN_TEXT.signupHint}

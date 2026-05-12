@@ -71,7 +71,14 @@
 }
 
 .error {
-  color: var(--color-danger-strong);
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid #ef4444;
+  border-left: 4px solid #ef4444;
+  border-radius: 4px;
+  background: #fee2e2;
+  color: #b91c1c;
   font-size: 13px;
-  margin-top: 6px;
+  font-weight: 600;
+  line-height: 1.4;
 }

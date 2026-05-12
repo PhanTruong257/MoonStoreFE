@@ -5,8 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "./home-page.module.scss";
 
 import { ProductListSection } from "@/features/home/product-list/product-list-section";
+import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
-import { homeHeaderLinks } from "@/pages/home/mock-data";
+import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 import { fetchProductDetail } from "@/services/catalog-service";
 
 export const HomePage = () => {
@@ -57,6 +58,11 @@ export const HomePage = () => {
           onProductClick={handleProductClick}
         />
       </div>
+
+      <SiteFooter
+        sections={homeFooterSections}
+        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+      />
     </main>
   );
 };

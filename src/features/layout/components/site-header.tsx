@@ -1,4 +1,3 @@
- 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -56,16 +55,7 @@ export const SiteHeader = ({
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const inputValue = search?.value ?? searchValue;
-  const keywords = search?.keywords ?? [
-    "iphone 17",
-    "laptop",
-    "samsung",
-    "iphone 16",
-    "macbook",
-    "ipad",
-    "macbook neo",
-    "may lanh",
-  ];
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [apiCategoryItems, setApiCategoryItems] = useState<HeaderLink[]>([]);
@@ -250,20 +240,6 @@ export const SiteHeader = ({
                   />
                 </svg>
               </button>
-            </div>
-            <div className={styles.searchHints}>
-              {keywords.map((keyword) => (
-                <button
-                  key={keyword}
-                  type="button"
-                  onClick={() => {
-                    setSearchValue(keyword);
-                    search.onChange?.(keyword);
-                  }}
-                >
-                  {keyword}
-                </button>
-              ))}
             </div>
           </div>
         ) : null}
