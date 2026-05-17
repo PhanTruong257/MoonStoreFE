@@ -1,10 +1,12 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { CHAT_ROUTES } from "@/const/chat.const";
 import { ORDER_STATUS } from "@/const/orders.const";
 import { PAYMENT_METHOD, PAYMENT_STATUS } from "@/const/payment.const";
+import { chatActions } from "@/features/chat/chat.slice";
 import { ordersActions } from "@/features/orders/orders.slice";
 import { paymentsActions } from "@/features/payments/payments.slice";
 
@@ -12,12 +14,17 @@ export const useOrderDetail = () => {
   const params = useParams<{ orderId: string }>();
   const orderId = Number(params.orderId ?? 0);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const pendingChatRef = useRef(false);
+
   const { detail, isDetailLoading, isCancelling, error } = useSelector(
     (state: RootState) => state.orders,
   );
   const { qrInfo, isQrLoading } = useSelector(
     (state: RootState) => state.payments,
   );
+  const isChatCreating = useSelector((state: RootState) => state.chat.isCreating);
+  const lastCreatedChatId = useSelector((state: RootState) => state.chat.lastCreatedId);
 
   useEffect(() => {
     if (!orderId) {
@@ -52,6 +59,13 @@ export const useOrderDetail = () => {
   ]);
 
 
+  useEffect(() => {
+    if (pendingChatRef.current && !isChatCreating && lastCreatedChatId !== null) {
+      pendingChatRef.current = false;
+      navigate(CHAT_ROUTES.buyerDetail(lastCreatedChatId));
+    }
+  }, [isChatCreating, lastCreatedChatId, navigate]);
+
   const canCancel = useMemo(() => {
     if (!detail) {
       return false;
@@ -74,6 +88,16 @@ export const useOrderDetail = () => {
     );
   };
 
+  const startChatWithSeller = (sellerId: number) => {
+    if (!detail) {
+      return;
+    }
+    pendingChatRef.current = true;
+    dispatch(
+      chatActions.conversationCreateRequested({ sellerId, orderId: detail.id }),
+    );
+  };
+
   return {
     orderId,
     order: detail,
@@ -84,5 +108,7 @@ export const useOrderDetail = () => {
     cancelGroup,
     qrInfo,
     isQrLoading,
+    isChatCreating,
+    startChatWithSeller,
   };
 };

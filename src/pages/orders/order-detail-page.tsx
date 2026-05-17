@@ -25,6 +25,8 @@ export const OrderDetailPage = () => {
     cancelGroup,
     qrInfo,
     isQrLoading,
+    isChatCreating,
+    startChatWithSeller,
   } = useOrderDetail();
 
   return (
@@ -83,6 +85,13 @@ export const OrderDetailPage = () => {
                         >
                           {group.status}
                         </Tag>
+                        <Button
+                          size="small"
+                          onClick={() => startChatWithSeller(group.sellerId)}
+                          loading={isChatCreating}
+                        >
+                          Chat with shop
+                        </Button>
                         {group.status === ORDER_STATUS.PENDING ? (
                           <Popconfirm
                             title="Cancel this order group?"

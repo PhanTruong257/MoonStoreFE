@@ -26,6 +26,7 @@ export type ChatState = {
 
   isCreating: boolean;
   createError: string | null;
+  lastCreatedId: number | null;
 
   unreadCount: number;
   isSocketConnected: boolean;
@@ -49,6 +50,7 @@ const initialState: ChatState = {
 
   isCreating: false,
   createError: null,
+  lastCreatedId: null,
 
   unreadCount: 0,
   isSocketConnected: false,
@@ -263,6 +265,7 @@ const chatSlice = createSlice({
       reducer(state) {
         state.isCreating = true;
         state.createError = null;
+        state.lastCreatedId = null;
       },
       prepare(payload: CreateConversationPayload) {
         return { payload };
@@ -273,6 +276,7 @@ const chatSlice = createSlice({
       action: PayloadAction<ChatConversation>,
     ) {
       state.isCreating = false;
+      state.lastCreatedId = action.payload.id;
       const idx = state.conversations.findIndex(
         (item) => item.id === action.payload.id,
       );

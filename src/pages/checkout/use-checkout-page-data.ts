@@ -1,14 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import type { RootState } from "@/app/app-store";
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import {
   CHECKOUT_PAYMENT_OPTIONS,
   type CheckoutPaymentOption,
   checkoutOptionToApiMethod,
 } from "@/const/payment.const";
+import type { AuthState } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
+import { fetchProfile } from "@/services/auth-service";
 import { fetchCartByUser } from "@/services/cart-service";
 import { createOrder } from "@/services/orders-service";
 import { fetchMyAddresses } from "@/services/users-service";
@@ -57,7 +61,7 @@ export const useCheckoutPageData = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [billing, setBilling] = useState<BillingForm>(initialBillingForm);
   const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentOption>(
-    CHECKOUT_PAYMENT_OPTIONS.COD,
+    CHECKOUT_PAYMENT_OPTIONS.QR,
   );
   const [saveInfo, setSaveInfo] = useState(true);
   const [orderMessage, setOrderMessage] = useState("");
@@ -67,20 +71,21 @@ export const useCheckoutPageData = () => {
 
   const voucherState = useVoucher();
   const navigate = useNavigate();
+  const { user } = useSelector<RootState, AuthState>((state) => state.auth);
+  const activeUserId = user?.id ?? getStoredUser()?.id;
 
   useEffect(() => {
-    let isMounted = true;
-    const user = getStoredUser();
-
-    if (!user) {
+    if (!activeUserId) {
       setItems([]);
       setIsLoading(false);
       return;
     }
 
+    let isMounted = true;
+
     const loadCart = async () => {
       try {
-        const cart = await fetchCartByUser(user.id);
+        const cart = await fetchCartByUser(activeUserId);
         if (!isMounted) {
           return;
         }
@@ -134,13 +139,32 @@ export const useCheckoutPageData = () => {
       }
     };
 
+    const prefillBilling = async () => {
+      try {
+        const profile = await fetchProfile();
+        if (!isMounted) {
+          return;
+        }
+        setBilling((prev) => ({
+          ...prev,
+          firstName: prev.firstName || profile.user.fullName || "",
+          email: prev.email || profile.user.email || "",
+          phone: prev.phone || profile.user.phone || "",
+          streetAddress: prev.streetAddress || profile.address || "",
+        }));
+      } catch {
+        // Profile prefill is best-effort; ignore failures.
+      }
+    };
+
     void loadCart();
     void loadAddresses();
+    void prefillBilling();
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [activeUserId]);
 
   const subTotal = useMemo(() => {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);

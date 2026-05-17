@@ -244,43 +244,7 @@ export const CheckoutPage = () => {
             </div>
 
             <div className={styles.paymentOptions}>
-              <div className={styles.paymentRow}>
-                <label>
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.BANK}
-                    onChange={() =>
-                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.BANK)
-                    }
-                    disabled={isSubmitting}
-                  />
-                  Bank
-                </label>
-                <div className={styles.cardBadges}>
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              </div>
-
-              <div className={styles.paymentRow}>
-                <label>
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY}
-                    onChange={() =>
-                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.VNPAY)
-                    }
-                    disabled={isSubmitting}
-                  />
-                  VNPay (online)
-                </label>
-              </div>
-
-              <div className={styles.paymentRow}>
+                <div className={styles.paymentRow}>
                 <label>
                   <input
                     type="radio"
@@ -292,21 +256,6 @@ export const CheckoutPage = () => {
                     disabled={isSubmitting}
                   />
                   QR bank transfer
-                </label>
-              </div>
-
-              <div className={styles.paymentRow}>
-                <label>
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.COD}
-                    onChange={() =>
-                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.COD)
-                    }
-                    disabled={isSubmitting}
-                  />
-                  Cash on delivery
                 </label>
               </div>
             </div>
