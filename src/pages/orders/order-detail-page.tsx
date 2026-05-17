@@ -1,4 +1,4 @@
-import { Button, Empty, Popconfirm, Skeleton, Tag } from "antd";
+import { Button, Empty, Form, Input, InputNumber, Modal, Popconfirm, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 import styles from "./order-detail-page.module.scss";
@@ -17,6 +17,7 @@ import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
 export const OrderDetailPage = () => {
+  const [refundForm] = Form.useForm();
   const {
     order,
     isLoading,
@@ -27,6 +28,13 @@ export const OrderDetailPage = () => {
     isQrLoading,
     isChatCreating,
     startChatWithSeller,
+    refundModalOpen,
+    openRefundModal,
+    closeRefundModal,
+    submitRefundRequest,
+    isRefundRequesting,
+    refundError,
+    canRequestRefund,
   } = useOrderDetail();
 
   return (
@@ -70,6 +78,11 @@ export const OrderDetailPage = () => {
                 <Tag color={ORDER_STATUS_COLORS[order.status] ?? "default"}>
                   {order.status}
                 </Tag>
+                {canRequestRefund ? (
+                  <Button size="small" onClick={openRefundModal}>
+                    Request refund
+                  </Button>
+                ) : null}
               </div>
             </header>
 
@@ -216,6 +229,36 @@ export const OrderDetailPage = () => {
         sections={homeFooterSections}
         copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
       />
+
+      <Modal
+        title="Request a refund"
+        open={refundModalOpen}
+        onCancel={closeRefundModal}
+        onOk={() => refundForm.submit()}
+        okText="Submit"
+        confirmLoading={isRefundRequesting}
+      >
+        {refundError ? (
+          <p style={{ color: "#b91c1c", fontSize: 13 }}>{refundError}</p>
+        ) : null}
+        <Form
+          form={refundForm}
+          layout="vertical"
+          onFinish={submitRefundRequest}
+          initialValues={{ amount: order?.finalAmount }}
+        >
+          <Form.Item label="Reason" name="reason" rules={[{ required: true }]}>
+            <Input.TextArea rows={3} placeholder="Describe your issue" />
+          </Form.Item>
+          <Form.Item
+            label="Refund amount"
+            name="amount"
+            rules={[{ required: true }]}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </main>
   );
 };

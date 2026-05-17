@@ -4,9 +4,12 @@ import { adminBrandsSaga } from "@/features/admin/admin-brands/admin-brands.saga
 import { adminCategoriesSaga } from "@/features/admin/admin-categories/admin-categories.saga";
 import { adminDashboardSaga } from "@/features/admin/admin-dashboard/admin-dashboard.saga";
 import { adminOrdersSaga } from "@/features/admin/admin-orders/admin-orders.saga";
+import { adminRefundsSaga } from "@/features/admin/admin-refunds/admin-refunds.saga";
+import { adminRevenueSaga } from "@/features/admin/admin-revenue/admin-revenue.saga";
 import { adminSellersSaga } from "@/features/admin/admin-sellers/admin-sellers.saga";
 import { adminUsersSaga } from "@/features/admin/admin-users/admin-users.saga";
 import { adminVouchersSaga } from "@/features/admin/admin-vouchers/admin-vouchers.saga";
+import { adminWithdrawalsSaga } from "@/features/admin/admin-withdrawals/admin-withdrawals.saga";
 import { authSaga } from "@/features/auth/auth-saga";
 import { chatSaga } from "@/features/chat/chat.saga";
 import { homeCategorySaga } from "@/features/home/category/category.saga";
@@ -20,6 +23,7 @@ import { sellerOrderDetailSaga } from "@/features/seller/seller-order-detail/sel
 import { sellerOrdersSaga } from "@/features/seller/seller-orders/seller-orders.saga";
 import { sellerProductEditSaga } from "@/features/seller/seller-product-edit/seller-product-edit.saga";
 import { sellerProductsSaga } from "@/features/seller/seller-products/seller-products.saga";
+import { sellerWalletSaga } from "@/features/seller/seller-wallet/seller-wallet.saga";
 import { vouchersSaga } from "@/features/vouchers/vouchers.saga";
 
 export function* rootSaga() {
@@ -38,6 +42,7 @@ export function* rootSaga() {
     fork(sellerProductEditSaga),
     fork(sellerProductsSaga),
     fork(vouchersSaga),
+    fork(sellerWalletSaga),
     fork(adminDashboardSaga),
     fork(adminSellersSaga),
     fork(adminUsersSaga),
@@ -45,5 +50,8 @@ export function* rootSaga() {
     fork(adminBrandsSaga),
     fork(adminVouchersSaga),
     fork(adminOrdersSaga),
+    fork(adminRevenueSaga),
+    fork(adminRefundsSaga),
+    fork(adminWithdrawalsSaga),
   ]);
 }

@@ -7,9 +7,12 @@ import { adminBrandsReducer } from "@/features/admin/admin-brands/admin-brands.s
 import { adminCategoriesReducer } from "@/features/admin/admin-categories/admin-categories.slice";
 import { adminDashboardReducer } from "@/features/admin/admin-dashboard/admin-dashboard.slice";
 import { adminOrdersReducer } from "@/features/admin/admin-orders/admin-orders.slice";
+import { adminRefundsReducer } from "@/features/admin/admin-refunds/admin-refunds.slice";
+import { adminRevenueReducer } from "@/features/admin/admin-revenue/admin-revenue.slice";
 import { adminSellersReducer } from "@/features/admin/admin-sellers/admin-sellers.slice";
 import { adminUsersReducer } from "@/features/admin/admin-users/admin-users.slice";
 import { adminVouchersReducer } from "@/features/admin/admin-vouchers/admin-vouchers.slice";
+import { adminWithdrawalsReducer } from "@/features/admin/admin-withdrawals/admin-withdrawals.slice";
 import { authReducer } from "@/features/auth/auth-slice";
 import { chatReducer } from "@/features/chat/chat.slice";
 import { homeCategoryReducer } from "@/features/home/category/category.slice";
@@ -23,6 +26,7 @@ import { sellerOrderDetailReducer } from "@/features/seller/seller-order-detail/
 import { sellerOrdersReducer } from "@/features/seller/seller-orders/seller-orders.slice";
 import { sellerProductEditReducer } from "@/features/seller/seller-product-edit/seller-product-edit.slice";
 import { sellerProductsReducer } from "@/features/seller/seller-products/seller-products.slice";
+import { sellerWalletReducer } from "@/features/seller/seller-wallet/seller-wallet.slice";
 import { vouchersReducer } from "@/features/vouchers/vouchers.slice";
 
 type AppState = {
@@ -62,6 +66,7 @@ export const store = configureStore({
     sellerProductEdit: sellerProductEditReducer,
     sellerProducts: sellerProductsReducer,
     vouchers: vouchersReducer,
+    sellerWallet: sellerWalletReducer,
     adminDashboard: adminDashboardReducer,
     adminSellers: adminSellersReducer,
     adminUsers: adminUsersReducer,
@@ -69,6 +74,9 @@ export const store = configureStore({
     adminBrands: adminBrandsReducer,
     adminVouchers: adminVouchersReducer,
     adminOrders: adminOrdersReducer,
+    adminRevenue: adminRevenueReducer,
+    adminRefunds: adminRefundsReducer,
+    adminWithdrawals: adminWithdrawalsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

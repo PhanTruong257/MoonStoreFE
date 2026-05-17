@@ -1,0 +1,51 @@
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.accent .statValue {
+  color: #16a34a;
+}
+
+.section {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.errorText {
+  color: #b91c1c;
+  font-size: 14px;
+}

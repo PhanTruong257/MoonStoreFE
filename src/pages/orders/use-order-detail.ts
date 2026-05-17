@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,9 +17,10 @@ export const useOrderDetail = () => {
   const navigate = useNavigate();
   const pendingChatRef = useRef(false);
 
-  const { detail, isDetailLoading, isCancelling, error } = useSelector(
+  const { detail, isDetailLoading, isCancelling, isRefundRequesting, refundError, error } = useSelector(
     (state: RootState) => state.orders,
   );
+  const [refundModalOpen, setRefundModalOpen] = useState(false);
   const { qrInfo, isQrLoading } = useSelector(
     (state: RootState) => state.payments,
   );
@@ -98,6 +99,31 @@ export const useOrderDetail = () => {
     );
   };
 
+  const openRefundModal = () => setRefundModalOpen(true);
+  const closeRefundModal = () => setRefundModalOpen(false);
+
+  const submitRefundRequest = (values: { reason: string; amount: number }) => {
+    if (!detail) return;
+    dispatch(
+      ordersActions.refundRequestRequested({
+        orderId: detail.id,
+        reason: values.reason,
+        amount: values.amount,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (!isRefundRequesting && !refundError && refundModalOpen) {
+      setRefundModalOpen(false);
+    }
+  }, [isRefundRequesting, refundError, refundModalOpen]);
+
+  const canRequestRefund = useMemo(() => {
+    if (!detail?.groups) return false;
+    return detail.groups.some((g) => g.status === ORDER_STATUS.DELIVERED);
+  }, [detail]);
+
   return {
     orderId,
     order: detail,
@@ -110,5 +136,12 @@ export const useOrderDetail = () => {
     isQrLoading,
     isChatCreating,
     startChatWithSeller,
+    refundModalOpen,
+    openRefundModal,
+    closeRefundModal,
+    submitRefundRequest,
+    isRefundRequesting,
+    refundError,
+    canRequestRefund,
   };
 };

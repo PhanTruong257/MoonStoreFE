@@ -10,7 +10,13 @@ export const ADMIN_ROUTES = {
   categories: "/admin/categories",
   brands: "/admin/brands",
   vouchers: "/admin/vouchers",
+  revenue: "/admin/revenue",
+  refunds: "/admin/refunds",
+  withdrawals: "/admin/withdrawals",
 } as const;
+
+export const ADMIN_REFUND_STATUS_OPTIONS = ["PENDING", "APPROVED", "REJECTED"] as const;
+export const ADMIN_WITHDRAWAL_STATUS_OPTIONS = ["PENDING", "APPROVED", "REJECTED"] as const;
 
 export const ADMIN_FILTER_ALL = "all";
 

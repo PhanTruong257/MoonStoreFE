@@ -110,6 +110,30 @@ export const AdminShell = ({
             >
               Vouchers
             </NavLink>
+            <NavLink
+              to="/admin/revenue"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Revenue
+            </NavLink>
+            <NavLink
+              to="/admin/refunds"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Refunds
+            </NavLink>
+            <NavLink
+              to="/admin/withdrawals"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Withdrawals
+            </NavLink>
           </nav>
         </aside>
 

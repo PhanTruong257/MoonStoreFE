@@ -50,7 +50,15 @@ export const SELLER_ROUTES = {
   orderDetail: (groupId: number | string) => `/seller/orders/${groupId}`,
   products: "/seller/products",
   productNew: "/seller/products/new",
+  wallet: "/seller/wallet",
+  chat: "/seller/chat",
 } as const;
+
+export const WITHDRAWAL_STATUS_COLORS: Record<string, string> = {
+  PENDING: "gold",
+  APPROVED: "green",
+  REJECTED: "red",
+};
 
 export const CURRENCY_FORMATTER = new Intl.NumberFormat("vi-VN", {
   style: "currency",

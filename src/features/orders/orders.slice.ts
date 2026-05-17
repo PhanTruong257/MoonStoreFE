@@ -9,6 +9,8 @@ export type OrdersState = {
   isListLoading: boolean;
   isDetailLoading: boolean;
   isCancelling: boolean;
+  isRefundRequesting: boolean;
+  refundError: string | null;
   error: string | null;
 };
 
@@ -18,6 +20,8 @@ const initialState: OrdersState = {
   isListLoading: false,
   isDetailLoading: false,
   isCancelling: false,
+  isRefundRequesting: false,
+  refundError: null,
   error: null,
 };
 
@@ -65,6 +69,20 @@ const ordersSlice = createSlice({
     orderGroupCancelFailed: (state, action: PayloadAction<string>) => {
       state.isCancelling = false;
       state.error = action.payload;
+    },
+    refundRequestRequested: (
+      state,
+      _action: PayloadAction<{ orderId: number; reason: string; amount: number }>,
+    ) => {
+      state.isRefundRequesting = true;
+      state.refundError = null;
+    },
+    refundRequestSucceeded: (state) => {
+      state.isRefundRequesting = false;
+    },
+    refundRequestFailed: (state, action: PayloadAction<string>) => {
+      state.isRefundRequesting = false;
+      state.refundError = action.payload;
     },
     orderDetailReset: () => initialState,
   },

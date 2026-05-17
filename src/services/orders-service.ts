@@ -89,3 +89,14 @@ export const cancelOrderGroup = async (groupId: number) => {
   );
   return response.data;
 };
+
+export const createRefundRequest = async (
+  orderId: number,
+  payload: { reason: string; amount: number },
+) => {
+  const response = await http.post<{ refundRequestId: number; status: string }>(
+    `/orders/${orderId}/refund-requests`,
+    payload,
+  );
+  return response.data;
+};

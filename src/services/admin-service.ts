@@ -339,3 +339,113 @@ export const fetchAdminOrderDetail = async (id: number) => {
   );
   return response.data.order;
 };
+
+// === Commission ===
+
+export const fetchCommissionRate = async () => {
+  const response = await http.get<{ commissionRate: number }>(
+    "/admin/config/commission",
+  );
+  return response.data;
+};
+
+export const setCommissionRate = async (rate: number) => {
+  const response = await http.patch<{ commissionRate: number }>(
+    "/admin/config/commission",
+    { rate },
+  );
+  return response.data;
+};
+
+// === Refund Requests ===
+
+export type AdminRefundRequest = {
+  id: number;
+  orderId: number;
+  userId: number;
+  reason: string;
+  amount: number;
+  status: string;
+  note: string | null;
+  processedAt: string | null;
+  createdAt: string;
+  user: { id: number; email: string; fullName: string };
+  order: { id: number; finalAmount: number };
+};
+
+export const fetchAdminRefundRequests = async (status?: string) => {
+  const response = await http.get<{ refundRequests: AdminRefundRequest[] }>(
+    "/admin/refund-requests",
+    { params: status ? { status } : undefined },
+  );
+  return response.data.refundRequests;
+};
+
+export const approveRefundRequest = async (id: number, note?: string) => {
+  const response = await http.patch<{ id: number; status: string }>(
+    `/admin/refund-requests/${id}/approve`,
+    { note },
+  );
+  return response.data;
+};
+
+export const rejectRefundRequest = async (id: number, note?: string) => {
+  const response = await http.patch<{ id: number; status: string }>(
+    `/admin/refund-requests/${id}/reject`,
+    { note },
+  );
+  return response.data;
+};
+
+// === Withdrawals ===
+
+export type AdminWithdrawal = {
+  id: number;
+  amount: number;
+  bankName: string;
+  bankAccount: string;
+  bankHolder: string;
+  status: string;
+  note: string | null;
+  processedAt: string | null;
+  createdAt: string;
+  seller: { id: number; shopName: string };
+};
+
+export const fetchAdminWithdrawals = async (status?: string) => {
+  const response = await http.get<{ withdrawals: AdminWithdrawal[] }>(
+    "/admin/withdrawals",
+    { params: status ? { status } : undefined },
+  );
+  return response.data.withdrawals;
+};
+
+export const approveWithdrawal = async (id: number, note?: string) => {
+  const response = await http.patch<{ id: number; status: string }>(
+    `/admin/withdrawals/${id}/approve`,
+    { note },
+  );
+  return response.data;
+};
+
+export const rejectWithdrawal = async (id: number, note?: string) => {
+  const response = await http.patch<{ id: number; status: string }>(
+    `/admin/withdrawals/${id}/reject`,
+    { note },
+  );
+  return response.data;
+};
+
+// === Revenue ===
+
+export type AdminRevenueReport = {
+  platformRevenue: number;
+  totalTransactions: number;
+  pendingRefunds: number;
+  pendingWithdrawals: number;
+};
+
+export const fetchAdminRevenueReport = async () => {
+  const response = await http.get<AdminRevenueReport>("/admin/revenue");
+  return response.data;
+};

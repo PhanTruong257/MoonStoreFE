@@ -13,9 +13,13 @@ import {
   AdminOrderDetailPage,
   AdminOrdersPage,
 } from "@/pages/admin/admin-orders";
+import { AdminRefundsPage } from "@/pages/admin/admin-refunds/admin-refunds-page";
+import { AdminRevenuePage } from "@/pages/admin/admin-revenue/admin-revenue-page";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
 import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
+import { AdminWithdrawalsPage } from "@/pages/admin/admin-withdrawals/admin-withdrawals-page";
+import { SellerWalletPage } from "@/pages/seller/seller-wallet/seller-wallet-page";
 import { CartPage } from "@/pages/cart/cart-page";
 import { ChatPage } from "@/pages/chat/chat-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
@@ -118,6 +122,11 @@ export const protectedRoutes: RouteObject[] = [
         element: <SellerChatPage />,
         handle: { title: "Seller Messages" },
       },
+      {
+        path: "/seller/wallet",
+        element: <SellerWalletPage />,
+        handle: { title: "My Wallet" },
+      },
     ],
   },
   {
@@ -162,6 +171,21 @@ export const protectedRoutes: RouteObject[] = [
         path: "/admin/vouchers",
         element: <AdminVouchersPage />,
         handle: { title: "Vouchers" },
+      },
+      {
+        path: "/admin/revenue",
+        element: <AdminRevenuePage />,
+        handle: { title: "Revenue & Commission" },
+      },
+      {
+        path: "/admin/refunds",
+        element: <AdminRefundsPage />,
+        handle: { title: "Refund Requests" },
+      },
+      {
+        path: "/admin/withdrawals",
+        element: <AdminWithdrawalsPage />,
+        handle: { title: "Withdrawal Requests" },
       },
     ],
   },

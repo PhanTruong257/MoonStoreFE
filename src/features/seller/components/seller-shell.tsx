@@ -103,6 +103,14 @@ export const SellerShell = ({
             >
               Upload product
             </NavLink>
+            <NavLink
+              to="/seller/wallet"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              Wallet
+            </NavLink>
           </nav>
         </aside>
 
