@@ -5,6 +5,23 @@
   flex-direction: column;
 }
 
+.pageFullHeight {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainFullHeight {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.contentFullHeight {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .hero {
   width: min(1220px, calc(100% - 40px));
   margin: 28px auto 0;

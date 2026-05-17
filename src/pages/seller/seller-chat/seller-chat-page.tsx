@@ -29,6 +29,7 @@ export const SellerChatPage = () => {
     <SellerShell
       title="Tin nhắn"
       subtitle="Trả lời khách hàng đang quan tâm tới sản phẩm và đơn hàng của shop."
+      fullHeight
     >
       <div className={styles.layout}>
         <ConversationList

@@ -13,6 +13,7 @@ type SellerShellProps = {
   subtitle: string;
   actions?: ReactNode;
   children: ReactNode;
+  fullHeight?: boolean;
 };
 
 export const SellerShell = ({
@@ -20,11 +21,14 @@ export const SellerShell = ({
   subtitle,
   actions,
   children,
+  fullHeight = false,
 }: SellerShellProps) => {
   const user = getStoredUser();
 
   return (
-    <main className={styles.page}>
+    <main
+      className={`${styles.page}${fullHeight ? ` ${styles.pageFullHeight}` : ""}`}
+    >
       <SiteHeader
         brand={{ label: "Exclusive", to: "/" }}
         navLinks={homeHeaderLinks}
@@ -44,7 +48,9 @@ export const SellerShell = ({
         {actions ? <div className={styles.heroActions}>{actions}</div> : null}
       </section>
 
-      <section className={styles.main}>
+      <section
+        className={`${styles.main}${fullHeight ? ` ${styles.mainFullHeight}` : ""}`}
+      >
         <aside className={styles.sidebar}>
           <div>
             <h2 className={styles.sidebarTitle}>
@@ -100,13 +106,19 @@ export const SellerShell = ({
           </nav>
         </aside>
 
-        <div className={styles.content}>{children}</div>
+        <div
+          className={`${styles.content}${fullHeight ? ` ${styles.contentFullHeight}` : ""}`}
+        >
+          {children}
+        </div>
       </section>
 
-      <SiteFooter
-        sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
-      />
+      {!fullHeight ? (
+        <SiteFooter
+          sections={homeFooterSections}
+          copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        />
+      ) : null}
     </main>
   );
 };

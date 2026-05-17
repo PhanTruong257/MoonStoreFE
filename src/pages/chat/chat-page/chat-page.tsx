@@ -7,9 +7,8 @@ import {
   MessageComposer,
   MessageThread,
 } from "@/features/chat";
-import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
-import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+import { homeHeaderLinks } from "@/pages/home/mock-data";
 
 export const ChatPage = () => {
   const {
@@ -72,11 +71,6 @@ export const ChatPage = () => {
           </div>
         </div>
       </section>
-
-      <SiteFooter
-        sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
-      />
     </main>
   );
 };
