@@ -11,7 +11,10 @@ import {
   formatSellerCurrency,
   formatSellerDateTime,
 } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SellerShell } from "@/features/seller/components/seller-shell";
+
+const t = UI_TEXT.seller.orderDetail;
 
 export const SellerOrderDetailPage = () => {
   const {
@@ -41,7 +44,7 @@ export const SellerOrderDetailPage = () => {
 
   if (loading) {
     return (
-      <SellerShell title="Order detail" subtitle="Loading order...">
+      <SellerShell title={t.title} subtitle={t.loadingSubtitle}>
         <div className={styles.card}>
           <Skeleton active paragraph={{ rows: 6 }} />
         </div>
@@ -51,14 +54,14 @@ export const SellerOrderDetailPage = () => {
 
   if (error || !group) {
     return (
-      <SellerShell title="Order detail" subtitle={error || "Order not found."}>
+      <SellerShell title={t.title} subtitle={error ?? t.notFound}>
         <div className={styles.card}>
           <Button
             onClick={() => {
               void navigate(SELLER_ROUTES.orders);
             }}
           >
-            Back to orders
+            {t.backToOrders}
           </Button>
         </div>
       </SellerShell>
@@ -71,7 +74,7 @@ export const SellerOrderDetailPage = () => {
       subtitle={`Order ${group.orderId} · ${formatSellerDateTime(group.createdAt)}`}
       actions={
         <Link to={SELLER_ROUTES.orders} className={styles.backLink}>
-          ← Back to orders
+          {t.backToOrders}
         </Link>
       }
     >
@@ -79,7 +82,7 @@ export const SellerOrderDetailPage = () => {
         <div className={styles.column}>
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>
-              Items{" "}
+              {t.orderItemsTitle}{" "}
               <Tag color={SELLER_ORDER_STATUS_COLORS[group.status]}>
                 {group.status}
               </Tag>
@@ -121,23 +124,23 @@ export const SellerOrderDetailPage = () => {
                   loading={submitting}
                   onClick={openAdvance}
                 >
-                  Mark as {nextStatus}
+                  {t.markAs(nextStatus)}
                 </Button>
               ) : null}
 
               {canCancel ? (
                 <Button danger loading={submitting} onClick={openCancel}>
-                  Cancel order
+                  {t.cancelOrderBtn}
                 </Button>
               ) : null}
             </div>
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Status history</h3>
+            <h3 className={styles.cardTitle}>{t.statusHistoryTitle}</h3>
             <div className={styles.logList}>
               {group.statusLogs.length === 0 ? (
-                <span className={styles.itemMeta}>No log entries.</span>
+                <span className={styles.itemMeta}>{t.noLogs}</span>
               ) : (
                 group.statusLogs.map((log) => (
                   <div key={log.id} className={styles.logEntry}>
@@ -161,25 +164,25 @@ export const SellerOrderDetailPage = () => {
 
         <div className={styles.column}>
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Buyer</h3>
+            <h3 className={styles.cardTitle}>{t.buyerTitle}</h3>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Name</span>
+              <span className={styles.rowLabel}>{t.buyerName}</span>
               <span className={styles.rowValue}>{group.buyer.fullName}</span>
             </div>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Phone</span>
+              <span className={styles.rowLabel}>{t.buyerPhone}</span>
               <span className={styles.rowValue}>{group.buyer.phone}</span>
             </div>
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Payment</h3>
+            <h3 className={styles.cardTitle}>{t.paymentTitle}</h3>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Method</span>
+              <span className={styles.rowLabel}>{t.paymentMethod}</span>
               <span className={styles.rowValue}>{group.paymentMethod}</span>
             </div>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Status</span>
+              <span className={styles.rowLabel}>{t.paymentStatus}</span>
               <span className={styles.rowValue}>
                 <Tag
                   color={
@@ -194,9 +197,9 @@ export const SellerOrderDetailPage = () => {
             </div>
             {canConfirmManualPayment ? (
               <Popconfirm
-                title="Mark this QR payment as received?"
-                description="Make sure the transfer with the matching note has arrived in your account."
-                okText="Confirm"
+                title={t.qrConfirm}
+                description={t.confirmQRDesc}
+                okText={t.confirmQROk}
                 onConfirm={confirmManualPayment}
               >
                 <Button
@@ -205,28 +208,28 @@ export const SellerOrderDetailPage = () => {
                   loading={confirmingManualPayment}
                   style={{ marginTop: 8 }}
                 >
-                  I have received the transfer
+                  {t.confirmQRBtn}
                 </Button>
               </Popconfirm>
             ) : null}
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Totals</h3>
+            <h3 className={styles.cardTitle}>{t.totalsTitle}</h3>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Subtotal</span>
+              <span className={styles.rowLabel}>{t.subtotalLabel}</span>
               <span className={styles.rowValue}>
                 {formatSellerCurrency(group.subtotal)}
               </span>
             </div>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Shipping fee</span>
+              <span className={styles.rowLabel}>{t.shippingFeeLabel}</span>
               <span className={styles.rowValue}>
                 {formatSellerCurrency(group.shippingFee)}
               </span>
             </div>
             <div className={styles.row}>
-              <span className={styles.rowLabel}>Total</span>
+              <span className={styles.rowLabel}>{t.totalLabel}</span>
               <span className={styles.rowValue}>
                 {formatSellerCurrency(totalAmount)}
               </span>
@@ -234,9 +237,9 @@ export const SellerOrderDetailPage = () => {
           </div>
 
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Shipping address</h3>
+            <h3 className={styles.cardTitle}>{t.shippingAddressTitle}</h3>
             {addressLines.length === 0 ? (
-              <span className={styles.itemMeta}>No address provided.</span>
+              <span className={styles.itemMeta}>{t.noAddress}</span>
             ) : (
               addressLines.map((line) => (
                 <div key={line.key} className={styles.row}>
@@ -251,36 +254,36 @@ export const SellerOrderDetailPage = () => {
 
       <Modal
         open={advanceOpen}
-        title={`Mark order as ${nextStatus ?? ""}?`}
-        okText="Confirm"
+        title={t.advanceModalTitle(nextStatus ?? "")}
+        okText={t.advanceModalOk}
         onOk={confirmAdvance}
         onCancel={closeAdvance}
         confirmLoading={submitting}
       >
-        <p>Add an optional note to help the buyer understand this update.</p>
+        <p>{t.advanceModalNote}</p>
         <Input.TextArea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={3}
-          placeholder="E.g. Package handed to carrier"
+          placeholder={t.advancePlaceholder}
         />
       </Modal>
 
       <Modal
         open={cancelOpen}
-        title="Cancel this order?"
-        okText="Cancel order"
+        title={t.cancelModalTitle}
+        okText={t.cancelModalOk}
         okButtonProps={{ danger: true }}
         onOk={confirmCancel}
         onCancel={closeCancel}
         confirmLoading={submitting}
       >
-        <p>Tell the buyer why you are cancelling.</p>
+        <p>{t.cancelModalNote}</p>
         <Input.TextArea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={3}
-          placeholder="E.g. Out of stock"
+          placeholder={t.cancelPlaceholder}
         />
       </Modal>
     </SellerShell>

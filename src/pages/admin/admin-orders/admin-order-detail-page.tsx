@@ -11,25 +11,28 @@ import {
 } from "@/app/utils/format";
 import { ADMIN_ROUTES } from "@/const/admin.const";
 import { ORDER_STATUS_COLORS } from "@/const/orders.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
+
+const t = UI_TEXT.admin.orderDetail;
 
 export const AdminOrderDetailPage = () => {
   const { order, isLoading, error } = useAdminOrderDetail();
 
   return (
     <AdminShell
-      title={order ? `Order #${order.id}` : "Order detail"}
-      subtitle={order ? formatDateTime(order.createdAt) : "Loading..."}
+      title={order ? t.title(order.id) : t.titleFallback}
+      subtitle={order ? formatDateTime(order.createdAt) : t.loadingSubtitle}
       actions={
         <Link to={ADMIN_ROUTES.orders} className={styles.backLink}>
-          ← Back to orders
+          {t.backToOrders}
         </Link>
       }
     >
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 6 }} />
       ) : error || !order ? (
-        <Empty description={error ?? "Order not found"} />
+        <Empty description={error ?? t.notFound} />
       ) : (
         <div className={styles.grid}>
           <div className={styles.column}>
@@ -56,7 +59,7 @@ export const AdminOrderDetailPage = () => {
                   </div>
                 ))}
                 <div className={styles.row}>
-                  <span>Subtotal</span>
+                  <span>{t.subtotalLabel}</span>
                   <strong>{formatMoney(group.subtotal)}</strong>
                 </div>
               </article>
@@ -65,33 +68,33 @@ export const AdminOrderDetailPage = () => {
 
           <div className={styles.column}>
             <article className={styles.card}>
-              <h3>Buyer</h3>
+              <h3>{t.buyerTitle}</h3>
               <div className={styles.row}>
-                <span>Name</span>
+                <span>{t.buyerName}</span>
                 <span>{order.userFullName}</span>
               </div>
               <div className={styles.row}>
-                <span>Email</span>
+                <span>{t.buyerEmail}</span>
                 <span>{order.userEmail}</span>
               </div>
               <div className={styles.row}>
-                <span>Phone</span>
+                <span>{t.buyerPhone}</span>
                 <span>{order.userPhone}</span>
               </div>
             </article>
 
             <article className={styles.card}>
-              <h3>Totals</h3>
+              <h3>{t.totalsTitle}</h3>
               <div className={styles.row}>
-                <span>Items</span>
+                <span>{t.itemsLabel}</span>
                 <span>{formatMoney(order.totalAmount)}</span>
               </div>
               <div className={styles.row}>
-                <span>Shipping</span>
+                <span>{t.shippingLabel}</span>
                 <span>{formatMoney(order.shippingFee)}</span>
               </div>
               <div className={styles.row}>
-                <span>Discount</span>
+                <span>{t.discountLabel}</span>
                 <span>
                   {order.discountAmount === 0
                     ? "—"
@@ -99,25 +102,25 @@ export const AdminOrderDetailPage = () => {
                 </span>
               </div>
               <div className={styles.rowTotal}>
-                <strong>Final</strong>
+                <strong>{t.finalLabel}</strong>
                 <strong>{formatMoney(order.finalAmount)}</strong>
               </div>
             </article>
 
             <article className={styles.card}>
-              <h3>Payment</h3>
+              <h3>{t.paymentTitle}</h3>
               <div className={styles.row}>
-                <span>Method</span>
+                <span>{t.paymentMethod}</span>
                 <span>{order.paymentMethod}</span>
               </div>
               <div className={styles.row}>
-                <span>Status</span>
+                <span>{t.paymentStatus}</span>
                 <Tag>{order.paymentStatus}</Tag>
               </div>
             </article>
 
             <article className={styles.card}>
-              <h3>Shipping</h3>
+              <h3>{t.shippingTitle}</h3>
               <p className={styles.address}>
                 {renderAddressLine(order.shippingAddress)}
               </p>

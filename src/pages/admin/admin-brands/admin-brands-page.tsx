@@ -3,9 +3,12 @@ import { useState } from "react";
 
 import { useAdminBrands } from "./use-admin-brands";
 
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminBrand } from "@/services/admin-service";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.brands;
 
 type FormValues = { name: string };
 
@@ -40,11 +43,11 @@ export const AdminBrandsPage = () => {
 
   return (
     <AdminShell
-      title="Brands"
-      subtitle="Manage product brands."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Button type="primary" onClick={openCreate}>
-          New brand
+          {t.newBrandBtn}
         </Button>
       }
     >
@@ -57,22 +60,22 @@ export const AdminBrandsPage = () => {
               <div className={styles.info}>
                 <div className={styles.titleRow}>
                   <strong>{brand.name}</strong>
-                  <Tag>{brand.productCount} products</Tag>
+                  <Tag>{t.productCount(brand.productCount)}</Tag>
                 </div>
                 <div className={styles.meta}>ID #{brand.id}</div>
               </div>
               <div className={styles.actions}>
                 <Button size="small" onClick={() => openEdit(brand)}>
-                  Edit
+                  {t.editBtn}
                 </Button>
                 <Popconfirm
-                  title="Delete brand?"
-                  okText="Delete"
+                  title={t.deleteTitle}
+                  okText={t.deleteOk}
                   okButtonProps={{ danger: true }}
                   onConfirm={() => remove(brand.id)}
                 >
                   <Button size="small" danger>
-                    Delete
+                    {t.deleteBtn}
                   </Button>
                 </Popconfirm>
               </div>
@@ -83,8 +86,8 @@ export const AdminBrandsPage = () => {
 
       <Modal
         open={isOpen}
-        title={editing ? "Edit brand" : "New brand"}
-        okText="Save"
+        title={editing ? t.editModalTitle : t.newModalTitle}
+        okText={t.saveOk}
         onOk={() => form.submit()}
         onCancel={() => setIsOpen(false)}
         confirmLoading={isSubmitting}
@@ -92,11 +95,11 @@ export const AdminBrandsPage = () => {
       >
         <Form form={form} layout="vertical" onFinish={submit}>
           <Form.Item
-            label="Name"
+            label={t.nameLabel}
             name="name"
-            rules={[{ required: true, message: "Name is required" }]}
+            rules={[{ required: true, message: t.nameRequired }]}
           >
-            <Input placeholder="Nova" />
+            <Input placeholder={t.namePlaceholder} />
           </Form.Item>
         </Form>
       </Modal>

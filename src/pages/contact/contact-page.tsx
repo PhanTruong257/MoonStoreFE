@@ -6,9 +6,13 @@ import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CONTACT_TEXT } from "@/const/contact.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const tc = UI_TEXT.contact;
+const th = UI_TEXT.header;
 
 export const ContactPage = () => {
   const [name, setName] = useState("");
@@ -33,15 +37,9 @@ export const ContactPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: th.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "What are you looking for?" }}
+        search={{ placeholder: th.searchPlaceholder }}
       />
 
       <section className={styles.main}>
@@ -53,16 +51,16 @@ export const ContactPage = () => {
         <section className={styles.content}>
           <aside className={styles.infoCard}>
             <article className={styles.infoBlock}>
-              <h3>Call To Us</h3>
-              <p>We are available 24/7, 7 days a week.</p>
-              <p>Phone: +8801611112222</p>
+              <h3>{tc.callTitle}</h3>
+              <p>{tc.callDesc}</p>
+              <p>{tc.callPhone}</p>
             </article>
 
             <article className={styles.infoBlock}>
-              <h3>Write To Us</h3>
-              <p>Fill out our form and we will contact you within 24 hours.</p>
-              <p>Emails: customer@exclusive.com</p>
-              <p>Emails: support@exclusive.com</p>
+              <h3>{tc.writeTitle}</h3>
+              <p>{tc.writeDesc}</p>
+              <p>{tc.writeEmail1}</p>
+              <p>{tc.writeEmail2}</p>
             </article>
           </aside>
 
@@ -109,7 +107,7 @@ export const ContactPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

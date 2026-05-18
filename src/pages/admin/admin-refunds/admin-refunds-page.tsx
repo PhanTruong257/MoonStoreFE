@@ -3,9 +3,13 @@ import type { ColumnsType } from "antd/es/table";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import { formatSellerCurrency, formatSellerDateTime } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import type { AdminRefundRequest } from "@/services/admin-service";
 import styles from "./admin-refunds-page.module.scss";
 import { useAdminRefunds } from "./use-admin-refunds";
+
+const t = UI_TEXT.admin.refunds;
+const tbl = UI_TEXT.admin.table;
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "gold",
@@ -18,41 +22,41 @@ export const AdminRefundsPage = () => {
 
   const columns: ColumnsType<AdminRefundRequest> = [
     {
-      title: "Date",
+      title: tbl.date,
       dataIndex: "createdAt",
       key: "createdAt",
       render: (v) => formatSellerDateTime(v),
     },
     {
-      title: "Order",
+      title: tbl.order,
       dataIndex: "orderId",
       key: "orderId",
       render: (v) => `#${v}`,
     },
     {
-      title: "User",
+      title: tbl.user,
       key: "user",
       render: (_, r) => `${r.user.fullName} (${r.user.email})`,
     },
     {
-      title: "Amount",
+      title: tbl.amount,
       dataIndex: "amount",
       key: "amount",
       render: (v) => formatSellerCurrency(v),
     },
     {
-      title: "Reason",
+      title: tbl.reason,
       dataIndex: "reason",
       key: "reason",
     },
     {
-      title: "Status",
+      title: tbl.status,
       dataIndex: "status",
       key: "status",
       render: (v: string) => <Tag color={STATUS_COLORS[v] ?? "default"}>{v}</Tag>,
     },
     {
-      title: "Actions",
+      title: tbl.actions,
       key: "actions",
       render: (_, r) =>
         r.status === "PENDING" ? (
@@ -63,7 +67,7 @@ export const AdminRefundsPage = () => {
               loading={isProcessing}
               onClick={() => approve(r.id)}
             >
-              Approve
+              {t.approveBtn}
             </Button>
             <Button
               size="small"
@@ -71,7 +75,7 @@ export const AdminRefundsPage = () => {
               loading={isProcessing}
               onClick={() => reject(r.id)}
             >
-              Reject
+              {t.rejectBtn}
             </Button>
           </Space>
         ) : null,
@@ -79,7 +83,7 @@ export const AdminRefundsPage = () => {
   ];
 
   return (
-    <AdminShell title="Refund Requests" subtitle="Review and process customer refund requests.">
+    <AdminShell title={t.title} subtitle={t.subtitle}>
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 5 }} />
       ) : error ? (

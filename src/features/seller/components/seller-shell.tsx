@@ -3,10 +3,13 @@ import { NavLink } from "react-router-dom";
 
 import styles from "./seller-shell.module.scss";
 
+import { UI_TEXT } from "@/const/ui-text";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const ts = UI_TEXT.seller;
 
 type SellerShellProps = {
   title: string;
@@ -30,19 +33,13 @@ export const SellerShell = ({
       className={`${styles.page}${fullHeight ? ` ${styles.pageFullHeight}` : ""}`}
     >
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: UI_TEXT.header.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "Search in seller hub" }}
+        search={{ placeholder: UI_TEXT.header.searchPlaceholder }}
       />
 
       <section className={styles.hero}>
-        <span className={styles.heroLabel}>Seller Studio</span>
+        <span className={styles.heroLabel}>{ts.studioLabel}</span>
         <h1 className={styles.heroTitle}>{title}</h1>
         <p className={styles.heroSubtitle}>{subtitle}</p>
         {actions ? <div className={styles.heroActions}>{actions}</div> : null}
@@ -57,7 +54,7 @@ export const SellerShell = ({
               {user?.fullName ?? "Seller"}
             </h2>
             <p className={styles.sidebarMeta}>
-              {user?.role === "seller" ? "Active seller" : "Seller setup"}
+              {user?.role === "seller" ? ts.activeSeller : ts.sellerSetup}
             </p>
           </div>
           <nav className={styles.navLinks}>
@@ -68,7 +65,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Dashboard
+              {ts.nav.dashboard}
             </NavLink>
             <NavLink
               to="/seller/orders"
@@ -76,7 +73,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Orders
+              {ts.nav.orders}
             </NavLink>
             <NavLink
               to="/seller/chat"
@@ -84,7 +81,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Messages
+              {ts.nav.messages}
             </NavLink>
             <NavLink
               to="/seller/products"
@@ -93,7 +90,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Manage products
+              {ts.nav.manageProducts}
             </NavLink>
             <NavLink
               to="/seller/products/new"
@@ -101,7 +98,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Upload product
+              {ts.nav.uploadProduct}
             </NavLink>
             <NavLink
               to="/seller/wallet"
@@ -109,7 +106,7 @@ export const SellerShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Wallet
+              {ts.nav.wallet}
             </NavLink>
           </nav>
         </aside>
@@ -124,7 +121,7 @@ export const SellerShell = ({
       {!fullHeight ? (
         <SiteFooter
           sections={homeFooterSections}
-          copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+          copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
         />
       ) : null}
     </main>

@@ -1,5 +1,6 @@
 import type { MouseEvent } from "react";
 
+import { formatMoneyShort } from "@/app/utils/format";
 import { ProductCard } from "@/component/product-card/product-card";
 import styles from "@/features/home/flash-sale/flash-sale-section.module.scss";
 import { useFlashSale } from "@/features/home/flash-sale/use-flash-sale";
@@ -13,7 +14,7 @@ type FlashSaleSectionProps = {
   ) => Promise<void>;
 };
 
-const formatMoney = (value: number) => `$${value.toFixed(0)}`;
+const formatMoney = formatMoneyShort;
 
 const formatCountdownPart = (value: number) =>
   value.toString().padStart(2, "0");

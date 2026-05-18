@@ -4,8 +4,11 @@ import styles from "./seller-orders-page.module.scss";
 import { useSellerOrders } from "./use-seller-orders";
 
 import { SELLER_ORDER_STATUS_FILTER_OPTIONS } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SellerShell } from "@/features/seller/components/seller-shell";
 import type { SellerOrderGroup } from "@/services/seller-service";
+
+const t = UI_TEXT.seller.orders;
 
 export const SellerOrdersPage = () => {
   const {
@@ -19,10 +22,7 @@ export const SellerOrdersPage = () => {
   } = useSellerOrders();
 
   return (
-    <SellerShell
-      title="Orders"
-      subtitle="Manage every order your shop receives."
-    >
+    <SellerShell title={t.title} subtitle={t.subtitle}>
       <div className={styles.toolbar}>
         <Select
           value={statusFilter}
@@ -31,7 +31,7 @@ export const SellerOrdersPage = () => {
           style={{ width: 180 }}
         />
         <span className={styles.productMeta}>
-          Total: {filtered.length} / {groups.length}
+          {t.totalMeta(filtered.length, groups.length)}
         </span>
       </div>
 
@@ -45,7 +45,7 @@ export const SellerOrdersPage = () => {
           loading={loading}
           pagination={{ pageSize: 10 }}
           locale={{
-            emptyText: <div className={styles.empty}>No orders yet.</div>,
+            emptyText: <div className={styles.empty}>{t.emptyText}</div>,
           }}
         />
       </div>

@@ -1,14 +1,12 @@
- 
+
 import type { MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import { toCategorySlug } from "@/app/utils/category-slug";
+import { formatMoneyShort } from "@/app/utils/format";
 import { ProductCard } from "@/component/product-card/product-card";
-import { getStoredUser } from "@/features/auth/auth-storage";
 import styles from "@/features/home/product-list/product-list-section.module.scss";
 import { useProductList } from "@/features/home/product-list/use-product-list";
-import { addToCart } from "@/services/cart-service";
 
 type ProductListSectionProps = {
   initialCategorySlug?: string;
@@ -19,7 +17,14 @@ type ProductListSectionProps = {
   ) => Promise<void>;
 };
 
-const formatMoney = (value: number) => `$${value.toFixed(0)}`;
+const formatMoney = formatMoneyShort;
+
+const calculateDiscountPercent = (price: number, oldPrice: number) => {
+  if (!oldPrice || oldPrice <= price) {
+    return 0;
+  }
+  return Math.round(((oldPrice - price) / oldPrice) * 100);
+};
 
 export const ProductListSection = ({
   initialCategorySlug,
@@ -43,28 +48,6 @@ export const ProductListSection = ({
   } = useProductList(searchQuery, initialCategorySlug);
 
   const hasItems = items.length > 0;
-  const handleAddToCart = async (
-    productId: string,
-    productIdNumber: number | undefined,
-  ) => {
-    if (!productIdNumber) {
-      void navigate(`/product/${productId}`);
-      return;
-    }
-
-    const user = getStoredUser();
-
-    try {
-      await addToCart({
-        userId: user?.id,
-        productId: productIdNumber,
-        quantity: 1,
-      });
-      dispatchCartUpdated();
-    } catch {
-      // Ignore add errors for now.
-    }
-  };
 
   return (
     <section className={`page-section ${styles.sectionShell}`}>
@@ -123,36 +106,64 @@ export const ProductListSection = ({
 
       {!isLoading ? (
         <div className={styles.productGrid}>
-          {items.map((product) => (
-            <ProductCard
-              key={product.id}
-              name={product.name}
-              image={product.image}
-              to={`/product/${product.id}`}
-              onLinkClick={(event) => {
-                void onProductClick(event, product.id);
-              }}
-              renderPrice={
-                <p className={styles.priceRow}>
-                  <span>{formatMoney(product.price)}</span>
-                  <del>{formatMoney(product.oldPrice)}</del>
-                </p>
-              }
-              renderMeta={
-                <p className={styles.metaRow}>
-                  <span>{"*".repeat(product.rating)}</span>
-                  <small>({product.sold})</small>
-                </p>
-              }
-              actionLabel="Add To Cart"
-              onAction={() => {
-                void handleAddToCart(product.id, product.productIdNumber);
-              }}
-              className={styles.productCard}
-              imageWrapClassName={styles.imageWrap}
-              actionClassName={styles.addToCartButton}
-            />
-          ))}
+          {items.map((product) => {
+            const discountPercent = calculateDiscountPercent(
+              product.price,
+              product.oldPrice,
+            );
+            const savings = product.oldPrice - product.price;
+            return (
+              <ProductCard
+                key={product.id}
+                name={product.name}
+                image={product.image}
+                to={`/product/${product.id}`}
+                onLinkClick={(event) => {
+                  void onProductClick(event, product.id);
+                }}
+                discountLabel={
+                  discountPercent > 0 ? `Giảm ${discountPercent}%` : undefined
+                }
+                renderPrice={
+                  <div className={styles.priceBlock}>
+                    {product.oldPrice > product.price ? (
+                      <del className={styles.oldPrice}>
+                        {formatMoney(product.oldPrice)}
+                      </del>
+                    ) : null}
+                    <strong className={styles.currentPrice}>
+                      {formatMoney(product.price)}
+                    </strong>
+                    {savings > 0 ? (
+                      <span className={styles.savings}>
+                        Giảm {formatMoney(savings)}
+                      </span>
+                    ) : null}
+                  </div>
+                }
+                renderMeta={
+                  product.rating > 0 || product.sold > 0 ? (
+                    <p className={styles.metaRow}>
+                      {product.rating > 0 ? (
+                        <span aria-label={`Rating ${product.rating}`}>
+                          {"★".repeat(product.rating)}
+                          <span className={styles.metaRatingDim}>
+                            {"★".repeat(Math.max(0, 5 - product.rating))}
+                          </span>
+                        </span>
+                      ) : null}
+                      {product.sold > 0 ? (
+                        <small>Đã bán {product.sold}</small>
+                      ) : null}
+                    </p>
+                  ) : null
+                }
+                className={styles.productCard}
+                imageWrapClassName={styles.imageWrap}
+                discountClassName={styles.discountTag}
+              />
+            );
+          })}
         </div>
       ) : null}
 

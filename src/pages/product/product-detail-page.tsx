@@ -1,16 +1,21 @@
+import { Image, Rate } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
 
+import { formatMoney } from "@/app/utils/format";
 import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
+import { ChatIcon, HeartIcon, ShopIcon } from "@/component/icons";
 import { ProductCard } from "@/component/product-card/product-card";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { ReviewsPanel } from "@/features/reviews";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
-const formatMoney = (value: number) => `$${value.toFixed(2)}`;
+const t = UI_TEXT.product;
+const h = UI_TEXT.header;
 
 export const ProductDetailPage = () => {
   const {
@@ -34,42 +39,31 @@ export const ProductDetailPage = () => {
   } = useProductDetailData();
 
   const navigate = useNavigate();
-  const oldPrice = product ? Math.round(unitPrice * 1.15) : 0;
-  const discountPercent =
-    oldPrice > 0
-      ? Math.round(((oldPrice - unitPrice) / oldPrice) * 100)
-      : 0;
 
   if (!product && !isLoading) {
     return (
       <main className={styles.page}>
         <SiteHeader
-          brand={{ label: "Exclusive", to: "/" }}
+          brand={{ label: h.brand, to: "/" }}
           navLinks={homeHeaderLinks}
-          promo={{
-            message:
-              "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-            linkLabel: "ShopNow",
-            to: "/",
-          }}
-          search={{ placeholder: "What are you looking for?" }}
+          search={{ placeholder: h.searchPlaceholder }}
         />
 
         <section className={styles.main}>
           <Breadcrumb
             className={styles.breadcrumb}
-            items={[{ label: "Home", to: "/" }, { label: "Product not found" }]}
+            items={[{ label: UI_TEXT.common.home, to: "/" }, { label: t.notFound }]}
           />
           <div>
-            <h1>Product not found</h1>
-            <p>We could not find that product. It may be unavailable.</p>
-            <Link to="/">Back to home</Link>
+            <h1>{t.notFound}</h1>
+            <p>{t.notFoundDesc}</p>
+            <Link to="/">{t.backToHome}</Link>
           </div>
         </section>
 
         <SiteFooter
           sections={homeFooterSections}
-          copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+          copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
         />
       </main>
     );
@@ -79,20 +73,14 @@ export const ProductDetailPage = () => {
     return (
       <main className={styles.page}>
         <SiteHeader
-          brand={{ label: "Exclusive", to: "/" }}
+          brand={{ label: h.brand, to: "/" }}
           navLinks={homeHeaderLinks}
-          promo={{
-            message:
-              "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-            linkLabel: "ShopNow",
-            to: "/",
-          }}
-          search={{ placeholder: "What are you looking for?" }}
+          search={{ placeholder: h.searchPlaceholder }}
         />
         <section className={styles.main}>
           <Breadcrumb
             className={styles.breadcrumb}
-            items={[{ label: "Home", to: "/" }, { label: "Loading product..." }]}
+            items={[{ label: UI_TEXT.common.home, to: "/" }, { label: UI_TEXT.common.loading }]}
           />
         </section>
       </main>
@@ -104,23 +92,17 @@ export const ProductDetailPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: h.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "What are you looking for?" }}
+        search={{ placeholder: h.searchPlaceholder }}
       />
 
       <section className={styles.main}>
         <Breadcrumb
           className={styles.breadcrumb}
           items={[
-            { label: "Trang chu", to: "/" },
-            { label: product.categoryName ?? "Danh muc" },
+            { label: UI_TEXT.common.home, to: "/" },
+            { label: product.categoryName ?? t.category },
             { label: product.name },
           ]}
         />
@@ -141,10 +123,20 @@ export const ProductDetailPage = () => {
             </div>
 
             <div className={styles.mainImageWrap}>
-              <img
-                src={product.gallery[selectedImage] ?? product.gallery[0]}
-                alt={product.name}
-              />
+              <Image.PreviewGroup
+                items={product.gallery}
+                preview={{
+                  current: selectedImage,
+                  onChange: (current) => setSelectedImage(current),
+                }}
+              >
+                <Image
+                  src={product.gallery[selectedImage] ?? product.gallery[0]}
+                  alt={product.name}
+                  rootClassName={styles.mainImageRoot}
+                  className={styles.mainImage}
+                />
+              </Image.PreviewGroup>
             </div>
           </section>
 
@@ -152,16 +144,51 @@ export const ProductDetailPage = () => {
             <div className={styles.infoHeader}>
               <h1>{product.name}</h1>
               <div className={styles.ratingRow}>
-                <span>{"*".repeat(product.rating)}</span>
-                <small>{product.reviews} danh gia</small>
-                <em>{product.inStock ? "Con hang" : "Het hang"}</em>
+                {product.reviews > 0 ? (
+                  <>
+                    <strong className={styles.ratingScore}>
+                      {product.rating.toFixed(1)}
+                    </strong>
+                    <Rate
+                      disabled
+                      allowHalf
+                      value={product.rating}
+                      className={styles.ratingStars}
+                    />
+                    <span className={styles.ratingDivider} aria-hidden>
+                      |
+                    </span>
+                    <small>{t.reviewsCount(product.reviews)}</small>
+                    <span className={styles.ratingDivider} aria-hidden>
+                      |
+                    </span>
+                  </>
+                ) : null}
+                <em
+                  className={
+                    product.inStock ? styles.inStock : styles.outOfStock
+                  }
+                >
+                  {product.inStock ? t.inStock : t.outOfStock}
+                </em>
               </div>
+            </div>
+
+            <div className={styles.priceCard}>
+              <strong className={styles.priceValue}>
+                {formatMoney(unitPrice)}
+              </strong>
             </div>
 
             <div className={styles.sellerBar}>
               <div className={styles.sellerInfo}>
-                <small>Cửa hàng</small>
-                <strong>{product.sellerShopName}</strong>
+                <span className={styles.sellerIcon}>
+                  <ShopIcon size={20} />
+                </span>
+                <div className={styles.sellerMeta}>
+                  <small>{t.store}</small>
+                  <strong>{product.sellerShopName}</strong>
+                </div>
               </div>
               <button
                 type="button"
@@ -170,36 +197,12 @@ export const ProductDetailPage = () => {
                   void chatWithSeller();
                 }}
                 disabled={isStartingChat}
-                aria-label="Chat với shop"
-                title="Chat với shop"
+                aria-label={t.chatWithShop}
+                title={t.chatWithShop}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7l-5 4V6a2 2 0 0 1 2-2zm3 6h10v2H7v-2zm0-3h10v2H7V7z"
-                    fill="currentColor"
-                  />
-                </svg>
-                <span>{isStartingChat ? "Đang mở..." : "Chat với shop"}</span>
+                <ChatIcon size={16} />
+                <span>{isStartingChat ? t.chatOpening : t.chatWithShop}</span>
               </button>
-            </div>
-
-            <div className={styles.priceCard}>
-              <div className={styles.priceMain}>
-                <strong>{formatMoney(unitPrice)}</strong>
-                {discountPercent > 0 ? (
-                  <span className={styles.priceBadge}>-{discountPercent}%</span>
-                ) : null}
-              </div>
-              <div className={styles.priceMeta}>
-                <span>{formatMoney(oldPrice)}</span>
-                <small>Gia cu</small>
-              </div>
-              <div className={styles.installment}>
-                Tra gop tu{" "}
-                <strong>
-                  {formatMoney(Math.max(unitPrice / 8, 0))}/thang
-                </strong>
-              </div>
             </div>
 
             <p className={styles.description}>{product.description}</p>
@@ -215,7 +218,7 @@ export const ProductDetailPage = () => {
                         {group.name}
                         {group.required ? " *" : ""}
                       </strong>
-                      {group.multiSelect ? <em>(chon nhieu)</em> : null}
+                      {group.multiSelect ? <em>{t.multiSelectHint}</em> : null}
                     </div>
                     <div className={styles.optionWrap}>
                       {group.options.map((option) => {
@@ -230,7 +233,7 @@ export const ProductDetailPage = () => {
                             type="button"
                             className={buttonClass}
                             onClick={() => setOption(group, option.id)}
-                            aria-label={`Select ${option.name} ${group.name}`}
+                            aria-label={t.selectOption(option.name, group.name)}
                           >
                             {isColor ? (
                               <span
@@ -256,7 +259,7 @@ export const ProductDetailPage = () => {
 
             {missingRequiredGroups.length > 0 ? (
               <p className={styles.missingHint}>
-                Vui long chon:{" "}
+                {t.missingHint}{" "}
                 {missingRequiredGroups.map((g) => g.name).join(", ")}
               </p>
             ) : null}
@@ -266,7 +269,7 @@ export const ProductDetailPage = () => {
                 <button
                   type="button"
                   onClick={decreaseQuantity}
-                  aria-label="Decrease quantity"
+                  aria-label={t.decreaseQty}
                 >
                   −
                 </button>
@@ -274,7 +277,7 @@ export const ProductDetailPage = () => {
                 <button
                   type="button"
                   onClick={increaseQuantity}
-                  aria-label="Increase quantity"
+                  aria-label={t.increaseQty}
                 >
                   +
                 </button>
@@ -292,7 +295,7 @@ export const ProductDetailPage = () => {
                   });
                 }}
               >
-                Buy Now
+                {t.buyNow}
               </button>
 
               <button
@@ -303,38 +306,28 @@ export const ProductDetailPage = () => {
                   void addSelectedToCart();
                 }}
               >
-                Add to cart
+                {t.addToCart}
               </button>
 
               <button
                 type="button"
                 className={`${styles.wishButton} ${isWishlisted ? styles.wishButtonActive : ""}`}
                 onClick={toggleWishlist}
-                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                title={isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
+                aria-label={isWishlisted ? t.removeFromWishlist : t.addToWishlist}
+                title={isWishlisted ? t.savedToWishlist : t.addToWishlist}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill={isWishlisted ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
+                <HeartIcon size={20} filled={isWishlisted} />
               </button>
             </div>
 
             <div className={styles.policyCard}>
               <article>
-                <h3>Free Delivery</h3>
-                <p>Enter your postal code for Delivery Availability</p>
+                <h3>{t.freeDelivery}</h3>
+                <p>{t.freeDeliveryDesc}</p>
               </article>
               <article>
-                <h3>Return Delivery</h3>
-                <p>Free 30 Days Delivery Returns. Details</p>
+                <h3>{t.returnDelivery}</h3>
+                <p>{t.returnDeliveryDesc}</p>
               </article>
             </div>
           </aside>
@@ -344,7 +337,7 @@ export const ProductDetailPage = () => {
 
         <section className={styles.relatedSection}>
           <header>
-            <p>Related Item</p>
+            <p>{t.relatedItems}</p>
           </header>
 
           <div className={styles.relatedGrid}>
@@ -360,16 +353,21 @@ export const ProductDetailPage = () => {
                   image={item.image}
                   to={`/product/${item.id}`}
                   discountLabel={`-${discount}%`}
-                  wishlistLabel="Wish"
+                  wishlistLabel={t.wishButtonLabel}
                   renderPrice={
                     <p>
-                      <strong>{`$${item.price}`}</strong>
-                      <del>{`$${item.oldPrice}`}</del>
+                      <strong>{formatMoney(item.price)}</strong>
+                      <del>{formatMoney(item.oldPrice)}</del>
                     </p>
                   }
                   renderMeta={
-                    <small>
-                      {"*".repeat(item.rating)} ({item.sold})
+                    <small className={styles.relatedMeta}>
+                      <Rate
+                        disabled
+                        value={item.rating}
+                        className={styles.relatedStars}
+                      />
+                      <span>({item.sold})</span>
                     </small>
                   }
                   className={styles.relatedCard}
@@ -383,7 +381,7 @@ export const ProductDetailPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

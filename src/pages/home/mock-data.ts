@@ -35,81 +35,53 @@ export type HomeSideMenuItem = {
   children: string[];
 };
 
+import { UI_TEXT } from "@/const/ui-text";
+
+const ft = UI_TEXT.footer;
+const nv = UI_TEXT.nav;
+
 export const homeHeaderLinks = [
-  { label: "Home", to: "/home" },
-  { label: "Contact", to: "/contact" },
-  { label: "About", to: "/about" },
-  { label: "Sign Up", to: "/register" },
+  { label: nv.home, to: "/home" },
+  { label: nv.contact, to: "/contact" },
+  { label: nv.about, to: "/about" },
+  { label: nv.signUp, to: "/register" },
 ];
 
 export const homeFooterSections = [
   {
-    title: "Exclusive",
-    items: [{ label: "Subscribe" }, { label: "Get 10% off your first order" }],
+    title: ft.exclusiveTitle,
+    items: [{ label: ft.subscribeLabel }, { label: ft.subscribeDesc }],
   },
   {
-    title: "Support",
+    title: ft.supportTitle,
     items: [
-      { label: "111 Bijoy Sarani, Dhaka, BD" },
-      { label: "exclusive@gmail.com" },
-      { label: "+88015-88888-9999" },
+      { label: ft.address },
+      { label: ft.email },
+      { label: ft.phone },
     ],
   },
   {
-    title: "Account",
+    title: ft.accountTitle,
     items: [
-      { label: "My Account" },
-      { label: "Login / Register", to: "/login" },
-      { label: "Cart" },
-      { label: "Wishlist" },
-      { label: "Shop", to: "/" },
+      { label: ft.myAccount },
+      { label: ft.loginRegister, to: "/login" },
+      { label: ft.cart },
+      { label: ft.wishlist },
+      { label: ft.shop, to: "/" },
     ],
   },
   {
-    title: "Quick Link",
+    title: ft.quickLinkTitle,
     items: [
-      { label: "Privacy Policy" },
-      { label: "Terms Of Use" },
-      { label: "FAQ" },
-      { label: "Contact" },
+      { label: ft.privacyPolicy },
+      { label: ft.termsOfUse },
+      { label: ft.faq },
+      { label: ft.contact },
     ],
   },
 ];
 
-export const homeSideMenu: HomeSideMenuItem[] = [
-  {
-    label: "Phones",
-    children: ["Flagship Phones", "Budget Phones", "Foldable Phones"],
-  },
-  {
-    label: "Computers",
-    children: ["Ultrabooks", "Gaming Laptops", "Workstations"],
-  },
-  {
-    label: "Smart Watch",
-    children: ["Fitness Watches", "Luxury Watches"],
-  },
-  {
-    label: "Camera",
-    children: ["DSLR Cameras", "Mirrorless Cameras"],
-  },
-  {
-    label: "Headphones",
-    children: ["Earbuds", "Over-Ear"],
-  },
-  {
-    label: "Gaming",
-    children: ["Controllers", "Keyboards"],
-  },
-  {
-    label: "Fashion",
-    children: ["Hoodies", "Jackets"],
-  },
-  {
-    label: "Furniture",
-    children: ["Desks", "Chairs"],
-  },
-];
+export const homeSideMenu: HomeSideMenuItem[] = UI_TEXT.home.sideMenu;
 
 export const homeBanners: HomeBanner[] = [
   {
@@ -277,47 +249,19 @@ export const homeProducts: HomeProduct[] = [
   },
 ];
 
-export const homeServices: HomeService[] = [
-  {
-    id: "service-1",
-    title: "FREE AND FAST DELIVERY",
-    description: "Free delivery for all orders over $140",
-  },
-  {
-    id: "service-2",
-    title: "24/7 CUSTOMER SERVICE",
-    description: "Friendly 24/7 customer support",
-  },
-  {
-    id: "service-3",
-    title: "MONEY BACK GUARANTEE",
-    description: "We return money within 30 days",
-  },
+export const homeServices: HomeService[] = UI_TEXT.home.services.map(
+  (s, i) => ({ id: `service-${i + 1}`, ...s }),
+);
+
+const arrivalImages = [
+  "/images/products/product-3.jpg",
+  "/images/products/product-2.jpg",
+  "/images/products/product-1.jpg",
+  "/images/products/product-3.jpg",
 ];
 
-export const arrivalCards = [
-  {
-    id: "arrival-1",
-    title: "PlayStation 5",
-    description: "Black and White version of the PS5 coming out on sale.",
-    image: "/images/products/product-3.jpg",
-  },
-  {
-    id: "arrival-2",
-    title: "Women's Collections",
-    description: "Featured woman collections that give you another vibe.",
-    image: "/images/products/product-2.jpg",
-  },
-  {
-    id: "arrival-3",
-    title: "Speakers",
-    description: "Amazon wireless speakers",
-    image: "/images/products/product-1.jpg",
-  },
-  {
-    id: "arrival-4",
-    title: "Perfume",
-    description: "GUCCI INTENSE OUD EDP",
-    image: "/images/products/product-3.jpg",
-  },
-];
+export const arrivalCards = UI_TEXT.home.arrivals.map((a, i) => ({
+  id: `arrival-${i + 1}`,
+  ...a,
+  image: arrivalImages[i],
+}));

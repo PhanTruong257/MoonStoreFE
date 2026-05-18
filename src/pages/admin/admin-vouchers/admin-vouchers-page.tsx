@@ -20,9 +20,12 @@ import {
   VOUCHER_DISCOUNT_TYPE,
   VOUCHER_DISCOUNT_TYPE_OPTIONS,
 } from "@/const/voucher.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminVoucher } from "@/services/admin-service";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.vouchers;
 
 const DEFAULT_PERCENT_VALUE = 10;
 const DEFAULT_EXPIRY_DAYS = 30;
@@ -94,11 +97,11 @@ export const AdminVouchersPage = () => {
 
   return (
     <AdminShell
-      title="Vouchers"
-      subtitle="Create and manage discount vouchers."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Button type="primary" onClick={openCreate}>
-          New voucher
+          {t.newVoucherBtn}
         </Button>
       }
     >
@@ -121,30 +124,29 @@ export const AdminVouchersPage = () => {
                     {formatDiscountValue(voucher)}
                   </Tag>
                   {isExpired(voucher.expiredAt) ? (
-                    <Tag color="red">EXPIRED</Tag>
+                    <Tag color="red">{t.expired}</Tag>
                   ) : (
-                    <Tag color="green">ACTIVE</Tag>
+                    <Tag color="green">{t.active}</Tag>
                   )}
                 </div>
                 <div className={styles.meta}>
-                  Expires {formatDate(voucher.expiredAt)} · Used{" "}
-                  {voucher.usageCount} time(s)
+                  {t.expires(formatDate(voucher.expiredAt))} · {t.usedCount(voucher.usageCount)}
                   {voucher.maxDiscount !== null
-                    ? ` · max -${formatMoneyShort(voucher.maxDiscount)}`
+                    ? ` · ${t.maxDiscountMeta(formatMoneyShort(voucher.maxDiscount))}`
                     : ""}
                 </div>
               </div>
               <div className={styles.actions}>
                 <Button size="small" onClick={() => openEdit(voucher)}>
-                  Edit
+                  {t.editBtn}
                 </Button>
                 <Popconfirm
                   title={
                     voucher.usageCount > 0
-                      ? "Voucher already used; cannot delete."
-                      : "Delete voucher?"
+                      ? t.deleteUsedTitle
+                      : t.deleteTitle
                   }
-                  okText="Delete"
+                  okText={t.deleteOk}
                   okButtonProps={{
                     danger: true,
                     disabled: voucher.usageCount > 0,
@@ -157,7 +159,7 @@ export const AdminVouchersPage = () => {
                     danger
                     disabled={voucher.usageCount > 0}
                   >
-                    Delete
+                    {t.deleteBtn}
                   </Button>
                 </Popconfirm>
               </div>
@@ -168,8 +170,8 @@ export const AdminVouchersPage = () => {
 
       <Modal
         open={isOpen}
-        title={editing ? "Edit voucher" : "New voucher"}
-        okText="Save"
+        title={editing ? t.editModalTitle : t.newModalTitle}
+        okText={t.saveOk}
         onOk={() => form.submit()}
         onCancel={() => setIsOpen(false)}
         confirmLoading={isSubmitting}
@@ -177,31 +179,31 @@ export const AdminVouchersPage = () => {
       >
         <Form form={form} layout="vertical" onFinish={submit}>
           <Form.Item
-            label="Code"
+            label={t.codeLabel}
             name="code"
-            rules={[{ required: true, message: "Code is required" }]}
+            rules={[{ required: true, message: t.codeRequired }]}
           >
-            <Input placeholder="SUMMER10" />
+            <Input placeholder={t.codePlaceholder} />
           </Form.Item>
           <Form.Item
-            label="Discount type"
+            label={t.discountTypeLabel}
             name="discountType"
             rules={[{ required: true }]}
           >
             <Select options={VOUCHER_DISCOUNT_TYPE_OPTIONS} />
           </Form.Item>
           <Form.Item
-            label="Value"
+            label={t.valueLabel}
             name="value"
-            rules={[{ required: true, message: "Value is required" }]}
+            rules={[{ required: true, message: t.valueRequired }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item label="Max discount (optional)" name="maxDiscount">
+          <Form.Item label={t.maxDiscountLabel} name="maxDiscount">
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
-            label="Expired at"
+            label={t.expiredAtLabel}
             name="expiredAt"
             rules={[{ required: true }]}
           >

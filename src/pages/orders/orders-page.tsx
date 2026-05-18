@@ -10,9 +10,13 @@ import {
   formatOrdersCurrency,
   formatOrdersDateTime,
 } from "@/const/orders.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const t = UI_TEXT.orders;
+const th = UI_TEXT.header;
 
 export const OrdersPage = () => {
   const { orders, statusFilter, setStatusFilter, isLoading, error } =
@@ -21,21 +25,16 @@ export const OrdersPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: th.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message: "Track your orders",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "Search products" }}
+        search={{ placeholder: th.searchPlaceholder }}
       />
 
       <section className={styles.main}>
         <header className={styles.header}>
           <div>
-            <h1>My orders</h1>
-            <p>Review and track every order you placed.</p>
+            <h1>{t.title}</h1>
+            <p>{t.subtitle}</p>
           </div>
           <Segmented
             value={statusFilter}
@@ -50,7 +49,7 @@ export const OrdersPage = () => {
           ) : error ? (
             <p className={styles.error}>{error}</p>
           ) : orders.length === 0 ? (
-            <Empty description="No orders yet" />
+            <Empty description={t.noOrders} />
           ) : (
             <div className={styles.list}>
               {orders.map((order) => (
@@ -58,7 +57,7 @@ export const OrdersPage = () => {
                   <div className={styles.info}>
                     <div className={styles.titleRow}>
                       <Link to={`/orders/${order.id}`}>
-                        <strong>Order #{order.id}</strong>
+                        <strong>{t.orderTitle(order.id)}</strong>
                       </Link>
                       <Tag
                         color={ORDER_STATUS_COLORS[order.status] ?? "default"}
@@ -68,16 +67,16 @@ export const OrdersPage = () => {
                     </div>
                     <div className={styles.meta}>
                       {formatOrdersDateTime(order.createdAt)} ·{" "}
-                      {order.paymentMethod} · payment {order.paymentStatus}
+                      {order.paymentMethod} · {t.paymentLabel} {order.paymentStatus}
                     </div>
                     <div className={styles.meta}>
-                      {order.groups?.length ?? 0} shop(s)
+                      {t.shopCount(order.groups?.length ?? 0)}
                     </div>
                   </div>
                   <div className={styles.totals}>
                     <strong>{formatOrdersCurrency(order.finalAmount)}</strong>
                     <Link to={`/orders/${order.id}`} className={styles.link}>
-                      View detail →
+                      {t.viewDetail}
                     </Link>
                   </div>
                 </article>
@@ -89,7 +88,7 @@ export const OrdersPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

@@ -2,50 +2,14 @@ import { useLocation } from "react-router-dom";
 
 import styles from "./auth-page.module.scss";
 
+import { UI_TEXT } from "@/const/ui-text";
 import { Login } from "@/features/auth/login/login";
 import { Register } from "@/features/auth/register/register";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
+import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
-const authHeaderLinks = [
-  { label: "Home", to: "/" },
-  { label: "Contact", to: "/contact" },
-  { label: "About", to: "/about" },
-  { label: "Sign Up", to: "/register" },
-];
-
-const authFooterSections = [
-  {
-    title: "Exclusive",
-    items: [{ label: "Subscribe" }, { label: "Get 10% off your first order" }],
-  },
-  {
-    title: "Support",
-    items: [
-      { label: "111 Bijoy Sarani, Dhaka, BD" },
-      { label: "exclusive@gmail.com" },
-      { label: "+88015-88888-9999" },
-    ],
-  },
-  {
-    title: "Account",
-    items: [
-      { label: "My Account" },
-      { label: "Login / Register", to: "/login" },
-      { label: "Cart" },
-      { label: "Wishlist" },
-    ],
-  },
-  {
-    title: "Quick Link",
-    items: [
-      { label: "Privacy Policy" },
-      { label: "Terms Of Use" },
-      { label: "FAQ" },
-      { label: "Contact" },
-    ],
-  },
-];
+const th = UI_TEXT.header;
 
 export const AuthPage = () => {
   const location = useLocation();
@@ -54,15 +18,9 @@ export const AuthPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/login" }}
-        navLinks={authHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/register",
-        }}
-        search={{ placeholder: "What are you looking for?" }}
+        brand={{ label: th.brand, to: "/login" }}
+        navLinks={homeHeaderLinks}
+        search={{ placeholder: th.searchPlaceholder }}
       />
 
       <section className={styles.content}>
@@ -76,8 +34,8 @@ export const AuthPage = () => {
       </section>
 
       <SiteFooter
-        sections={authFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        sections={homeFooterSections}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

@@ -66,12 +66,23 @@
   border-radius: 18px;
   padding: 18px;
   border: 1px solid #eee;
+}
 
-  img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 10px;
+.mainImageRoot {
+  width: 100%;
+  display: block;
+}
+
+.mainImage {
+  width: 100% !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+
+  &:hover {
+    transform: scale(1.01);
   }
 }
 
@@ -94,12 +105,10 @@
 .ratingRow {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   font-size: 13px;
-
-  span {
-    color: #ffad33;
-  }
+  color: var(--color-slate-500);
 
   small {
     color: var(--color-slate-500);
@@ -107,53 +116,55 @@
 
   em {
     font-style: normal;
-    color: #00a75a;
-    border-left: 1px solid var(--color-gray-240);
-    padding-left: 10px;
   }
+}
+
+.ratingScore {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-danger);
+  border-bottom: 1px solid currentColor;
+  line-height: 1;
+}
+
+.ratingStars {
+  font-size: 14px !important;
+  line-height: 1 !important;
+
+  :global(.ant-rate-star:not(:last-child)) {
+    margin-inline-end: 2px;
+  }
+}
+
+.ratingDivider {
+  color: var(--color-gray-260);
+}
+
+.inStock {
+  color: #00a75a;
+  font-weight: 600;
+}
+
+.outOfStock {
+  color: var(--color-danger);
+  font-weight: 600;
 }
 
 .priceCard {
-  border-radius: 14px;
-  padding: 16px;
-  background: #fff5e8;
-  border: 1px solid #ffe4c2;
-  display: grid;
-  gap: 8px;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, #fff7f2 0%, #fff 100%);
+  border: 1px solid #fcd9c4;
+  border-left: 4px solid var(--color-primary);
 }
 
-.priceMain {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 28px;
+.priceValue {
+  font-size: 32px;
   font-weight: 700;
-  color: #b91c1c;
+  color: var(--color-danger);
   font-family: var(--font-display);
-}
-
-.priceBadge {
-  background: #ef4444;
-  color: #fff;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 999px;
-}
-
-.priceMeta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #6b7280;
-
-  span {
-    text-decoration: line-through;
-  }
-}
-
-.installment {
-  font-size: 13px;
-  color: #374151;
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
 
 .description {
@@ -479,9 +490,21 @@
       color: var(--color-slate-500);
     }
   }
+}
 
-  small {
-    color: #ffad33;
+.relatedMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-slate-500);
+}
+
+.relatedStars {
+  font-size: 12px !important;
+  line-height: 1 !important;
+
+  :global(.ant-rate-star:not(:last-child)) {
+    margin-inline-end: 1px;
   }
 }
 
@@ -555,14 +578,36 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin: 12px 0 4px;
   padding: 12px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #fdf2f8 0%, #f5f3ff 100%);
+  border: 1px solid var(--color-gray-220);
+  border-radius: 10px;
+  background: #fff;
 }
 
 .sellerInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sellerIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(222, 91, 44, 0.1);
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+.sellerMeta {
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -571,12 +616,12 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    color: #6b7280;
+    color: var(--color-slate-500);
   }
 
   strong {
     font-size: 15px;
-    color: #111827;
+    color: var(--color-ink-680);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -586,16 +631,17 @@
 .chatSellerButton {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #2563eb;
-  border-radius: 999px;
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
   background: #fff;
-  color: #2563eb;
+  color: var(--color-primary);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
 
   svg {
     width: 16px;
@@ -604,7 +650,7 @@
   }
 
   &:hover:not(:disabled) {
-    background: #2563eb;
+    background: var(--color-primary);
     color: #fff;
   }
 

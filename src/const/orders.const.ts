@@ -1,4 +1,5 @@
 import { formatDateTime, formatMoney } from "@/app/utils/format";
+import { UI_TEXT } from "./ui-text";
 
 export const ORDER_STATUS = {
   PENDING: "PENDING",
@@ -20,14 +21,8 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
 
 export const ORDER_STATUS_FILTER_ALL = "ALL";
 
-export const ORDER_STATUS_FILTER_OPTIONS = [
-  { label: "All", value: ORDER_STATUS_FILTER_ALL },
-  { label: "Pending", value: ORDER_STATUS.PENDING },
-  { label: "Confirmed", value: ORDER_STATUS.CONFIRMED },
-  { label: "Shipping", value: ORDER_STATUS.SHIPPING },
-  { label: "Delivered", value: ORDER_STATUS.DELIVERED },
-  { label: "Cancelled", value: ORDER_STATUS.CANCELLED },
-];
+export const ORDER_STATUS_FILTER_OPTIONS =
+  UI_TEXT.statusOptions.orderFilter;
 
 /** Reuse central format helpers; keep aliases for backward compatibility. */
 export const formatOrdersCurrency = formatMoney;

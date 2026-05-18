@@ -105,32 +105,39 @@
 
 .productCard {
   display: grid;
-  gap: 10px;
-  border-radius: 12px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid transparent;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  gap: 8px;
+  border-radius: 14px;
+  padding: 12px 12px 16px;
+  background: #fff;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
   transform: translateY(14px);
   opacity: 0;
   animation: cardIn 0.48s ease forwards;
   transition:
     transform 0.22s ease,
     box-shadow 0.24s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+    border-color 0.2s ease;
+  cursor: pointer;
 
   h3 {
-    margin: 0;
+    margin: 4px 0 0;
     font-size: 14px;
+    line-height: 1.35;
+    color: #1f2937;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 38px;
   }
 }
 
 .productCard:hover {
-  transform: translateY(-5px);
-  border-color: rgba(251, 113, 133, 0.28);
-  background: #fff;
-  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.15);
+  transform: translateY(-4px);
+  border-color: #fecaca;
+  box-shadow: 0 16px 30px rgba(239, 68, 68, 0.12);
 }
 
 .productCard:nth-child(1) {
@@ -166,71 +173,84 @@
 }
 
 .imageWrap {
-  background: var(--color-gray-140);
-  border-radius: 8px;
-  padding: 10px;
-  min-height: 170px;
+  background: #f6f7f9;
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 190px;
   position: relative;
   display: grid;
   place-items: center;
+  overflow: hidden;
 
   img {
     width: 100%;
     aspect-ratio: 1/1;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.35s ease;
   }
 }
 
 .productCard:hover .imageWrap img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
-.priceRow {
-  margin: 0;
+.discountTag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f1f3f5;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  z-index: 1;
+}
+
+.priceBlock {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  margin: 6px 0 0;
+}
 
-  span {
-    color: var(--color-danger);
-    font-weight: 700;
-  }
+.oldPrice {
+  color: #94a3b8;
+  font-size: 13px;
+  text-decoration: line-through;
+}
 
-  del {
-    color: var(--color-slate-500);
-  }
+.currentPrice {
+  color: #111827;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.savings {
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .metaRow {
-  margin: 0;
+  margin: 4px 0 0;
   display: flex;
   gap: 8px;
   align-items: center;
-  color: #ffad33;
+  color: #f59e0b;
   font-size: 13px;
+  letter-spacing: 1px;
 
   small {
-    color: var(--color-slate-500);
+    color: #64748b;
+    letter-spacing: normal;
   }
 }
 
-.addToCartButton {
-  border: 0;
-  border-radius: 10px;
-  height: 36px;
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.2s ease;
-}
-
-.addToCartButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.22);
+.metaRatingDim {
+  color: #e2e8f0;
 }
 
 .message {

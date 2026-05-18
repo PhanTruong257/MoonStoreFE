@@ -12,9 +12,12 @@ import { useMemo, useState } from "react";
 
 import { useAdminCategories } from "./use-admin-categories";
 
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import type { AdminCategory } from "@/services/admin-service";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.categories;
 
 type FormValues = {
   name: string;
@@ -31,7 +34,7 @@ export const AdminCategoriesPage = () => {
 
   const parentOptions = useMemo(
     () => [
-      { label: "(no parent)", value: 0 },
+      { label: t.noParent, value: 0 },
       ...items.map((item) => ({
         label: item.parentId ? `↳ ${item.name}` : item.name,
         value: item.id,
@@ -71,11 +74,11 @@ export const AdminCategoriesPage = () => {
 
   return (
     <AdminShell
-      title="Categories"
-      subtitle="Manage product categories tree."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Button type="primary" onClick={openCreate}>
-          New category
+          {t.newCategoryBtn}
         </Button>
       }
     >
@@ -91,9 +94,9 @@ export const AdminCategoriesPage = () => {
                     {cat.parentId ? "↳ " : ""}
                     {cat.name}
                   </strong>
-                  <Tag>{cat.productCount} products</Tag>
+                  <Tag>{t.productCount(cat.productCount)}</Tag>
                   {cat.childCount > 0 ? (
-                    <Tag color="blue">{cat.childCount} children</Tag>
+                    <Tag color="blue">{t.childCount(cat.childCount)}</Tag>
                   ) : null}
                 </div>
                 <div className={styles.meta}>
@@ -103,16 +106,16 @@ export const AdminCategoriesPage = () => {
               </div>
               <div className={styles.actions}>
                 <Button size="small" onClick={() => openEdit(cat)}>
-                  Edit
+                  {t.editBtn}
                 </Button>
                 <Popconfirm
-                  title="Delete category?"
-                  okText="Delete"
+                  title={t.deleteTitle}
+                  okText={t.deleteOk}
                   okButtonProps={{ danger: true }}
                   onConfirm={() => remove(cat.id)}
                 >
                   <Button size="small" danger>
-                    Delete
+                    {t.deleteBtn}
                   </Button>
                 </Popconfirm>
               </div>
@@ -123,8 +126,8 @@ export const AdminCategoriesPage = () => {
 
       <Modal
         open={isOpen}
-        title={editing ? "Edit category" : "New category"}
-        okText="Save"
+        title={editing ? t.editModalTitle : t.newModalTitle}
+        okText={t.saveOk}
         onOk={() => form.submit()}
         onCancel={() => setIsOpen(false)}
         confirmLoading={isSubmitting}
@@ -132,13 +135,13 @@ export const AdminCategoriesPage = () => {
       >
         <Form form={form} layout="vertical" onFinish={submit}>
           <Form.Item
-            label="Name"
+            label={t.nameLabel}
             name="name"
-            rules={[{ required: true, message: "Name is required" }]}
+            rules={[{ required: true, message: t.nameRequired }]}
           >
-            <Input placeholder="Phones" />
+            <Input placeholder={t.namePlaceholder} />
           </Form.Item>
-          <Form.Item label="Parent" name="parentId">
+          <Form.Item label={t.parentLabel} name="parentId">
             <Select
               options={parentOptions.filter(
                 (opt) => !editing || opt.value !== editing.id,

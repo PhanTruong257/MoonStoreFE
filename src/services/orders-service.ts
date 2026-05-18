@@ -6,6 +6,7 @@ export type CreateOrderPayload = {
   paymentMethod?: string;
   shippingAddress?: Record<string, unknown>;
   addressId?: number;
+  cartItemIds?: number[];
 };
 
 export type CreateOrderQrInfo = {

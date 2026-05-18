@@ -1,4 +1,6 @@
+import { UI_TEXT } from "./ui-text";
+
 export const HEADER_TEXT = {
-  defaultSearchAriaLabel: "Search",
-  defaultSearchActionLabel: "Search",
+  defaultSearchAriaLabel: UI_TEXT.header.searchAriaLabel,
+  defaultSearchActionLabel: UI_TEXT.header.searchActionLabel,
 } as const;

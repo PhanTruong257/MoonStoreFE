@@ -22,9 +22,12 @@ import {
   ACCOUNT_TEXT,
   PROFILE_FIELDS,
 } from "@/const/account.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const ta = UI_TEXT.account;
 
 export const AccountPage = () => {
   const {
@@ -68,15 +71,9 @@ export const AccountPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: UI_TEXT.header.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "What are you looking for?" }}
+        search={{ placeholder: UI_TEXT.header.searchPlaceholder }}
       />
 
       <section className={styles.main}>
@@ -113,7 +110,7 @@ export const AccountPage = () => {
 
             <h4>{ACCOUNT_MENU.orderTitle}</h4>
             <Link to="/orders" className={styles.menuLink}>
-              My orders
+              {ta.myOrders}
             </Link>
 
             <h4>{ACCOUNT_MENU.wishlistTitle}</h4>
@@ -122,20 +119,18 @@ export const AccountPage = () => {
           <section className={styles.panel}>
             <div className={styles.sellerCard}>
               <div>
-                <h3>Seller hub</h3>
+                <h3>{ta.sellerHubTitle}</h3>
                 <p>
-                  {isSeller
-                    ? "Manage your product catalog and launch new items."
-                    : "Submit an application to become a seller. Admin will review."}
+                  {isSeller ? ta.sellerActiveDesc : ta.sellerInactiveDesc}
                 </p>
               </div>
               {isSeller ? (
                 <Link className={styles.sellerLink} to="/seller">
-                  Open seller hub
+                  {ta.openSellerHub}
                 </Link>
               ) : (
                 <Link className={styles.sellerLink} to="/seller/apply">
-                  Become a seller
+                  {ta.becomeSeller}
                 </Link>
               )}
             </div>
@@ -145,16 +140,16 @@ export const AccountPage = () => {
               className={styles.addressSection}
             >
               <header>
-                <h3>My addresses</h3>
+                <h3>{ta.myAddresses}</h3>
                 <Button type="primary" onClick={openCreateAddress}>
-                  Add address
+                  {ta.addAddress}
                 </Button>
               </header>
 
               {isAddressLoading ? (
                 <Skeleton active paragraph={{ rows: 2 }} />
               ) : addresses.length === 0 ? (
-                <Empty description="No saved addresses" />
+                <Empty description={ta.noAddresses} />
               ) : (
                 <div className={styles.addressList}>
                   {addresses.map((address) => (
@@ -163,7 +158,7 @@ export const AccountPage = () => {
                         <div className={styles.addressTitle}>
                           <strong>{address.addressLine}</strong>
                           {address.isDefault ? (
-                            <Tag color="blue">Default</Tag>
+                            <Tag color="blue">{ta.isDefault}</Tag>
                           ) : null}
                         </div>
                         <div className={styles.addressMeta}>
@@ -178,25 +173,25 @@ export const AccountPage = () => {
                               void handleSetDefault(address.id);
                             }}
                           >
-                            Set default
+                            {ta.setDefault}
                           </Button>
                         ) : null}
                         <Button
                           size="small"
                           onClick={() => openEditAddress(address)}
                         >
-                          Edit
+                          {ta.editAddress}
                         </Button>
                         <Popconfirm
-                          title="Remove this address?"
-                          okText="Remove"
+                          title={ta.removeAddressConfirm}
+                          okText={ta.removeAddressOk}
                           okButtonProps={{ danger: true }}
                           onConfirm={() => {
                             void handleDeleteAddress(address.id);
                           }}
                         >
                           <Button size="small" danger>
-                            Remove
+                            {ta.removeAddress}
                           </Button>
                         </Popconfirm>
                       </div>
@@ -295,13 +290,13 @@ export const AccountPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
 
       <Modal
         open={isAddressModalOpen}
-        title={editingAddress ? "Edit address" : "Add address"}
-        okText="Save"
+        title={editingAddress ? ta.editAddressTitle : ta.addAddressTitle}
+        okText={ta.saveAddressOk}
         onOk={() => addressForm.submit()}
         onCancel={closeAddressModal}
         confirmLoading={isAddressSaving}
@@ -316,28 +311,28 @@ export const AccountPage = () => {
           initialValues={{ isDefault: false }}
         >
           <Form.Item
-            label="Address line"
+            label={ta.addressLineLabel}
             name="addressLine"
-            rules={[{ required: true, message: "Address line is required" }]}
+            rules={[{ required: true, message: ta.addressLineRequired }]}
           >
-            <Input placeholder="123 Le Loi street" />
+            <Input placeholder={ta.addressLinePlaceholder} />
           </Form.Item>
           <Form.Item
-            label="District"
+            label={ta.districtLabel}
             name="district"
-            rules={[{ required: true, message: "District is required" }]}
+            rules={[{ required: true, message: ta.districtRequired }]}
           >
-            <Input placeholder="District 1" />
+            <Input placeholder={ta.districtPlaceholder} />
           </Form.Item>
           <Form.Item
-            label="City"
+            label={ta.cityLabel}
             name="city"
-            rules={[{ required: true, message: "City is required" }]}
+            rules={[{ required: true, message: ta.cityRequired }]}
           >
-            <Input placeholder="Ho Chi Minh" />
+            <Input placeholder={ta.cityPlaceholder} />
           </Form.Item>
           <Form.Item
-            label="Set as default"
+            label={ta.setAsDefault}
             name="isDefault"
             valuePropName="checked"
           >

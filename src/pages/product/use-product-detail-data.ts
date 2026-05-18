@@ -41,7 +41,6 @@ type ProductView = {
   name: string;
   categoryName: string;
   basePrice: number;
-  oldPrice: number;
   rating: number;
   reviews: number;
   inStock: boolean;
@@ -100,8 +99,7 @@ export const useProductDetailData = () => {
       name: catalogProduct.name,
       categoryName: catalogProduct.categoryName,
       basePrice: catalogProduct.basePrice,
-      oldPrice: Math.round(catalogProduct.basePrice * 1.2),
-      rating: Math.max(1, Math.round(catalogProduct.averageRating || 4)),
+      rating: catalogProduct.averageRating ?? 0,
       reviews: catalogProduct.totalReviews,
       inStock: catalogProduct.stock > 0,
       description: catalogProduct.description ?? "",

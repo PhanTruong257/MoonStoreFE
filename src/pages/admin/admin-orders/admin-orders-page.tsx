@@ -9,8 +9,11 @@ import {
 import { formatDateTime, formatMoney } from "@/app/utils/format";
 import { ADMIN_ROUTES } from "@/const/admin.const";
 import { ORDER_STATUS_COLORS } from "@/const/orders.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.orders;
 
 export const AdminOrdersPage = () => {
   const { orders, isLoading, error, statusFilter, setStatusFilter } =
@@ -18,8 +21,8 @@ export const AdminOrdersPage = () => {
 
   return (
     <AdminShell
-      title="Orders"
-      subtitle="All orders across the marketplace."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Segmented
           value={statusFilter}
@@ -36,7 +39,7 @@ export const AdminOrdersPage = () => {
       ) : error ? (
         <p className={styles.error}>{error}</p>
       ) : orders.length === 0 ? (
-        <Empty description="No orders" />
+        <Empty description={t.noOrders} />
       ) : (
         <div className={styles.list}>
           {orders.map((order) => (
@@ -52,7 +55,7 @@ export const AdminOrdersPage = () => {
                   <Tag>{order.paymentStatus}</Tag>
                 </div>
                 <div className={styles.meta}>
-                  Buyer: {order.userFullName} (#{order.userId}) ·{" "}
+                  {t.buyerPrefix}{order.userFullName} (#{order.userId}) ·{" "}
                   {order.groupCount} shop(s) · {formatDateTime(order.createdAt)}
                 </div>
               </div>
@@ -62,7 +65,7 @@ export const AdminOrdersPage = () => {
                   to={ADMIN_ROUTES.orderDetail(order.id)}
                   className={styles.link}
                 >
-                  View →
+                  {UI_TEXT.admin.table.reviewLink}
                 </Link>
               </div>
             </article>

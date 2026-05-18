@@ -19,8 +19,11 @@ import {
   SELLER_APPLICATION_STATUS,
   SELLER_APPLICATION_STATUS_COLORS,
 } from "@/const/seller-status.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.sellers;
 
 export const AdminSellersPage = () => {
   const {
@@ -41,8 +44,8 @@ export const AdminSellersPage = () => {
 
   return (
     <AdminShell
-      title="Seller applications"
-      subtitle="Review pending applications and approve, reject or disable sellers."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Segmented
           value={statusFilter}
@@ -59,7 +62,7 @@ export const AdminSellersPage = () => {
       ) : error ? (
         <p className={styles.error}>{error}</p>
       ) : sellers.length === 0 ? (
-        <Empty description="No applications" />
+        <Empty description={t.noApplications} />
       ) : (
         <div className={styles.list}>
           {sellers.map((seller) => (
@@ -86,7 +89,7 @@ export const AdminSellersPage = () => {
                 {seller.status === SELLER_APPLICATION_STATUS.REJECTED &&
                 seller.rejectReason ? (
                   <p className={styles.rejectReason}>
-                    Reject reason: {seller.rejectReason}
+                    {t.rejectReasonPrefix}{seller.rejectReason}
                   </p>
                 ) : null}
               </div>
@@ -98,7 +101,7 @@ export const AdminSellersPage = () => {
                     loading={actingId === seller.id}
                     onClick={() => handleApprove(seller.id)}
                   >
-                    Approve
+                    {t.approveBtn}
                   </Button>
                 ) : null}
                 {seller.status === SELLER_APPLICATION_STATUS.PENDING ||
@@ -111,17 +114,17 @@ export const AdminSellersPage = () => {
                       setRejectReason("");
                     }}
                   >
-                    Reject
+                    {t.rejectBtn}
                   </Button>
                 ) : null}
                 {seller.status === SELLER_APPLICATION_STATUS.ACTIVE ? (
                   <Popconfirm
-                    title="Disable this seller? Their products will be hidden."
-                    okText="Disable"
+                    title={t.disableTitle}
+                    okText={t.disableBtn}
                     okButtonProps={{ danger: true }}
                     onConfirm={() => handleDisable(seller.id)}
                   >
-                    <Button loading={actingId === seller.id}>Disable</Button>
+                    <Button loading={actingId === seller.id}>{t.disableBtn}</Button>
                   </Popconfirm>
                 ) : null}
                 {seller.status === SELLER_APPLICATION_STATUS.DISABLED ? (
@@ -130,7 +133,7 @@ export const AdminSellersPage = () => {
                     loading={actingId === seller.id}
                     onClick={() => handleEnable(seller.id)}
                   >
-                    Enable
+                    {t.enableBtn}
                   </Button>
                 ) : null}
               </div>
@@ -141,8 +144,8 @@ export const AdminSellersPage = () => {
 
       <Modal
         open={rejectTarget !== null}
-        title="Reject application"
-        okText="Reject"
+        title={t.rejectTitle}
+        okText={t.rejectOkBtn}
         okButtonProps={{ danger: true }}
         onCancel={() => setRejectTarget(null)}
         onOk={() => {
@@ -154,12 +157,12 @@ export const AdminSellersPage = () => {
         }}
         confirmLoading={actingId === rejectTarget}
       >
-        <p>Tell the seller why their application is rejected (optional).</p>
+        <p>{t.rejectModalText}</p>
         <Input.TextArea
           value={rejectReason}
           onChange={(event) => setRejectReason(event.target.value)}
           rows={3}
-          placeholder="E.g. Insufficient shop information"
+          placeholder={t.rejectPlaceholder}
         />
       </Modal>
     </AdminShell>

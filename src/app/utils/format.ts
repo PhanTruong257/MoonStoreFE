@@ -1,7 +1,11 @@
-export const formatMoney = (value: number, fractionDigits = 2) =>
-  `$${value.toFixed(fractionDigits)}`;
+const VND_FORMATTER = new Intl.NumberFormat("vi-VN", {
+  maximumFractionDigits: 0,
+});
 
-export const formatMoneyShort = (value: number) => formatMoney(value, 0);
+export const formatMoney = (value: number) =>
+  `${VND_FORMATTER.format(Math.round(value))}đ`;
+
+export const formatMoneyShort = formatMoney;
 
 export const formatDateTime = (iso: string) => new Date(iso).toLocaleString();
 

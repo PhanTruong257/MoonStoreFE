@@ -8,7 +8,10 @@ import {
   SELLER_APPLICATION_STATUS,
   SELLER_APPLICATION_STATUS_COLORS,
 } from "@/const/seller-status.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SellerShell } from "@/features/seller/components/seller-shell";
+
+const t = UI_TEXT.seller.apply;
 
 export const SellerApplyPage = () => {
   const {
@@ -25,7 +28,7 @@ export const SellerApplyPage = () => {
 
   if (isLoading) {
     return (
-      <SellerShell title="Become a seller" subtitle="Loading...">
+      <SellerShell title={t.loadingTitle} subtitle={t.loadingSubtitle}>
         <div className={styles.card}>
           <Skeleton active paragraph={{ rows: 4 }} />
         </div>
@@ -35,13 +38,10 @@ export const SellerApplyPage = () => {
 
   if (isAlreadyActive) {
     return (
-      <SellerShell
-        title="Seller account active"
-        subtitle="Your shop is approved."
-      >
+      <SellerShell title={t.activeTitle} subtitle={t.activeSubtitle}>
         <div className={styles.card}>
-          <p>You are already an active seller.</p>
-          <Link to="/seller">Go to seller dashboard</Link>
+          <p>{t.alreadyActive}</p>
+          <Link to="/seller">{t.goToDashboard}</Link>
         </div>
       </SellerShell>
     );
@@ -50,14 +50,11 @@ export const SellerApplyPage = () => {
   const isPending = profile?.status === SELLER_APPLICATION_STATUS.PENDING;
 
   return (
-    <SellerShell
-      title="Become a seller"
-      subtitle="Submit your shop info. Admin will review and approve."
-    >
+    <SellerShell title={t.title} subtitle={t.subtitle}>
       <div className={styles.card}>
         {profile ? (
           <div className={styles.statusRow}>
-            <strong>Status:</strong>
+            <strong>{t.statusLabel}</strong>
             <Tag
               color={
                 SELLER_APPLICATION_STATUS_COLORS[profile.status] ?? "default"
@@ -73,7 +70,7 @@ export const SellerApplyPage = () => {
           <Alert
             type="error"
             showIcon
-            message="Application rejected"
+            message={t.rejectedAlert}
             description={profile.rejectReason}
             className={styles.rejectAlert}
           />
@@ -83,7 +80,7 @@ export const SellerApplyPage = () => {
           <Alert
             type="info"
             showIcon
-            message="Application is being reviewed by admin."
+            message={t.pendingAlert}
             className={styles.rejectAlert}
           />
         ) : null}
@@ -95,19 +92,19 @@ export const SellerApplyPage = () => {
           }}
           disabled={isSubmitting || isPending}
         >
-          <Form.Item label="Shop name" required>
+          <Form.Item label={t.shopNameLabel} required>
             <Input
               value={shopName}
               onChange={(event) => setShopName(event.target.value)}
-              placeholder="Moon Store"
+              placeholder={t.shopNamePlaceholder}
             />
           </Form.Item>
-          <Form.Item label="Description">
+          <Form.Item label={t.descriptionLabel}>
             <Input.TextArea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               rows={3}
-              placeholder="Fast delivery, authentic devices"
+              placeholder={t.descriptionPlaceholder}
             />
           </Form.Item>
           <div className={styles.actions}>
@@ -118,13 +115,13 @@ export const SellerApplyPage = () => {
               disabled={isPending}
             >
               {profile?.status === SELLER_APPLICATION_STATUS.REJECTED
-                ? "Resubmit application"
+                ? t.resubmitLabel
                 : profile
-                  ? "Update application"
-                  : "Submit application"}
+                  ? t.updateLabel
+                  : t.submitLabel}
             </Button>
             <Link to="/account" className={styles.secondaryLink}>
-              Back to account
+              {t.backToAccount}
             </Link>
           </div>
         </Form>

@@ -4,8 +4,11 @@ import { useState } from "react";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import { ADMIN_ROUTES } from "@/const/admin.const";
 import { formatSellerCurrency } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import styles from "./admin-revenue-page.module.scss";
 import { useAdminRevenue } from "./use-admin-revenue";
+
+const t = UI_TEXT.admin.revenue;
 
 export const AdminRevenuePage = () => {
   const { data, isLoading, error, commissionRate, isUpdatingRate, updateCommissionRate } =
@@ -17,10 +20,7 @@ export const AdminRevenuePage = () => {
   };
 
   return (
-    <AdminShell
-      title="Revenue & Commission"
-      subtitle="Platform earnings, commission rate, and financial overview."
-    >
+    <AdminShell title={t.title} subtitle={t.subtitle}>
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 4 }} />
       ) : error ? (
@@ -29,31 +29,31 @@ export const AdminRevenuePage = () => {
         <>
           <div className={styles.statsGrid}>
             <article className={styles.statCard}>
-              <span className={styles.statLabel}>Platform revenue</span>
+              <span className={styles.statLabel}>{t.statPlatformRevenue}</span>
               <strong className={styles.statValue}>
                 {formatSellerCurrency(data?.platformRevenue ?? 0)}
               </strong>
             </article>
             <article className={styles.statCard}>
-              <span className={styles.statLabel}>Total transactions</span>
+              <span className={styles.statLabel}>{t.statTotalTransactions}</span>
               <strong className={styles.statValue}>{data?.totalTransactions ?? 0}</strong>
             </article>
             <article className={`${styles.statCard} ${styles.highlight}`}>
-              <span className={styles.statLabel}>Pending refunds</span>
+              <span className={styles.statLabel}>{t.statPendingRefunds}</span>
               <strong className={styles.statValue}>{data?.pendingRefunds ?? 0}</strong>
-              <a href={ADMIN_ROUTES.refunds} className={styles.link}>Review →</a>
+              <a href={ADMIN_ROUTES.refunds} className={styles.link}>{t.reviewNow}</a>
             </article>
             <article className={`${styles.statCard} ${styles.highlight}`}>
-              <span className={styles.statLabel}>Pending withdrawals</span>
+              <span className={styles.statLabel}>{t.statPendingWithdrawals}</span>
               <strong className={styles.statValue}>{data?.pendingWithdrawals ?? 0}</strong>
-              <a href={ADMIN_ROUTES.withdrawals} className={styles.link}>Review →</a>
+              <a href={ADMIN_ROUTES.withdrawals} className={styles.link}>{t.reviewNow}</a>
             </article>
           </div>
 
           <div className={styles.commissionBox}>
-            <h3 className={styles.commissionTitle}>Commission rate</h3>
+            <h3 className={styles.commissionTitle}>{t.commissionTitle}</h3>
             <p className={styles.commissionDesc}>
-              Current rate: <strong>{commissionRate ?? "—"}%</strong>. Sellers receive (100 − rate)% of subtotal after delivery.
+              {t.commissionDesc(String(commissionRate ?? "—"))}
             </p>
             <div className={styles.commissionRow}>
               <InputNumber
@@ -70,7 +70,7 @@ export const AdminRevenuePage = () => {
                 onClick={handleUpdateRate}
                 disabled={rateInput === null || rateInput === commissionRate}
               >
-                Update
+                {t.updateBtn}
               </Button>
             </div>
           </div>

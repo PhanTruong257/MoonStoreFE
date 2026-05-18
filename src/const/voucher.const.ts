@@ -1,3 +1,5 @@
+import { UI_TEXT } from "./ui-text";
+
 export const VOUCHER_DISCOUNT_TYPE = {
   PERCENT: "percent",
   FIXED: "fixed",
@@ -6,7 +8,5 @@ export const VOUCHER_DISCOUNT_TYPE = {
 export type VoucherDiscountType =
   (typeof VOUCHER_DISCOUNT_TYPE)[keyof typeof VOUCHER_DISCOUNT_TYPE];
 
-export const VOUCHER_DISCOUNT_TYPE_OPTIONS = [
-  { label: "Percent (%)", value: VOUCHER_DISCOUNT_TYPE.PERCENT },
-  { label: "Fixed amount", value: VOUCHER_DISCOUNT_TYPE.FIXED },
-];
+export const VOUCHER_DISCOUNT_TYPE_OPTIONS =
+  UI_TEXT.statusOptions.voucherType;

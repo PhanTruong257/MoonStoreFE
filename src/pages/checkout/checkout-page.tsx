@@ -1,24 +1,18 @@
 import styles from "./checkout-page.module.scss";
 import { useCheckoutPageData } from "./use-checkout-page-data";
 
+import { formatMoneyShort } from "@/app/utils/format";
 import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
 import { CHECKOUT_TEXT } from "@/const/checkout.const";
 import { CHECKOUT_PAYMENT_OPTIONS } from "@/const/payment.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
-import { homeFooterSections } from "@/pages/home/mock-data";
+import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
 
-const checkoutHeaderLinks = [
-  { label: "Home", to: "/" },
-  { label: "Contact", to: "/contact" },
-  { label: "About", to: "/about" },
-  { label: "Sign Up", to: "/register" },
-  { label: "Cart", to: "/cart" },
-];
-
-const formatMoney = (value: number) => `$${value.toFixed(0)}`;
+const th = UI_TEXT.header;
 
 export const CheckoutPage = () => {
   const {
@@ -51,36 +45,24 @@ export const CheckoutPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
-        navLinks={checkoutHeaderLinks}
-        promo={{
-          message:
-            "Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "What are you looking for?" }}
+        brand={{ label: th.brand, to: "/" }}
+        navLinks={homeHeaderLinks}
+        search={{ placeholder: th.searchPlaceholder }}
       />
 
       <section className={styles.main}>
         <Breadcrumb
           className={styles.breadcrumb}
-          items={[
-            { label: "Account" },
-            { label: "My Account" },
-            { label: "Product" },
-            { label: "View Cart" },
-            { label: "CheckOut" },
-          ]}
+          items={CHECKOUT_TEXT.breadcrumbItems.map((label) => ({ label }))}
         />
 
         <div className={styles.layout}>
           <section className={styles.billing}>
-            <h1>Billing Details</h1>
+            <h1>{CHECKOUT_TEXT.billingTitle}</h1>
 
             {savedAddresses.length > 0 ? (
               <div className={styles.addressPicker}>
-                <label htmlFor="savedAddress">Saved addresses</label>
+                <label htmlFor="savedAddress">{CHECKOUT_TEXT.savedAddressLabel}</label>
                 <select
                   id="savedAddress"
                   value={selectedAddressId}
@@ -92,10 +74,10 @@ export const CheckoutPage = () => {
                   {savedAddresses.map((addr) => (
                     <option key={addr.id} value={String(addr.id)}>
                       {addr.addressLine}, {addr.district}, {addr.city}
-                      {addr.isDefault ? " (default)" : ""}
+                      {addr.isDefault ? ` ${CHECKOUT_TEXT.isDefault}` : ""}
                     </option>
                   ))}
-                  <option value={NEW_ADDRESS}>+ Use a new address</option>
+                  <option value={NEW_ADDRESS}>{CHECKOUT_TEXT.newAddressOption}</option>
                 </select>
               </div>
             ) : null}
@@ -204,7 +186,7 @@ export const CheckoutPage = () => {
                   onChange={(event) => setSaveInfo(event.target.checked)}
                   disabled={isSubmitting}
                 />
-                Save this information for faster check-out next time
+                {CHECKOUT_TEXT.saveInfoLabel}
               </label>
             )}
           </section>
@@ -217,30 +199,30 @@ export const CheckoutPage = () => {
                     <img src={item.image} alt={item.name} />
                     <span>{item.name}</span>
                   </div>
-                  <strong>{formatMoney(item.price * item.quantity)}</strong>
+                  <strong>{formatMoneyShort(item.price * item.quantity)}</strong>
                 </article>
               ))}
             </div>
 
             <div className={styles.totalLine}>
-              <span>Subtotal:</span>
-              <strong>{formatMoney(subTotal)}</strong>
+              <span>{CHECKOUT_TEXT.subtotal}</span>
+              <strong>{formatMoneyShort(subTotal)}</strong>
             </div>
             <div className={styles.totalLine}>
-              <span>Shipping:</span>
+              <span>{CHECKOUT_TEXT.shipping}</span>
               <strong>
-                {shippingFee === 0 ? "Free" : formatMoney(shippingFee)}
+                {shippingFee === 0 ? CHECKOUT_TEXT.freeShipping : formatMoneyShort(shippingFee)}
               </strong>
             </div>
             <div className={styles.totalLine}>
-              <span>Discount:</span>
+              <span>{CHECKOUT_TEXT.discount}</span>
               <strong>
-                {discountAmount === 0 ? "-" : `-${formatMoney(discountAmount)}`}
+                {discountAmount === 0 ? CHECKOUT_TEXT.noDiscount : `-${formatMoneyShort(discountAmount)}`}
               </strong>
             </div>
             <div className={styles.totalLine}>
-              <span>Total:</span>
-              <strong>{formatMoney(total)}</strong>
+              <span>{CHECKOUT_TEXT.total}</span>
+              <strong>{formatMoneyShort(total)}</strong>
             </div>
 
             <div className={styles.paymentOptions}>
@@ -255,7 +237,7 @@ export const CheckoutPage = () => {
                     }
                     disabled={isSubmitting}
                   />
-                  QR bank transfer
+                  {CHECKOUT_TEXT.paymentQR}
                 </label>
               </div>
             </div>
@@ -298,7 +280,7 @@ export const CheckoutPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

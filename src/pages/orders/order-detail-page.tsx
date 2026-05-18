@@ -12,9 +12,13 @@ import {
   formatOrdersCurrency,
   formatOrdersDateTime,
 } from "@/const/orders.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const t = UI_TEXT.orders;
+const th = UI_TEXT.header;
 
 export const OrderDetailPage = () => {
   const [refundForm] = Form.useForm();
@@ -40,20 +44,15 @@ export const OrderDetailPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: th.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message: "Track your orders",
-          linkLabel: "ShopNow",
-          to: "/",
-        }}
-        search={{ placeholder: "Search products" }}
+        search={{ placeholder: th.searchPlaceholder }}
       />
 
       <section className={styles.main}>
         <div className={styles.headerRow}>
           <Link to="/orders" className={styles.backLink}>
-            ← Back to my orders
+            {t.backToOrders}
           </Link>
         </div>
 
@@ -63,24 +62,24 @@ export const OrderDetailPage = () => {
           </div>
         ) : error || !order ? (
           <div className={styles.card}>
-            <Empty description={error ?? "Order not found"} />
+            <Empty description={error ?? t.orderNotFound} />
           </div>
         ) : (
           <>
             <header className={styles.summary}>
               <div>
-                <h1>Order #{order.id}</h1>
+                <h1>{t.orderTitle(order.id)}</h1>
                 <p>{formatOrdersDateTime(order.createdAt)}</p>
               </div>
               <div className={styles.summaryTotals}>
-                <span>Total</span>
+                <span>{t.totalLabel}</span>
                 <strong>{formatOrdersCurrency(order.finalAmount)}</strong>
                 <Tag color={ORDER_STATUS_COLORS[order.status] ?? "default"}>
                   {order.status}
                 </Tag>
                 {canRequestRefund ? (
                   <Button size="small" onClick={openRefundModal}>
-                    Request refund
+                    {t.requestRefund}
                   </Button>
                 ) : null}
               </div>
@@ -91,7 +90,7 @@ export const OrderDetailPage = () => {
                 {order.groups?.map((group) => (
                   <article key={group.id} className={styles.card}>
                     <div className={styles.groupHeader}>
-                      <h3>Shop #{group.sellerId}</h3>
+                      <h3>{t.shopLabel(group.sellerId)}</h3>
                       <div className={styles.groupActions}>
                         <Tag
                           color={ORDER_STATUS_COLORS[group.status] ?? "default"}
@@ -103,12 +102,12 @@ export const OrderDetailPage = () => {
                           onClick={() => startChatWithSeller(group.sellerId)}
                           loading={isChatCreating}
                         >
-                          Chat with shop
+                          {t.chatWithShop}
                         </Button>
                         {group.status === ORDER_STATUS.PENDING ? (
                           <Popconfirm
-                            title="Cancel this order group?"
-                            okText="Cancel order"
+                            title={t.cancelConfirm}
+                            okText={t.cancelGroupOk}
                             okButtonProps={{ danger: true }}
                             onConfirm={() => cancelGroup(group.id)}
                           >
@@ -117,7 +116,7 @@ export const OrderDetailPage = () => {
                               size="small"
                               loading={isCancelling}
                             >
-                              Cancel
+                              {t.cancelGroupBtn}
                             </Button>
                           </Popconfirm>
                         ) : null}
@@ -163,7 +162,7 @@ export const OrderDetailPage = () => {
                     ))}
 
                     <div className={styles.groupTotals}>
-                      <span>Subtotal</span>
+                      <span>{t.subtotalLabel}</span>
                       <strong>{formatOrdersCurrency(group.subtotal)}</strong>
                     </div>
                   </article>
@@ -174,17 +173,17 @@ export const OrderDetailPage = () => {
                 <QrPaymentCard qrInfo={qrInfo} isLoading={isQrLoading} />
 
                 <article className={styles.card}>
-                  <h3>Totals</h3>
+                  <h3>{t.totalsTitle}</h3>
                   <div className={styles.row}>
-                    <span>Items</span>
+                    <span>{t.itemsLabel}</span>
                     <span>{formatOrdersCurrency(order.totalAmount)}</span>
                   </div>
                   <div className={styles.row}>
-                    <span>Shipping</span>
+                    <span>{t.shippingLabel}</span>
                     <span>{formatOrdersCurrency(order.shippingFee)}</span>
                   </div>
                   <div className={styles.row}>
-                    <span>Discount</span>
+                    <span>{t.discountLabel}</span>
                     <span>
                       {order.discountAmount === 0
                         ? "—"
@@ -192,31 +191,31 @@ export const OrderDetailPage = () => {
                     </span>
                   </div>
                   <div className={styles.rowTotal}>
-                    <strong>Final</strong>
+                    <strong>{t.finalLabel}</strong>
                     <strong>{formatOrdersCurrency(order.finalAmount)}</strong>
                   </div>
                 </article>
 
                 <article className={styles.card}>
-                  <h3>Payment</h3>
+                  <h3>{t.paymentTitle}</h3>
                   <div className={styles.row}>
-                    <span>Method</span>
+                    <span>{t.paymentMethod}</span>
                     <span>{order.paymentMethod}</span>
                   </div>
                   <div className={styles.row}>
-                    <span>Status</span>
+                    <span>{t.paymentStatus}</span>
                     <Tag>{order.paymentStatus}</Tag>
                   </div>
                 </article>
 
                 <article className={styles.card}>
-                  <h3>Shipping address</h3>
+                  <h3>{t.shippingAddressTitle}</h3>
                   {order.shippingAddress ? (
                     <p className={styles.address}>
                       {renderAddressLine(order.shippingAddress)}
                     </p>
                   ) : (
-                    <p className={styles.address}>(none)</p>
+                    <p className={styles.address}>{t.noAddress}</p>
                   )}
                 </article>
               </div>
@@ -227,15 +226,15 @@ export const OrderDetailPage = () => {
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
 
       <Modal
-        title="Request a refund"
+        title={t.refundModalTitle}
         open={refundModalOpen}
         onCancel={closeRefundModal}
         onOk={() => refundForm.submit()}
-        okText="Submit"
+        okText={t.refundSubmitOk}
         confirmLoading={isRefundRequesting}
       >
         {refundError ? (
@@ -247,11 +246,11 @@ export const OrderDetailPage = () => {
           onFinish={submitRefundRequest}
           initialValues={{ amount: order?.finalAmount }}
         >
-          <Form.Item label="Reason" name="reason" rules={[{ required: true }]}>
-            <Input.TextArea rows={3} placeholder="Describe your issue" />
+          <Form.Item label={t.refundReason} name="reason" rules={[{ required: true }]}>
+            <Input.TextArea rows={3} placeholder={t.refundReasonPlaceholder} />
           </Form.Item>
           <Form.Item
-            label="Refund amount"
+            label={t.refundAmount}
             name="amount"
             rules={[{ required: true }]}
           >

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
-import { safeParseJsonArray } from "@/app/utils/safe-parse";
 import { SELLER_ROUTES } from "@/const/seller.const";
 import { sellerProductEditActions } from "@/features/seller/seller-product-edit/seller-product-edit.slice";
 import type {
@@ -21,7 +20,7 @@ export type SellerProductEditFormValues = {
   basePrice: number;
   stock: number;
   imageUrl: string;
-  optionGroupsJson?: string;
+  optionGroups?: SellerProductOptionGroupInput[];
 };
 
 export const useSellerProductEdit = () => {
@@ -52,15 +51,16 @@ export const useSellerProductEdit = () => {
       return;
     }
     const product = detail.product;
-    const groupsForJson = product.optionGroups.map((group) => ({
-      name: group.name,
-      required: group.required,
-      multiSelect: group.multiSelect,
-      options: group.options.map((option) => ({
-        name: option.name,
-        priceDelta: option.priceDelta,
-      })),
-    }));
+    const optionGroups: SellerProductOptionGroupInput[] =
+      product.optionGroups.map((group) => ({
+        name: group.name,
+        required: group.required,
+        multiSelect: group.multiSelect,
+        options: group.options.map((option) => ({
+          name: option.name,
+          priceDelta: option.priceDelta,
+        })),
+      }));
 
     form.setFieldsValue({
       name: product.name,
@@ -71,10 +71,7 @@ export const useSellerProductEdit = () => {
       basePrice: product.basePrice,
       stock: product.stock,
       imageUrl: product.imageUrl,
-      optionGroupsJson:
-        groupsForJson.length > 0
-          ? JSON.stringify(groupsForJson, null, 2)
-          : "",
+      optionGroups,
     });
   }, [detail, form]);
 
@@ -89,14 +86,16 @@ export const useSellerProductEdit = () => {
         basePrice: Number(values.basePrice),
         stock: Number(values.stock),
         imageUrl: values.imageUrl,
+        optionGroups: (values.optionGroups ?? []).map((group) => ({
+          name: group.name,
+          required: group.required ?? false,
+          multiSelect: group.multiSelect ?? false,
+          options: (group.options ?? []).map((option) => ({
+            name: option.name,
+            priceDelta: Number(option.priceDelta ?? 0),
+          })),
+        })),
       };
-
-      const parsedGroups = safeParseJsonArray<SellerProductOptionGroupInput>(
-        values.optionGroupsJson,
-      );
-      if (parsedGroups !== undefined) {
-        payload.optionGroups = parsedGroups;
-      }
 
       dispatch(
         sellerProductEditActions.sellerProductEditUpdateRequested({

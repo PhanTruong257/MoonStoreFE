@@ -8,8 +8,11 @@ import {
   USER_STATUS,
   USER_STATUS_TAG_COLORS,
 } from "@/const/role.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import styles from "@/styles/admin-list.module.scss";
+
+const t = UI_TEXT.admin.users;
 
 export const AdminUsersPage = () => {
   const {
@@ -26,8 +29,8 @@ export const AdminUsersPage = () => {
 
   return (
     <AdminShell
-      title="Users"
-      subtitle="Manage user roles and account status."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Segmented
           value={roleFilter}
@@ -44,7 +47,7 @@ export const AdminUsersPage = () => {
       ) : error ? (
         <p className={styles.error}>{error}</p>
       ) : users.length === 0 ? (
-        <Empty description="No users" />
+        <Empty description={t.noUsers} />
       ) : (
         <div className={styles.list}>
           {users.map((user) => (
@@ -66,26 +69,26 @@ export const AdminUsersPage = () => {
               <div className={styles.actions}>
                 {user.role !== USER_ROLE.ADMIN ? (
                   <Popconfirm
-                    title="Promote this user to admin?"
-                    okText="Promote"
+                    title={t.promoteTitle}
+                    okText={t.promoteOk}
                     onConfirm={() => handlePromote(user.id)}
                   >
                     <Button loading={actingId === user.id}>
-                      Promote to admin
+                      {t.promoteBtn}
                     </Button>
                   </Popconfirm>
                 ) : (
-                  <span className={styles.adminBadge}>Already admin</span>
+                  <span className={styles.adminBadge}>{t.alreadyAdmin}</span>
                 )}
                 {user.status === USER_STATUS.ACTIVE ? (
                   <Popconfirm
-                    title="Disable this user? They will not be able to login."
-                    okText="Disable"
+                    title={t.disableTitle}
+                    okText={t.disableOk}
                     okButtonProps={{ danger: true }}
                     onConfirm={() => handleDisable(user.id)}
                   >
                     <Button danger loading={actingId === user.id}>
-                      Disable
+                      {t.disableBtn}
                     </Button>
                   </Popconfirm>
                 ) : (
@@ -94,7 +97,7 @@ export const AdminUsersPage = () => {
                     loading={actingId === user.id}
                     onClick={() => handleEnable(user.id)}
                   >
-                    Enable
+                    {t.enableBtn}
                   </Button>
                 )}
               </div>

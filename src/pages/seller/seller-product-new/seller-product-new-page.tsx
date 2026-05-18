@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import styles from "./seller-product-new-page.module.scss";
 import { useSellerProductNew } from "./use-seller-product-new";
 
+import { ImageUploader } from "@/component/image-uploader/image-uploader";
 import {
   OPTION_GROUPS_JSON_PLACEHOLDER,
   SELLER_PRODUCT_STATUS_OPTIONS,
 } from "@/const/seller-product-new.const";
 import { SELLER_ROUTES } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SellerShell } from "@/features/seller/components/seller-shell";
+
+const t = UI_TEXT.seller.productNew;
 
 export const SellerProductNewPage = () => {
   const {
@@ -23,11 +27,11 @@ export const SellerProductNewPage = () => {
 
   return (
     <SellerShell
-      title="Upload a new product"
-      subtitle="Publish listings fast with a clean product brief."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Link to={SELLER_ROUTES.products} className={styles.secondaryButton}>
-          Back to products
+          {t.backToProducts}
         </Link>
       }
     >
@@ -39,28 +43,28 @@ export const SellerProductNewPage = () => {
         }}
       >
         <div className={styles.field}>
-          <label htmlFor="name">Product name</label>
+          <label htmlFor="name">{t.nameLabel}</label>
           <input
             id="name"
             value={form.name}
             onChange={(event) => setField("name", event.target.value)}
-            placeholder="iPhone 17 Pro Max"
+            placeholder={t.namePlaceholder}
           />
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="description">Short description</label>
+          <label htmlFor="description">{t.descLabel}</label>
           <textarea
             id="description"
             value={form.description}
             onChange={(event) => setField("description", event.target.value)}
-            placeholder="Highlight the key specs and condition."
+            placeholder={t.descPlaceholder}
           />
         </div>
 
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor="categoryId">Category</label>
+            <label htmlFor="categoryId">{t.categoryLabel}</label>
             <select
               id="categoryId"
               value={form.categoryId}
@@ -70,7 +74,7 @@ export const SellerProductNewPage = () => {
               disabled={categories.length === 0}
             >
               {categories.length === 0 ? (
-                <option value={form.categoryId}>No categories available</option>
+                <option value={form.categoryId}>{t.noCategoriesOption}</option>
               ) : (
                 categories.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -81,7 +85,7 @@ export const SellerProductNewPage = () => {
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="brandId">Brand id</label>
+            <label htmlFor="brandId">{t.brandIdLabel}</label>
             <input
               id="brandId"
               type="number"
@@ -95,7 +99,7 @@ export const SellerProductNewPage = () => {
 
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor="basePrice">Base price</label>
+            <label htmlFor="basePrice">{t.basePriceLabel}</label>
             <input
               id="basePrice"
               type="number"
@@ -106,7 +110,7 @@ export const SellerProductNewPage = () => {
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="stock">Stock</label>
+            <label htmlFor="stock">{t.stockLabel}</label>
             <input
               id="stock"
               type="number"
@@ -118,15 +122,15 @@ export const SellerProductNewPage = () => {
 
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor="imageUrl">Image URL</label>
-            <input
-              id="imageUrl"
+            <label>{t.imageUrlLabel}</label>
+            <ImageUploader
               value={form.imageUrl}
-              onChange={(event) => setField("imageUrl", event.target.value)}
+              onChange={(url) => setField("imageUrl", url)}
+              disabled={isSaving}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="status">Status</label>
+            <label htmlFor="status">{t.statusLabel}</label>
             <select
               id="status"
               value={form.status}
@@ -142,9 +146,7 @@ export const SellerProductNewPage = () => {
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="optionGroupsJson">
-            Option groups (JSON, optional)
-          </label>
+          <label htmlFor="optionGroupsJson">{t.optionGroupsLabel}</label>
           <textarea
             id="optionGroupsJson"
             value={form.optionGroupsJson}
@@ -159,10 +161,7 @@ export const SellerProductNewPage = () => {
         {categoriesError ? (
           <p className={styles.note}>{categoriesError}</p>
         ) : (
-          <p className={styles.note}>
-            Tip: Use category/brand ids from your database seed to keep products
-            in the right catalog.
-          </p>
+          <p className={styles.note}>{t.tipText}</p>
         )}
 
         {error ? <p className={styles.note}>{error}</p> : null}
@@ -173,10 +172,10 @@ export const SellerProductNewPage = () => {
             className={styles.primaryButton}
             disabled={isSaving}
           >
-            {isSaving ? "Saving..." : "Publish product"}
+            {isSaving ? t.savingBtn : t.publishBtn}
           </button>
           <Link to={SELLER_ROUTES.products} className={styles.secondaryButton}>
-            Cancel
+            {t.cancelBtn}
           </Link>
         </div>
       </form>

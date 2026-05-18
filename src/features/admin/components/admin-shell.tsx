@@ -5,9 +5,12 @@ import { NavLink } from "react-router-dom";
 import styles from "./admin-shell.module.scss";
 
 import type { RootState } from "@/app/app-store";
+import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
 import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+
+const ta = UI_TEXT.admin;
 
 type AdminShellProps = {
   title: string;
@@ -27,18 +30,13 @@ export const AdminShell = ({
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: UI_TEXT.header.brand, to: "/" }}
         navLinks={homeHeaderLinks}
-        promo={{
-          message: "Admin console",
-          linkLabel: "Home",
-          to: "/",
-        }}
-        search={{ placeholder: "Search admin" }}
+        search={{ placeholder: UI_TEXT.header.searchPlaceholder }}
       />
 
       <section className={styles.hero}>
-        <span className={styles.heroLabel}>Admin Console</span>
+        <span className={styles.heroLabel}>{ta.consoleLabel}</span>
         <h1 className={styles.heroTitle}>{title}</h1>
         <p className={styles.heroSubtitle}>{subtitle}</p>
         {actions ? <div className={styles.heroActions}>{actions}</div> : null}
@@ -60,7 +58,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Dashboard
+              {ta.nav.dashboard}
             </NavLink>
             <NavLink
               to="/admin/sellers"
@@ -68,7 +66,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Sellers
+              {ta.nav.sellers}
             </NavLink>
             <NavLink
               to="/admin/users"
@@ -76,7 +74,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Users
+              {ta.nav.users}
             </NavLink>
             <NavLink
               to="/admin/orders"
@@ -84,7 +82,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Orders
+              {ta.nav.orders}
             </NavLink>
             <NavLink
               to="/admin/categories"
@@ -92,7 +90,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Categories
+              {ta.nav.categories}
             </NavLink>
             <NavLink
               to="/admin/brands"
@@ -100,7 +98,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Brands
+              {ta.nav.brands}
             </NavLink>
             <NavLink
               to="/admin/vouchers"
@@ -108,7 +106,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Vouchers
+              {ta.nav.vouchers}
             </NavLink>
             <NavLink
               to="/admin/revenue"
@@ -116,7 +114,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Revenue
+              {ta.nav.revenue}
             </NavLink>
             <NavLink
               to="/admin/refunds"
@@ -124,7 +122,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Refunds
+              {ta.nav.refunds}
             </NavLink>
             <NavLink
               to="/admin/withdrawals"
@@ -132,7 +130,7 @@ export const AdminShell = ({
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
               }
             >
-              Withdrawals
+              {ta.nav.withdrawals}
             </NavLink>
           </nav>
         </aside>
@@ -142,7 +140,7 @@ export const AdminShell = ({
 
       <SiteFooter
         sections={homeFooterSections}
-        copyright={`Copyright Rimel ${new Date().getFullYear()}. All right reserved`}
+        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
     </main>
   );

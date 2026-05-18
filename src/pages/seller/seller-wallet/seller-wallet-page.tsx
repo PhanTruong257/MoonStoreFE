@@ -7,31 +7,34 @@ import {
   formatSellerDateTime,
   WITHDRAWAL_STATUS_COLORS,
 } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import type { WalletTransaction, WithdrawalRequest } from "@/services/wallet-service";
 import styles from "./seller-wallet-page.module.scss";
 import { useSellerWallet } from "./use-seller-wallet";
 
+const t = UI_TEXT.seller.wallet;
+
 const txColumns: ColumnsType<WalletTransaction> = [
-  { title: "Date", dataIndex: "createdAt", key: "createdAt", render: (v) => formatSellerDateTime(v) },
-  { title: "Type", dataIndex: "type", key: "type" },
-  { title: "Gross", dataIndex: "amount", key: "amount", render: (v) => formatSellerCurrency(v) },
-  { title: "Fee", dataIndex: "fee", key: "fee", render: (v) => formatSellerCurrency(v) },
-  { title: "Net", dataIndex: "net", key: "net", render: (v) => formatSellerCurrency(v) },
-  { title: "Description", dataIndex: "description", key: "description" },
+  { title: t.tableDate, dataIndex: "createdAt", key: "createdAt", render: (v) => formatSellerDateTime(v) },
+  { title: t.tableType, dataIndex: "type", key: "type" },
+  { title: t.tableGross, dataIndex: "amount", key: "amount", render: (v) => formatSellerCurrency(v) },
+  { title: t.tableFee, dataIndex: "fee", key: "fee", render: (v) => formatSellerCurrency(v) },
+  { title: t.tableNet, dataIndex: "net", key: "net", render: (v) => formatSellerCurrency(v) },
+  { title: t.tableDesc, dataIndex: "description", key: "description" },
 ];
 
 const withdrawalColumns: ColumnsType<WithdrawalRequest> = [
-  { title: "Date", dataIndex: "createdAt", key: "createdAt", render: (v) => formatSellerDateTime(v) },
-  { title: "Amount", dataIndex: "amount", key: "amount", render: (v) => formatSellerCurrency(v) },
-  { title: "Bank", dataIndex: "bankName", key: "bankName" },
-  { title: "Account", dataIndex: "bankAccount", key: "bankAccount" },
+  { title: t.tableDate, dataIndex: "createdAt", key: "createdAt", render: (v) => formatSellerDateTime(v) },
+  { title: t.tableAmount, dataIndex: "amount", key: "amount", render: (v) => formatSellerCurrency(v) },
+  { title: t.tableBank, dataIndex: "bankName", key: "bankName" },
+  { title: t.tableAccount, dataIndex: "bankAccount", key: "bankAccount" },
   {
-    title: "Status",
+    title: t.tableStatus,
     dataIndex: "status",
     key: "status",
     render: (v: string) => <Tag color={WITHDRAWAL_STATUS_COLORS[v] ?? "default"}>{v}</Tag>,
   },
-  { title: "Note", dataIndex: "note", key: "note", render: (v) => v ?? "—" },
+  { title: t.tableNote, dataIndex: "note", key: "note", render: (v) => v ?? "—" },
 ];
 
 export const SellerWalletPage = () => {
@@ -52,11 +55,11 @@ export const SellerWalletPage = () => {
 
   return (
     <SellerShell
-      title="Wallet"
-      subtitle="Track your earnings and manage withdrawals."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Button type="primary" onClick={openWithdrawModal} disabled={!wallet || wallet.balance <= 0}>
-          Withdraw
+          {t.withdrawBtn}
         </Button>
       }
     >
@@ -68,19 +71,19 @@ export const SellerWalletPage = () => {
         <>
           <div className={styles.summary}>
             <div className={`${styles.statCard} ${styles.accent}`}>
-              <span className={styles.statLabel}>Available balance</span>
+              <span className={styles.statLabel}>{t.availableBalance}</span>
               <strong className={styles.statValue}>
                 {formatSellerCurrency(wallet?.balance ?? 0)}
               </strong>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>Total earned</span>
+              <span className={styles.statLabel}>{t.totalEarned}</span>
               <strong className={styles.statValue}>
                 {formatSellerCurrency(wallet?.totalEarned ?? 0)}
               </strong>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>Total withdrawn</span>
+              <span className={styles.statLabel}>{t.totalWithdrawn}</span>
               <strong className={styles.statValue}>
                 {formatSellerCurrency(wallet?.totalWithdrawn ?? 0)}
               </strong>
@@ -88,7 +91,7 @@ export const SellerWalletPage = () => {
           </div>
 
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Transaction history</h3>
+            <h3 className={styles.sectionTitle}>{t.txHistory}</h3>
             <Table
               columns={txColumns}
               dataSource={transactions}
@@ -99,7 +102,7 @@ export const SellerWalletPage = () => {
           </div>
 
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Withdrawal requests</h3>
+            <h3 className={styles.sectionTitle}>{t.withdrawalRequests}</h3>
             <Table
               columns={withdrawalColumns}
               dataSource={withdrawals}
@@ -112,24 +115,24 @@ export const SellerWalletPage = () => {
       )}
 
       <Modal
-        title="Request withdrawal"
+        title={t.withdrawModalTitle}
         open={withdrawModalOpen}
         onCancel={closeWithdrawModal}
         onOk={() => form.submit()}
-        okText="Submit"
+        okText={t.withdrawOk}
         confirmLoading={isWithdrawing}
       >
         {withdrawError ? <p className={styles.errorText}>{withdrawError}</p> : null}
         <Form form={form} layout="vertical" onFinish={submitWithdrawal}>
           <Form.Item
-            label="Amount (VND)"
+            label={t.amountLabel}
             name="amount"
             rules={[
-              { required: true, message: "Enter amount" },
+              { required: true, message: t.amountRequired },
               {
                 validator: (_, value) => {
                   if (wallet && value > wallet.balance) {
-                    return Promise.reject("Amount exceeds available balance");
+                    return Promise.reject(t.amountExceeds);
                   }
                   return Promise.resolve();
                 },
@@ -138,14 +141,14 @@ export const SellerWalletPage = () => {
           >
             <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item label="Bank name" name="bankName" rules={[{ required: true }]}>
-            <Input placeholder="e.g. Vietcombank" />
+          <Form.Item label={t.bankNameLabel} name="bankName" rules={[{ required: true }]}>
+            <Input placeholder={t.bankNamePlaceholder} />
           </Form.Item>
-          <Form.Item label="Account number" name="bankAccount" rules={[{ required: true }]}>
-            <Input placeholder="Account number" />
+          <Form.Item label={t.accountNumberLabel} name="bankAccount" rules={[{ required: true }]}>
+            <Input placeholder={t.accountNumberPlaceholder} />
           </Form.Item>
-          <Form.Item label="Account holder" name="bankHolder" rules={[{ required: true }]}>
-            <Input placeholder="Full name on account" />
+          <Form.Item label={t.accountHolderLabel} name="bankHolder" rules={[{ required: true }]}>
+            <Input placeholder={t.accountHolderPlaceholder} />
           </Form.Item>
         </Form>
       </Modal>

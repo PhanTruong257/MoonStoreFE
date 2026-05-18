@@ -5,10 +5,15 @@ import { useNavigate } from "react-router-dom";
 import type { RootState } from "@/app/app-store";
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
 import {
+  readJsonFromStorage,
+  removeFromStorage,
+} from "@/app/utils/storage";
+import {
   CHECKOUT_PAYMENT_OPTIONS,
   type CheckoutPaymentOption,
   checkoutOptionToApiMethod,
 } from "@/const/payment.const";
+import { STORAGE_KEYS } from "@/const/storage.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
@@ -90,8 +95,20 @@ export const useCheckoutPageData = () => {
           return;
         }
 
+        const selectedIds = readJsonFromStorage<number[]>(
+          STORAGE_KEYS.CART_SELECTED_IDS,
+          [],
+        );
+        const selectedSet = new Set(
+          Array.isArray(selectedIds) ? selectedIds : [],
+        );
+        const sourceItems =
+          selectedSet.size > 0
+            ? cart.items.filter((item) => selectedSet.has(item.id))
+            : cart.items;
+
         setItems(
-          cart.items.map((item) => ({
+          sourceItems.map((item) => ({
             id: String(item.id),
             name: item.product.name,
             price: Number(item.unitPrice),
@@ -204,10 +221,15 @@ export const useCheckoutPageData = () => {
 
     setIsSubmitting(true);
     try {
+      const cartItemIds = items
+        .map((item) => Number(item.id))
+        .filter((id) => Number.isFinite(id));
+
       const response = await createOrder({
         shippingFee: SHIPPING_FEE,
         voucherCode: voucherState.voucher?.code,
         paymentMethod: checkoutOptionToApiMethod(paymentMethod),
+        cartItemIds,
         ...(isUsingSavedAddress
           ? { addressId: Number(selectedAddressId) }
           : {
@@ -220,6 +242,7 @@ export const useCheckoutPageData = () => {
 
       setItems([]);
       voucherState.reset();
+      removeFromStorage(STORAGE_KEYS.CART_SELECTED_IDS);
       dispatchCartUpdated();
 
       if (

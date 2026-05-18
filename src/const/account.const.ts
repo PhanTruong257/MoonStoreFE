@@ -1,15 +1,19 @@
+import { UI_TEXT } from "./ui-text";
+
+const t = UI_TEXT.account;
+
 export const ACCOUNT_TEXT = {
-  breadcrumbPrefix: "Home /",
-  breadcrumbCurrent: "My Account",
-  welcomePrefix: "Welcome!",
-  welcomeName: "Md Rimel",
-  profileTitle: "Edit Your Profile",
-  passwordTitle: "Password Changes",
-  currentPasswordPlaceholder: "Current Password",
-  newPasswordPlaceholder: "New Password",
-  confirmPasswordPlaceholder: "Confirm New Password",
-  cancelLabel: "Cancel",
-  saveLabel: "Save Changes",
+  breadcrumbPrefix: t.breadcrumbPrefix,
+  breadcrumbCurrent: t.breadcrumbCurrent,
+  welcomePrefix: t.welcomePrefix,
+  welcomeName: "",
+  profileTitle: t.profileTitle,
+  passwordTitle: t.passwordTitle,
+  currentPasswordPlaceholder: t.currentPasswordPlaceholder,
+  newPasswordPlaceholder: t.newPasswordPlaceholder,
+  confirmPasswordPlaceholder: t.confirmPasswordPlaceholder,
+  cancelLabel: t.cancelLabel,
+  saveLabel: t.saveLabel,
 } as const;
 
 export const ACCOUNT_SECTION_IDS = {
@@ -29,31 +33,31 @@ export type AccountManageItem = {
 export const ACCOUNT_MANAGE_ITEMS: readonly AccountManageItem[] = [
   {
     key: "profile",
-    label: "My Profile",
+    label: t.manageItems[0].label,
     anchorId: ACCOUNT_SECTION_IDS.profile,
   },
   {
     key: "address",
-    label: "Address Book",
+    label: t.manageItems[1].label,
     anchorId: ACCOUNT_SECTION_IDS.address,
   },
   {
     key: "payment",
-    label: "My Payment Options",
+    label: t.manageItems[2].label,
     disabled: true,
   },
 ];
 
 export const ACCOUNT_MENU = {
-  manageTitle: "Manage My Account",
-  orderTitle: "My Orders",
-  orderItems: ["My Returns", "My Cancellations"],
-  wishlistTitle: "My Wishlist",
+  manageTitle: t.manageTitle,
+  orderTitle: t.orderTitle,
+  orderItems: [t.myOrders],
+  wishlistTitle: t.wishlistTitle,
 } as const;
 
 export const PROFILE_FIELDS = {
-  firstNameLabel: "First Name",
-  lastNameLabel: "Last Name",
-  emailLabel: "Email",
-  addressLabel: "Address",
+  firstNameLabel: t.firstNameLabel,
+  lastNameLabel: t.lastNameLabel,
+  emailLabel: t.emailLabel,
+  addressLabel: t.addressLabel,
 } as const;

@@ -218,6 +218,15 @@
   position: relative;
 }
 
+.accountMenu::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 12px;
+}
+
 .accountButton,
 .loginLink {
   border: 0;
@@ -335,21 +344,36 @@
 .accountDropdown {
   position: absolute;
   right: 0;
-  top: calc(100% + 8px);
-  background: var(--color-surface);
-  border: 1px solid var(--color-gray-200);
-  box-shadow: 0 8px 20px rgba(8, 10, 15, 0.12);
-  border-radius: 10px;
-  min-width: 180px;
-  z-index: 10;
-  overflow: hidden;
+  top: calc(100% + 12px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 16px 40px rgba(0, 0, 0, 0.15);
+  min-width: 240px;
+  z-index: 30;
+  padding: 8px;
   display: grid;
+  gap: 2px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.accountDropdownOpen {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .accountItem {
-  padding: 10px 14px;
-  font-size: 13px;
-  color: var(--color-ink-800);
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
   background: transparent;
   border: 0;
   text-align: left;
@@ -358,10 +382,30 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  border-radius: 10px;
+  width: 100%;
+  text-decoration: none;
+  line-height: 1.4;
 }
 
 .accountItem:hover {
-  background: var(--color-gray-140);
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.accountItemLogout {
+  color: #dc2626;
+}
+
+.accountItemLogout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.accountDivider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 4px 6px;
 }
 
 .accountItemBadge {

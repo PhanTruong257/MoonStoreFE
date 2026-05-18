@@ -3,9 +3,13 @@ import type { ColumnsType } from "antd/es/table";
 
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import { formatSellerCurrency, formatSellerDateTime } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import type { AdminWithdrawal } from "@/services/admin-service";
 import styles from "./admin-withdrawals-page.module.scss";
 import { useAdminWithdrawals } from "./use-admin-withdrawals";
+
+const t = UI_TEXT.admin.withdrawals;
+const tbl = UI_TEXT.admin.table;
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "gold",
@@ -18,33 +22,33 @@ export const AdminWithdrawalsPage = () => {
 
   const columns: ColumnsType<AdminWithdrawal> = [
     {
-      title: "Date",
+      title: tbl.date,
       dataIndex: "createdAt",
       key: "createdAt",
       render: (v) => formatSellerDateTime(v),
     },
     {
-      title: "Shop",
+      title: tbl.shop,
       key: "shop",
       render: (_, r) => r.seller.shopName,
     },
     {
-      title: "Amount",
+      title: tbl.amount,
       dataIndex: "amount",
       key: "amount",
       render: (v) => formatSellerCurrency(v),
     },
-    { title: "Bank", dataIndex: "bankName", key: "bankName" },
-    { title: "Account", dataIndex: "bankAccount", key: "bankAccount" },
-    { title: "Holder", dataIndex: "bankHolder", key: "bankHolder" },
+    { title: tbl.bank, dataIndex: "bankName", key: "bankName" },
+    { title: tbl.account, dataIndex: "bankAccount", key: "bankAccount" },
+    { title: tbl.holder, dataIndex: "bankHolder", key: "bankHolder" },
     {
-      title: "Status",
+      title: tbl.status,
       dataIndex: "status",
       key: "status",
       render: (v: string) => <Tag color={STATUS_COLORS[v] ?? "default"}>{v}</Tag>,
     },
     {
-      title: "Actions",
+      title: tbl.actions,
       key: "actions",
       render: (_, r) =>
         r.status === "PENDING" ? (
@@ -55,7 +59,7 @@ export const AdminWithdrawalsPage = () => {
               loading={isProcessing}
               onClick={() => approve(r.id)}
             >
-              Approve
+              {t.approveBtn}
             </Button>
             <Button
               size="small"
@@ -63,7 +67,7 @@ export const AdminWithdrawalsPage = () => {
               loading={isProcessing}
               onClick={() => reject(r.id)}
             >
-              Reject
+              {t.rejectBtn}
             </Button>
           </Space>
         ) : null,
@@ -71,7 +75,7 @@ export const AdminWithdrawalsPage = () => {
   ];
 
   return (
-    <AdminShell title="Withdrawal Requests" subtitle="Review and process seller withdrawal requests.">
+    <AdminShell title={t.title} subtitle={t.subtitle}>
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 5 }} />
       ) : error ? (

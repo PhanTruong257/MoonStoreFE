@@ -1,5 +1,6 @@
-export const CART_TEXT = {
-  updateCartLabel: "Update Cart",
-  couponPlaceholder: "Coupon Code",
-  applyCouponLabel: "Apply Coupon",
-} as const;
+import { UI_TEXT } from "./ui-text";
+
+export const CART_TEXT = UI_TEXT.cart;
+
+export const CART_MAX_QUANTITY = 99;
+

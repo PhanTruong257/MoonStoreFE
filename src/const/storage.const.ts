@@ -2,6 +2,7 @@
 export const STORAGE_KEYS = {
   AUTH_USER: "auth_user",
   CART_ITEMS: "cart_items",
+  CART_SELECTED_IDS: "cart_selected_ids",
   WISHLIST_ITEMS: "wishlist_items",
 } as const;
 

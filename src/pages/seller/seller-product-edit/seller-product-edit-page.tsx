@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Form,
   Input,
   InputNumber,
@@ -12,13 +13,35 @@ import { Link } from "react-router-dom";
 import styles from "./seller-product-edit-page.module.scss";
 import { useSellerProductEdit } from "./use-seller-product-edit";
 
+import { ImageUploader } from "@/component/image-uploader/image-uploader";
 import { SELLER_ROUTES } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { SellerShell } from "@/features/seller/components/seller-shell";
 
+const t = UI_TEXT.seller.productEdit;
+
 const STATUS_OPTIONS = [
-  { label: "Active", value: "active" },
-  { label: "Draft", value: "draft" },
+  { label: t.statusActive, value: "active" },
+  { label: t.statusDraft, value: "draft" },
 ];
+
+type ImageUploaderFieldProps = {
+  value?: string;
+  onChange?: (url: string) => void;
+  disabled?: boolean;
+};
+
+const ImageUploaderField = ({
+  value,
+  onChange,
+  disabled,
+}: ImageUploaderFieldProps) => (
+  <ImageUploader
+    value={value ?? ""}
+    onChange={(url) => onChange?.(url)}
+    disabled={disabled}
+  />
+);
 
 export const SellerProductEditPage = () => {
   const {
@@ -34,11 +57,11 @@ export const SellerProductEditPage = () => {
 
   return (
     <SellerShell
-      title="Edit product"
-      subtitle="Update product details, stock, and option groups."
+      title={t.title}
+      subtitle={t.subtitle}
       actions={
         <Link to={SELLER_ROUTES.products} className={styles.backLink}>
-          ← Back to products
+          {t.backToProducts}
         </Link>
       }
     >
@@ -53,19 +76,19 @@ export const SellerProductEditPage = () => {
             disabled={submitting || deleting}
           >
             <Form.Item
-              label="Product name"
+              label={t.nameField}
               name="name"
-              rules={[{ required: true, message: "Name is required" }]}
+              rules={[{ required: true, message: t.nameRequired }]}
             >
-              <Input placeholder="iPhone 17 Pro Max" />
+              <Input placeholder={t.namePlaceholder} />
             </Form.Item>
 
-            <Form.Item label="Description" name="description">
+            <Form.Item label={t.descField} name="description">
               <Input.TextArea rows={3} />
             </Form.Item>
 
             <Form.Item
-              label="Status"
+              label={t.statusField}
               name="status"
               rules={[{ required: true }]}
             >
@@ -73,7 +96,7 @@ export const SellerProductEditPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Category"
+              label={t.categoryField}
               name="categoryId"
               rules={[{ required: true }]}
             >
@@ -86,7 +109,7 @@ export const SellerProductEditPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Brand id"
+              label={t.brandField}
               name="brandId"
               rules={[{ required: true }]}
             >
@@ -94,7 +117,7 @@ export const SellerProductEditPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Base price"
+              label={t.priceField}
               name="basePrice"
               rules={[{ required: true }]}
             >
@@ -102,7 +125,7 @@ export const SellerProductEditPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Stock"
+              label={t.stockField}
               name="stock"
               rules={[{ required: true }]}
             >
@@ -110,38 +133,148 @@ export const SellerProductEditPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Image URL"
+              label={t.imageField}
               name="imageUrl"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: t.imageField }]}
+              getValueFromEvent={(value: string) => value}
+              trigger="onChange"
             >
-              <Input placeholder="/images/products/..." />
+              <ImageUploaderField disabled={submitting || deleting} />
             </Form.Item>
 
-            <Form.Item
-              label="Option groups (JSON, leave empty to keep current)"
-              name="optionGroupsJson"
-              extra={
-                'Format: [{"name":"Size","required":true,"multiSelect":false,"options":[{"name":"S","priceDelta":0}]}]'
-              }
-            >
-              <Input.TextArea rows={6} placeholder="[]" />
-            </Form.Item>
+            <div className={styles.optionGroupsLabel}>{t.optionGroupsLabel}</div>
+            <p className={styles.optionGroupsHint}>{t.optionGroupsHint}</p>
+
+            <Form.List name="optionGroups">
+              {(groupFields, groupOps) => (
+                <div className={styles.groupList}>
+                  {groupFields.map((groupField) => (
+                    <div key={groupField.key} className={styles.groupCard}>
+                      <div className={styles.groupHeader}>
+                        <Form.Item
+                          label={t.groupNameLabel}
+                          name={[groupField.name, "name"]}
+                          rules={[
+                            { required: true, message: t.groupNameRequired },
+                          ]}
+                          className={styles.groupNameItem}
+                        >
+                          <Input placeholder={t.groupNamePlaceholder} />
+                        </Form.Item>
+                        <Button
+                          danger
+                          type="text"
+                          onClick={() => groupOps.remove(groupField.name)}
+                        >
+                          {t.removeGroupBtn}
+                        </Button>
+                      </div>
+
+                      <div className={styles.groupFlags}>
+                        <Form.Item
+                          name={[groupField.name, "required"]}
+                          valuePropName="checked"
+                          noStyle
+                        >
+                          <Checkbox>{t.requiredLabel}</Checkbox>
+                        </Form.Item>
+                        <Form.Item
+                          name={[groupField.name, "multiSelect"]}
+                          valuePropName="checked"
+                          noStyle
+                        >
+                          <Checkbox>{t.multiSelectLabel}</Checkbox>
+                        </Form.Item>
+                      </div>
+
+                      <Form.List name={[groupField.name, "options"]}>
+                        {(optionFields, optionOps) => (
+                          <div className={styles.optionList}>
+                            {optionFields.map((optionField) => (
+                              <div
+                                key={optionField.key}
+                                className={styles.optionRow}
+                              >
+                                <Form.Item
+                                  name={[optionField.name, "name"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t.optionNameRequired,
+                                    },
+                                  ]}
+                                  className={styles.optionNameItem}
+                                >
+                                  <Input placeholder={t.optionNamePlaceholder} />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[optionField.name, "priceDelta"]}
+                                  initialValue={0}
+                                  className={styles.optionPriceItem}
+                                >
+                                  <InputNumber
+                                    style={{ width: "100%" }}
+                                    placeholder={t.priceDeltaPlaceholder}
+                                  />
+                                </Form.Item>
+                                <Button
+                                  danger
+                                  type="text"
+                                  onClick={() =>
+                                    optionOps.remove(optionField.name)
+                                  }
+                                >
+                                  {t.removeOptionBtn}
+                                </Button>
+                              </div>
+                            ))}
+                            <Button
+                              type="dashed"
+                              onClick={() =>
+                                optionOps.add({ name: "", priceDelta: 0 })
+                              }
+                              block
+                            >
+                              {t.addOptionBtn}
+                            </Button>
+                          </div>
+                        )}
+                      </Form.List>
+                    </div>
+                  ))}
+                  <Button
+                    type="dashed"
+                    onClick={() =>
+                      groupOps.add({
+                        name: "",
+                        required: false,
+                        multiSelect: false,
+                        options: [],
+                      })
+                    }
+                    block
+                  >
+                    {t.addGroupBtn}
+                  </Button>
+                </div>
+              )}
+            </Form.List>
 
             {error ? <p className={styles.errorText}>{error}</p> : null}
 
             <div className={styles.actions}>
               <Popconfirm
-                title="Delete this product? It will be hidden from the storefront."
-                okText="Delete"
+                title={t.deleteConfirm}
+                okText={UI_TEXT.common.delete}
                 okButtonProps={{ danger: true }}
                 onConfirm={handleDelete}
               >
                 <Button danger loading={deleting}>
-                  Delete product
+                  {t.deleteBtn}
                 </Button>
               </Popconfirm>
               <Button type="primary" htmlType="submit" loading={submitting}>
-                Save changes
+                {t.saveBtn}
               </Button>
             </div>
           </Form>

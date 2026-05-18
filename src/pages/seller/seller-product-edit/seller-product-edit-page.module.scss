@@ -22,3 +22,69 @@
   color: #fff;
   text-decoration: none;
 }
+
+.optionGroupsLabel {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.optionGroupsHint {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.groupCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  background: #f9fafb;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.groupNameItem {
+  flex: 1;
+  margin-bottom: 8px;
+}
+
+.groupFlags {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 2px solid #e5e7eb;
+}
+
+.optionRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.optionNameItem {
+  flex: 2;
+  margin-bottom: 0;
+}
+
+.optionPriceItem {
+  flex: 1;
+  margin-bottom: 0;
+}

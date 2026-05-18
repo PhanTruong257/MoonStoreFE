@@ -1,3 +1,5 @@
+import { UI_TEXT } from "./ui-text";
+
 export const SELLER_ORDER_STATUS = {
   PENDING: "PENDING",
   CONFIRMED: "CONFIRMED",
@@ -24,13 +26,15 @@ export const SELLER_ORDER_STATUS_COLORS: Record<string, string> = {
   [SELLER_ORDER_STATUS.CANCELLED]: "red",
 };
 
+const t = UI_TEXT.seller.orders;
+
 export const SELLER_ORDER_STATUS_FILTER_OPTIONS = [
-  { label: "All status", value: "ALL" },
-  { label: "Pending", value: SELLER_ORDER_STATUS.PENDING },
-  { label: "Confirmed", value: SELLER_ORDER_STATUS.CONFIRMED },
-  { label: "Shipping", value: SELLER_ORDER_STATUS.SHIPPING },
-  { label: "Delivered", value: SELLER_ORDER_STATUS.DELIVERED },
-  { label: "Cancelled", value: SELLER_ORDER_STATUS.CANCELLED },
+  { label: t.statusAll, value: "ALL" },
+  { label: t.statusPending, value: SELLER_ORDER_STATUS.PENDING },
+  { label: t.statusConfirmed, value: SELLER_ORDER_STATUS.CONFIRMED },
+  { label: t.statusShipping, value: SELLER_ORDER_STATUS.SHIPPING },
+  { label: t.statusDelivered, value: SELLER_ORDER_STATUS.DELIVERED },
+  { label: t.statusCancelled, value: SELLER_ORDER_STATUS.CANCELLED },
 ];
 
 export const SELLER_PRODUCT_STATUS = {
@@ -38,11 +42,8 @@ export const SELLER_PRODUCT_STATUS = {
   DRAFT: "draft",
 } as const;
 
-export const SELLER_PRODUCT_STATUS_FILTER_OPTIONS = [
-  { label: "All status", value: "ALL" },
-  { label: "Active", value: SELLER_PRODUCT_STATUS.ACTIVE },
-  { label: "Draft", value: SELLER_PRODUCT_STATUS.DRAFT },
-];
+export const SELLER_PRODUCT_STATUS_FILTER_OPTIONS =
+  UI_TEXT.statusOptions.sellerProductStatus;
 
 export const SELLER_ROUTES = {
   dashboard: "/seller",

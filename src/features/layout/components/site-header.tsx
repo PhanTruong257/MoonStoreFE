@@ -7,6 +7,8 @@ import { subscribeCartUpdated } from "@/app/utils/cart-event";
 import { toCategorySlug } from "@/app/utils/category-slug";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { HEADER_TEXT } from "@/const/header.const";
+import { UI_TEXT } from "@/const/ui-text";
+import { CartIcon, ChatIcon, SearchIcon, UserIcon } from "@/component/icons";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
@@ -157,10 +159,6 @@ export const SiteHeader = ({
     };
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
-
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -194,7 +192,7 @@ export const SiteHeader = ({
                 <span />
                 <span />
               </span>
-              <span>{categoryLink?.label ?? "Category"}</span>
+              <span>{categoryLink?.label ?? UI_TEXT.header.categoryLabel}</span>
             </button>
 
             <div
@@ -232,112 +230,98 @@ export const SiteHeader = ({
                   search.onChange?.(nextValue);
                 }}
               />
-              <button type="button" aria-label="Search">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    d="M11 4a7 7 0 1 0 4.9 12.1l3.5 3.5 1.4-1.4-3.5-3.5A7 7 0 0 0 11 4zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"
-                    fill="currentColor"
-                  />
-                </svg>
+              <button type="button" aria-label={UI_TEXT.header.searchAriaLabel}>
+                <SearchIcon size={18} />
               </button>
             </div>
           </div>
         ) : null}
 
         <div className={styles.actions}>
-          <div className={styles.accountMenu}>
+          <div
+            className={styles.accountMenu}
+            onMouseEnter={() => setIsMenuOpen(true)}
+            onMouseLeave={() => setIsMenuOpen(false)}
+          >
             {user ? (
               <>
-                <button
-                  type="button"
-                  className={styles.accountButton}
-                  onClick={toggleMenu}
-                >
+                <button type="button" className={styles.accountButton}>
                   <span className={styles.accountIcon}>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <UserIcon size={18} />
                   </span>
-                  <span>{user.fullName || "Tai khoan"}</span>
+                  <span>{user.fullName || UI_TEXT.header.login}</span>
                 </button>
-                {isMenuOpen ? (
-                  <div className={styles.accountDropdown}>
-                    <Link
-                      to="/account"
-                      className={styles.accountItem}
-                      onClick={closeMenu}
-                    >
-                      Account settings
-                    </Link>
-                    <Link
-                      to="/orders"
-                      className={styles.accountItem}
-                      onClick={closeMenu}
-                    >
-                      My orders
-                    </Link>
-                    <Link
-                      to={CHAT_ROUTES.buyerList}
-                      className={styles.accountItem}
-                      onClick={closeMenu}
-                    >
-                      Tin nhắn
-                      {unreadChatCount > 0 ? (
-                        <span className={styles.accountItemBadge}>
-                          {unreadChatCount > 99 ? "99+" : unreadChatCount}
-                        </span>
-                      ) : null}
-                    </Link>
-                    {user.role === "admin" ? (
-                      <Link
-                        to="/admin"
-                        className={styles.accountItem}
-                        onClick={closeMenu}
-                      >
-                        Admin console
-                      </Link>
+                <div
+                  className={`${styles.accountDropdown} ${isMenuOpen ? styles.accountDropdownOpen : ""}`}
+                >
+                  <Link
+                    to="/account"
+                    className={styles.accountItem}
+                    onClick={closeMenu}
+                  >
+                    {UI_TEXT.header.accountSettings}
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className={styles.accountItem}
+                    onClick={closeMenu}
+                  >
+                    {UI_TEXT.header.myOrders}
+                  </Link>
+                  <Link
+                    to={CHAT_ROUTES.buyerList}
+                    className={styles.accountItem}
+                    onClick={closeMenu}
+                  >
+                    {UI_TEXT.header.messages}
+                    {unreadChatCount > 0 ? (
+                      <span className={styles.accountItemBadge}>
+                        {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                      </span>
                     ) : null}
-                    {user.role === "seller" ? (
-                      <Link
-                        to="/seller"
-                        className={styles.accountItem}
-                        onClick={closeMenu}
-                      >
-                        Seller hub
-                      </Link>
-                    ) : user.role === "user" ? (
-                      <Link
-                        to="/seller/apply"
-                        className={styles.accountItem}
-                        onClick={closeMenu}
-                      >
-                        Become a seller
-                      </Link>
-                    ) : null}
-                    <button
-                      type="button"
+                  </Link>
+                  {user.role === "admin" ? (
+                    <Link
+                      to="/admin"
                       className={styles.accountItem}
-                      onClick={handleLogout}
+                      onClick={closeMenu}
                     >
-                      Logout
-                    </button>
-                  </div>
-                ) : null}
+                      {UI_TEXT.header.adminConsole}
+                    </Link>
+                  ) : null}
+                  {user.role === "seller" ? (
+                    <Link
+                      to="/seller"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
+                      {UI_TEXT.header.sellerHub}
+                    </Link>
+                  ) : user.role === "user" ? (
+                    <Link
+                      to="/seller/apply"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
+                      {UI_TEXT.header.becomeSeller}
+                    </Link>
+                  ) : null}
+                  <div className={styles.accountDivider} />
+                  <button
+                    type="button"
+                    className={`${styles.accountItem} ${styles.accountItemLogout}`}
+                    onClick={handleLogout}
+                  >
+                    {UI_TEXT.header.logout}
+                  </button>
+                </div>
               </>
             ) : (
               <Link className={styles.loginLink} to="/login">
                 <span className={styles.accountIcon}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <UserIcon size={18} />
                 </span>
-                <span>Dang nhap</span>
+                <span>{UI_TEXT.header.login}</span>
               </Link>
             )}
           </div>
@@ -349,22 +333,17 @@ export const SiteHeader = ({
               onClick={() => {
                 void navigate(CHAT_ROUTES.buyerList);
               }}
-              aria-label="Tin nhắn"
+              aria-label={UI_TEXT.header.messages}
             >
               <span className={styles.chatIcon}>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7l-5 4V6a2 2 0 0 1 2-2zm3 6h10v2H7v-2zm0-3h10v2H7V7z"
-                    fill="currentColor"
-                  />
-                </svg>
+                <ChatIcon size={18} />
                 {unreadChatCount > 0 ? (
                   <span className={styles.cartBadge}>
                     {unreadChatCount > 99 ? "99+" : unreadChatCount}
                   </span>
                 ) : null}
               </span>
-              <span>Tin nhắn</span>
+              <span>{UI_TEXT.header.messages}</span>
             </button>
           ) : null}
 
@@ -380,19 +359,14 @@ export const SiteHeader = ({
             }}
           >
             <span className={styles.cartIcon}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M7 6h14l-2 8H8L6.2 3H3v2h2l2.2 11h12.6l2.4-10H7V6zm1 14a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"
-                  fill="currentColor"
-                />
-              </svg>
+              <CartIcon size={18} />
               {resolvedCartCount > 0 ? (
                 <span className={styles.cartBadge}>
                   {resolvedCartCount > 99 ? "99+" : resolvedCartCount}
                 </span>
               ) : null}
             </span>
-            <span>Gio hang</span>
+            <span>{UI_TEXT.header.cartLabel}</span>
           </button>
         </div>
       </div>

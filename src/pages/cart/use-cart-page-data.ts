@@ -1,20 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import type { RootState } from "@/app/app-store";
-import { writeJsonToStorage } from "@/app/utils/storage";
+import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import {
+  readJsonFromStorage,
+  writeJsonToStorage,
+} from "@/app/utils/storage";
+import { CART_MAX_QUANTITY } from "@/const/cart.const";
 import { STORAGE_KEYS } from "@/const/storage.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
-import { useVoucher } from "@/features/vouchers";
 import {
   fetchCartByUser,
   removeCartItem,
   updateCartItem,
 } from "@/services/cart-service";
 
-type CartItem = {
+export type CartItem = {
   id: number;
+  productId: number;
   name: string;
   price: number;
   quantity: number;
@@ -26,31 +32,38 @@ type CartItem = {
   }>;
 };
 
-const SHIPPING_FEE = 0;
+const readStoredSelectedIds = (): number[] => {
+  const data = readJsonFromStorage<number[]>(STORAGE_KEYS.CART_SELECTED_IDS, []);
+  if (!Array.isArray(data)) {
+    return [];
+  }
+  return data.filter((value): value is number => typeof value === "number");
+};
 
 export const useCartPageData = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState<CartItem[]>([]);
-  const voucherState = useVoucher();
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(
+    () => new Set(readStoredSelectedIds()),
+  );
   const { user } = useSelector<RootState, AuthState>((state) => state.auth);
   const activeUserId = user?.id ?? getStoredUser()?.id;
 
   useEffect(() => {
-    if (!activeUserId) {
-      setItems([]);
-      return;
-    }
-
     let isMounted = true;
 
     const loadCart = async () => {
+      if (!activeUserId) {
+        if (isMounted) setItems([]);
+        return;
+      }
       try {
         const cart = await fetchCartByUser(activeUserId);
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
-        const nextItems = cart.items.map((item) => ({
+        const nextItems: CartItem[] = cart.items.map((item) => ({
           id: item.id,
+          productId: item.product.id,
           name: item.product.name,
           price: Number(item.unitPrice),
           quantity: item.quantity,
@@ -61,71 +74,153 @@ export const useCartPageData = () => {
             priceDelta: opt.priceDelta,
           })),
         }));
-
         setItems(nextItems);
 
-        const map = nextItems.reduce<Record<string, number>>((acc, item) => {
+        const validIds = new Set(nextItems.map((item) => item.id));
+        setSelectedIds((prev) => {
+          const next = new Set<number>();
+          prev.forEach((id) => {
+            if (validIds.has(id)) next.add(id);
+          });
+          return next;
+        });
+
+        const qtyMap = nextItems.reduce<Record<string, number>>((acc, item) => {
           acc[String(item.id)] = item.quantity;
           return acc;
         }, {});
-        writeJsonToStorage(STORAGE_KEYS.CART_ITEMS, map);
+        writeJsonToStorage(STORAGE_KEYS.CART_ITEMS, qtyMap);
       } catch {
-        if (!isMounted) {
-          return;
-        }
-        setItems([]);
+        if (isMounted) setItems([]);
       }
     };
 
     void loadCart();
-
     return () => {
       isMounted = false;
     };
   }, [activeUserId]);
 
-  const subTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  useEffect(() => {
+    writeJsonToStorage(STORAGE_KEYS.CART_SELECTED_IDS, Array.from(selectedIds));
+  }, [selectedIds]);
+
+  const subTotal = useMemo(
+    () =>
+      items
+        .filter((item) => selectedIds.has(item.id))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [items, selectedIds],
+  );
+
+  const selectedCount = useMemo(
+    () => items.filter((item) => selectedIds.has(item.id)).length,
+    [items, selectedIds],
+  );
+
+  const allSelected = items.length > 0 && selectedCount === items.length;
+
+  const toggleSelectItem = useCallback((itemId: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(itemId)) {
+        next.delete(itemId);
+      } else {
+        next.add(itemId);
+      }
+      return next;
+    });
+  }, []);
+
+  const toggleSelectAll = useCallback(() => {
+    setSelectedIds((prev) => {
+      if (prev.size === items.length) {
+        return new Set();
+      }
+      return new Set(items.map((item) => item.id));
+    });
   }, [items]);
 
-  const total = Math.max(0, subTotal - voucherState.discountAmount + SHIPPING_FEE);
-
-  const updateQuantity = (itemId: number, quantity: number) => {
+  const changeQuantity = useCallback((itemId: number, nextQuantity: number) => {
+    const clamped = Math.max(1, Math.min(CART_MAX_QUANTITY, nextQuantity));
     setItems((prev) =>
       prev.map((item) =>
-        item.id === itemId
-          ? { ...item, quantity: Math.max(1, quantity) }
-          : item,
+        item.id === itemId ? { ...item, quantity: clamped } : item,
       ),
     );
-
-    void updateCartItem(itemId, Math.max(1, quantity)).catch(() => {
-      // Ignore update errors for now; UI already updated.
+    void updateCartItem(itemId, clamped).catch(() => {
+      // silent: UI already updated
     });
-  };
+  }, []);
 
-  const removeItem = (itemId: number) => {
+  const incrementQuantity = useCallback(
+    (itemId: number) => {
+      const current = items.find((item) => item.id === itemId);
+      if (!current) return;
+      changeQuantity(itemId, current.quantity + 1);
+    },
+    [items, changeQuantity],
+  );
+
+  const decrementQuantity = useCallback(
+    (itemId: number) => {
+      const current = items.find((item) => item.id === itemId);
+      if (!current) return;
+      changeQuantity(itemId, current.quantity - 1);
+    },
+    [items, changeQuantity],
+  );
+
+  const removeItem = useCallback((itemId: number) => {
     setItems((prev) => prev.filter((item) => item.id !== itemId));
-    void removeCartItem(itemId).catch(() => {
-      // Ignore remove errors for now; UI already updated.
+    setSelectedIds((prev) => {
+      if (!prev.has(itemId)) return prev;
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
     });
-  };
+    void removeCartItem(itemId)
+      .then(() => dispatchCartUpdated())
+      .catch(() => {
+        // silent
+      });
+  }, []);
 
-  const applyCoupon = () => {
-    voucherState.apply(subTotal);
-  };
+  const removeSelected = useCallback(() => {
+    const idsToRemove = Array.from(selectedIds);
+    if (idsToRemove.length === 0) return;
+    setItems((prev) => prev.filter((item) => !selectedIds.has(item.id)));
+    setSelectedIds(new Set());
+    void Promise.allSettled(idsToRemove.map((id) => removeCartItem(id))).then(
+      () => {
+        dispatchCartUpdated();
+      },
+    );
+  }, [selectedIds]);
+
+  const goToCheckout = useCallback(() => {
+    if (selectedCount === 0) return;
+    writeJsonToStorage(
+      STORAGE_KEYS.CART_SELECTED_IDS,
+      Array.from(selectedIds),
+    );
+    void navigate("/checkout");
+  }, [navigate, selectedCount, selectedIds]);
 
   return {
-    couponCode: voucherState.code,
-    couponMessage: voucherState.message,
-    discountAmount: voucherState.discountAmount,
     items,
-    shippingFee: SHIPPING_FEE,
+    selectedIds,
+    selectedCount,
+    allSelected,
     subTotal,
-    total,
-    applyCoupon,
+    isEmpty: items.length === 0,
+    toggleSelectItem,
+    toggleSelectAll,
+    incrementQuantity,
+    decrementQuantity,
+    changeQuantity,
     removeItem,
-    setCouponCode: voucherState.setCode,
-    updateQuantity,
+    removeSelected,
+    goToCheckout,
   };
 };
