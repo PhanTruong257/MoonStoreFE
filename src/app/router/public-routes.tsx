@@ -7,6 +7,7 @@ import { ContactPage } from "@/pages/contact/contact-page";
 import { HomePage } from "@/pages/home/home-page";
 import { PaymentResultPage } from "@/pages/payment/payment-result-page";
 import { ProductDetailPage } from "@/pages/product/product-detail-page";
+import { ShopPage } from "@/pages/shop/shop-page/shop-page";
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -48,6 +49,11 @@ export const publicRoutes: RouteObject[] = [
     path: "/product/:productId",
     element: <ProductDetailPage />,
     handle: { title: "Product Detail" },
+  },
+  {
+    path: "/shop/:sellerId",
+    element: <ShopPage />,
+    handle: { title: "Shop" },
   },
   {
     path: "/payment/result",

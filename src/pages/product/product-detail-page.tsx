@@ -40,15 +40,11 @@ export const ProductDetailPage = () => {
 
   const navigate = useNavigate();
 
-  if (!product && !isLoading) {
-    return (
-      <main className={styles.page}>
-        <SiteHeader
-          brand={{ label: h.brand, to: "/" }}
-          navLinks={homeHeaderLinks}
-          search={{ placeholder: h.searchPlaceholder }}
-        />
+  const canAddToCart = missingRequiredGroups.length === 0;
 
+  const renderContent = () => {
+    if (!product && !isLoading) {
+      return (
         <section className={styles.main}>
           <Breadcrumb
             className={styles.breadcrumb}
@@ -60,42 +56,21 @@ export const ProductDetailPage = () => {
             <Link to="/">{t.backToHome}</Link>
           </div>
         </section>
+      );
+    }
 
-        <SiteFooter
-          sections={homeFooterSections}
-          copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
-        />
-      </main>
-    );
-  }
-
-  if (!product) {
-    return (
-      <main className={styles.page}>
-        <SiteHeader
-          brand={{ label: h.brand, to: "/" }}
-          navLinks={homeHeaderLinks}
-          search={{ placeholder: h.searchPlaceholder }}
-        />
+    if (!product) {
+      return (
         <section className={styles.main}>
           <Breadcrumb
             className={styles.breadcrumb}
             items={[{ label: UI_TEXT.common.home, to: "/" }, { label: UI_TEXT.common.loading }]}
           />
         </section>
-      </main>
-    );
-  }
+      );
+    }
 
-  const canAddToCart = missingRequiredGroups.length === 0;
-
-  return (
-    <main className={styles.page}>
-      <SiteHeader
-        brand={{ label: h.brand, to: "/" }}
-        navLinks={homeHeaderLinks}
-        search={{ placeholder: h.searchPlaceholder }}
-      />
+    return (
 
       <section className={styles.main}>
         <Breadcrumb
@@ -187,7 +162,12 @@ export const ProductDetailPage = () => {
                 </span>
                 <div className={styles.sellerMeta}>
                   <small>{t.store}</small>
-                  <strong>{product.sellerShopName}</strong>
+                  <Link
+                    to={`/shop/${product.sellerId}`}
+                    className={styles.sellerNameLink}
+                  >
+                    {product.sellerShopName}
+                  </Link>
                 </div>
               </div>
               <button
@@ -378,7 +358,17 @@ export const ProductDetailPage = () => {
           </div>
         </section>
       </section>
+    );
+  };
 
+  return (
+    <main className={styles.page}>
+      <SiteHeader
+        brand={{ label: h.brand, to: "/" }}
+        navLinks={homeHeaderLinks}
+        search={{ placeholder: h.searchPlaceholder }}
+      />
+      {renderContent()}
       <SiteFooter
         sections={homeFooterSections}
         copyright={UI_TEXT.common.copyright(new Date().getFullYear())}

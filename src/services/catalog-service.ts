@@ -92,3 +92,26 @@ export const fetchProductDetail = async (productId: number) => {
   );
   return response.data.product;
 };
+
+export type ShopStorefrontProduct = {
+  id: number;
+  name: string;
+  basePrice: number;
+  imageUrl: string;
+  stock: number;
+};
+
+export type ShopStorefront = {
+  id: number;
+  shopName: string;
+  description: string | null;
+  productCount: number;
+  products: ShopStorefrontProduct[];
+};
+
+export const fetchShopStorefront = async (sellerId: number) => {
+  const response = await http.get<{ shop: ShopStorefront }>(
+    `/sellers/${sellerId}/storefront`,
+  );
+  return response.data.shop;
+};

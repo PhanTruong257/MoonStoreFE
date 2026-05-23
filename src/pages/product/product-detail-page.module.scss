@@ -628,6 +628,21 @@
   }
 }
 
+.sellerNameLink {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink-680);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+
+  &:hover {
+    color: #db4444;
+    text-decoration: underline;
+  }
+}
+
 .chatSellerButton {
   display: inline-flex;
   align-items: center;

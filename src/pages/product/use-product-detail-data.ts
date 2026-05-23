@@ -69,7 +69,7 @@ export const useProductDetailData = () => {
   const { productId } = useParams();
   const [catalogProduct, setCatalogProduct] =
     useState<CatalogProductDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const product = useMemo<ProductView | null>(() => {
     if (!productId) {

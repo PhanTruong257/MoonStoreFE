@@ -791,6 +791,17 @@ export const UI_TEXT = {
     },
   },
 
+  shop: {
+    title: (name: string) => name,
+    subtitle: "Tất cả sản phẩm đang bán tại gian hàng này.",
+    productCountLabel: (count: number) => `${count} sản phẩm`,
+    viewShopBtn: "Xem gian hàng",
+    productsSection: "Sản phẩm của cửa hàng",
+    noProducts: "Gian hàng chưa có sản phẩm nào.",
+    notFound: "Không tìm thấy gian hàng.",
+    backToHome: "Về trang chủ",
+  },
+
   statusOptions: {
     orderFilter: [
       { label: "Tất cả", value: "ALL" },
