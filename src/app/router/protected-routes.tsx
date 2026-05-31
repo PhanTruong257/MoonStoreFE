@@ -24,6 +24,7 @@ import { CartPage } from "@/pages/cart/cart-page";
 import { ChatPage } from "@/pages/chat/chat-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
 import { OrderDetailPage, OrdersPage } from "@/pages/orders";
+import { SellerLayout } from "@/features/seller/components/seller-layout";
 import { SellerApplyPage } from "@/pages/seller/seller-apply";
 import { SellerChatPage } from "@/pages/seller/seller-chat";
 import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
@@ -83,49 +84,55 @@ export const protectedRoutes: RouteObject[] = [
     element: <RequireSeller />,
     children: [
       {
-        path: "/seller",
-        element: <SellerDashboardPage />,
-        handle: { title: "Seller Dashboard" },
-      },
-      {
-        path: "/seller/orders",
-        element: <SellerOrdersPage />,
-        handle: { title: "Seller Orders" },
-      },
-      {
-        path: "/seller/orders/:groupId",
-        element: <SellerOrderDetailPage />,
-        handle: { title: "Order Detail" },
-      },
-      {
-        path: "/seller/products",
-        element: <SellerProductsPage />,
-        handle: { title: "Manage Products" },
-      },
-      {
-        path: "/seller/products/new",
-        element: <SellerProductNewPage />,
-        handle: { title: "Upload Product" },
-      },
-      {
-        path: "/seller/products/:productId/edit",
-        element: <SellerProductEditPage />,
-        handle: { title: "Edit Product" },
-      },
-      {
-        path: "/seller/chat",
-        element: <SellerChatPage />,
-        handle: { title: "Seller Messages" },
-      },
-      {
-        path: "/seller/chat/:conversationId",
-        element: <SellerChatPage />,
-        handle: { title: "Seller Messages" },
-      },
-      {
-        path: "/seller/wallet",
-        element: <SellerWalletPage />,
-        handle: { title: "My Wallet" },
+        // SellerLayout render 1 lần, Outlet thay content → không giật khi navigate
+        element: <SellerLayout />,
+        children: [
+          {
+            path: "/seller",
+            element: <SellerDashboardPage />,
+            handle: { title: "Seller Dashboard" },
+          },
+          {
+            path: "/seller/orders",
+            element: <SellerOrdersPage />,
+            handle: { title: "Seller Orders" },
+          },
+          {
+            path: "/seller/orders/:groupId",
+            element: <SellerOrderDetailPage />,
+            handle: { title: "Order Detail" },
+          },
+          {
+            path: "/seller/products",
+            element: <SellerProductsPage />,
+            handle: { title: "Manage Products" },
+          },
+          {
+            path: "/seller/products/new",
+            element: <SellerProductNewPage />,
+            handle: { title: "Upload Product" },
+          },
+          {
+            path: "/seller/products/:productId/edit",
+            element: <SellerProductEditPage />,
+            handle: { title: "Edit Product" },
+          },
+          {
+            path: "/seller/chat",
+            element: <SellerChatPage />,
+            handle: { title: "Seller Messages" },
+          },
+          {
+            path: "/seller/chat/:conversationId",
+            element: <SellerChatPage />,
+            handle: { title: "Seller Messages" },
+          },
+          {
+            path: "/seller/wallet",
+            element: <SellerWalletPage />,
+            handle: { title: "My Wallet" },
+          },
+        ],
       },
     ],
   },

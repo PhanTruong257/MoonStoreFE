@@ -4,6 +4,9 @@ import { formatMoneyShort } from "@/app/utils/format";
 import { ProductCard } from "@/component/product-card/product-card";
 import styles from "@/features/home/flash-sale/flash-sale-section.module.scss";
 import { useFlashSale } from "@/features/home/flash-sale/use-flash-sale";
+import { UI_TEXT } from "@/const/ui-text";
+
+const t = UI_TEXT.home.flashSale;
 
 type FlashSaleSectionProps = {
   searchQuery: string;
@@ -44,26 +47,26 @@ export const FlashSaleSection = ({
     <section className="page-section">
       <header className={styles.sectionHeader}>
         <div>
-          <p className={styles.sectionLabel}>Today&apos;s</p>
-          <h2>Flash Sales</h2>
+          <p className={styles.sectionLabel}>{t.label}</p>
+          <h2>{t.title}</h2>
         </div>
 
         <div className={styles.countdownWrap}>
           <span>
             <strong>{formatCountdownPart(countdown.days)}</strong>
-            <small>Days</small>
+            <small>{t.days}</small>
           </span>
           <span>
             <strong>{formatCountdownPart(countdown.hours)}</strong>
-            <small>Hours</small>
+            <small>{t.hours}</small>
           </span>
           <span>
             <strong>{formatCountdownPart(countdown.minutes)}</strong>
-            <small>Minutes</small>
+            <small>{t.minutes}</small>
           </span>
           <span>
             <strong>{formatCountdownPart(countdown.seconds)}</strong>
-            <small>Seconds</small>
+            <small>{t.seconds}</small>
           </span>
         </div>
       </header>
@@ -108,7 +111,7 @@ export const FlashSaleSection = ({
                 void onProductClick(event, product.id);
               }}
               discountLabel={`-${discount}%`}
-              wishlistLabel={wishlistMap[product.id] ? "Saved" : "Wish"}
+              wishlistLabel={wishlistMap[product.id] ? t.saved : t.wish}
               onWishlist={() => toggleWishlist(product.id)}
               renderPrice={
                 <p className={styles.priceRow}>
@@ -122,7 +125,7 @@ export const FlashSaleSection = ({
                   <small>({product.sold})</small>
                 </p>
               }
-              actionLabel="Add To Cart"
+              actionLabel={t.addToCart}
               onAction={() => {
                 addToCart(product.id, product.productIdNumber, product.name);
               }}
@@ -142,7 +145,7 @@ export const FlashSaleSection = ({
           className={styles.viewAllButton}
           onClick={toggleFlashView}
         >
-          {showAll ? "Show Less" : "View All Products"} ({cartCount} in cart)
+          {showAll ? t.showLess : t.viewAll} ({t.inCart(cartCount)})
         </button>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import { Button, Form, Input, InputNumber, Modal, Skeleton, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 import {
   formatSellerCurrency,
   formatSellerDateTime,
@@ -53,16 +53,18 @@ export const SellerWalletPage = () => {
     submitWithdrawal,
   } = useSellerWallet(form);
 
+  useSetSellerShell({
+    title: t.title,
+    subtitle: t.subtitle,
+    actions: (
+      <Button type="primary" onClick={openWithdrawModal} disabled={!wallet || wallet.balance <= 0}>
+        {t.withdrawBtn}
+      </Button>
+    ),
+  });
+
   return (
-    <SellerShell
-      title={t.title}
-      subtitle={t.subtitle}
-      actions={
-        <Button type="primary" onClick={openWithdrawModal} disabled={!wallet || wallet.balance <= 0}>
-          {t.withdrawBtn}
-        </Button>
-      }
-    >
+    <>
       {error ? <p className={styles.errorText}>{error}</p> : null}
 
       {isLoading ? (
@@ -152,6 +154,6 @@ export const SellerWalletPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </SellerShell>
+    </>
   );
 };

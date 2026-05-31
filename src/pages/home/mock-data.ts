@@ -122,7 +122,8 @@ export const homeCategories: HomeCategory[] = [
   { id: "furniture", label: "Furniture" },
 ];
 
-export const flashSaleDeadline = "2026-04-03T23:59:59";
+const _sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+export const flashSaleDeadline = _sevenDaysFromNow.toISOString();
 
 export const homeProducts: HomeProduct[] = [
   {

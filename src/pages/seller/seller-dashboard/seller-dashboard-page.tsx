@@ -6,28 +6,30 @@ import { useSellerDashboard } from "./use-seller-dashboard";
 
 import { SELLER_ROUTES, formatSellerCurrency } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 
 const t = UI_TEXT.seller.dashboard;
 
 export const SellerDashboardPage = () => {
   const { stats, loading, error } = useSellerDashboard();
 
+  useSetSellerShell({
+    title: t.title,
+    subtitle: t.subtitle,
+    actions: (
+      <>
+        <Link to={SELLER_ROUTES.productNew} className={styles.heroLink}>
+          {t.uploadProductBtn}
+        </Link>
+        <Link to={SELLER_ROUTES.orders} className={styles.heroLink}>
+          {t.viewOrdersBtn}
+        </Link>
+      </>
+    ),
+  });
+
   return (
-    <SellerShell
-      title={t.title}
-      subtitle={t.subtitle}
-      actions={
-        <>
-          <Link to={SELLER_ROUTES.productNew} className={styles.heroLink}>
-            {t.uploadProductBtn}
-          </Link>
-          <Link to={SELLER_ROUTES.orders} className={styles.heroLink}>
-            {t.viewOrdersBtn}
-          </Link>
-        </>
-      }
-    >
+    <>
       {error ? <p className={styles.errorText}>{error}</p> : null}
 
       {loading ? (
@@ -107,6 +109,6 @@ export const SellerDashboardPage = () => {
           </Link>
         </section>
       </div>
-    </SellerShell>
+    </>
   );
 };

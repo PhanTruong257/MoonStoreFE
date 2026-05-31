@@ -5,7 +5,7 @@ import { useSellerOrders } from "./use-seller-orders";
 
 import { SELLER_ORDER_STATUS_FILTER_OPTIONS } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 import type { SellerOrderGroup } from "@/services/seller-service";
 
 const t = UI_TEXT.seller.orders;
@@ -21,8 +21,10 @@ export const SellerOrdersPage = () => {
     columns,
   } = useSellerOrders();
 
+  useSetSellerShell({ title: t.title, subtitle: t.subtitle });
+
   return (
-    <SellerShell title={t.title} subtitle={t.subtitle}>
+    <>
       <div className={styles.toolbar}>
         <Select
           value={statusFilter}
@@ -30,8 +32,8 @@ export const SellerOrdersPage = () => {
           options={SELLER_ORDER_STATUS_FILTER_OPTIONS}
           style={{ width: 180 }}
         />
-        <span className={styles.productMeta}>
-          {t.totalMeta(filtered.length, groups.length)}
+        <span className={styles.countBadge}>
+          Hiển thị: <strong>{filtered.length}</strong> / {groups.length}
         </span>
       </div>
 
@@ -49,6 +51,6 @@ export const SellerOrdersPage = () => {
           }}
         />
       </div>
-    </SellerShell>
+    </>
   );
 };

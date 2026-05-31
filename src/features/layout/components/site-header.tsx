@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { subscribeCartUpdated } from "@/app/utils/cart-event";
+import {
+  addSavedSearch,
+  clearSavedSearches,
+  getSavedSearches,
+  removeSavedSearch,
+} from "@/app/utils/saved-searches";
 import { toCategorySlug } from "@/app/utils/category-slug";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { HEADER_TEXT } from "@/const/header.const";
@@ -57,6 +63,9 @@ export const SiteHeader = ({
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const inputValue = search?.value ?? searchValue;
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [savedSearches, setSavedSearches] = useState<string[]>([]);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -159,6 +168,48 @@ export const SiteHeader = ({
     };
   }, []);
 
+  // Đóng history dropdown khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node)) {
+        setIsHistoryOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearchSubmit = () => {
+    const query = inputValue.trim();
+    if (query) {
+      addSavedSearch(query);
+      setSavedSearches(getSavedSearches());
+    }
+    setIsHistoryOpen(false);
+  };
+
+  const handleSearchFocus = () => {
+    setSavedSearches(getSavedSearches());
+    setIsHistoryOpen(true);
+  };
+
+  const handleHistorySelect = (query: string) => {
+    search?.onChange?.(query);
+    setSearchValue(query);
+    setIsHistoryOpen(false);
+  };
+
+  const handleHistoryDelete = (e: React.MouseEvent, query: string) => {
+    e.stopPropagation();
+    removeSavedSearch(query);
+    setSavedSearches(getSavedSearches());
+  };
+
+  const handleHistoryClear = () => {
+    clearSavedSearches();
+    setSavedSearches([]);
+  };
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -217,22 +268,64 @@ export const SiteHeader = ({
 
         {search ? (
           <div className={styles.searchArea}>
-            <div className={styles.searchBar}>
-              <input
-                placeholder={search.placeholder}
-                aria-label={
-                  search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel
-                }
-                value={inputValue}
-                onChange={(event) => {
-                  const nextValue = event.target.value;
-                  setSearchValue(nextValue);
-                  search.onChange?.(nextValue);
-                }}
-              />
-              <button type="button" aria-label={UI_TEXT.header.searchAriaLabel}>
-                <SearchIcon size={18} />
-              </button>
+            <div className={styles.searchWrapper} ref={searchWrapRef}>
+              <div className={styles.searchBar}>
+                <input
+                  placeholder={search.placeholder}
+                  aria-label={search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel}
+                  value={inputValue}
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+                    setSearchValue(nextValue);
+                    search.onChange?.(nextValue);
+                  }}
+                  onFocus={handleSearchFocus}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSearchSubmit();
+                    if (e.key === "Escape") setIsHistoryOpen(false);
+                  }}
+                />
+                <button
+                  type="button"
+                  aria-label={UI_TEXT.header.searchAriaLabel}
+                  onClick={handleSearchSubmit}
+                >
+                  <SearchIcon size={18} />
+                </button>
+              </div>
+
+              {isHistoryOpen && savedSearches.length > 0 ? (
+                <div className={styles.searchHistoryDropdown}>
+                  <div className={styles.searchHistoryHeader}>
+                    <span>Tìm kiếm gần đây</span>
+                    <button
+                      type="button"
+                      className={styles.searchHistoryClear}
+                      onClick={handleHistoryClear}
+                    >
+                      Xóa tất cả
+                    </button>
+                  </div>
+                  {savedSearches.map((q) => (
+                    <button
+                      key={q}
+                      type="button"
+                      className={styles.searchHistoryItem}
+                      onClick={() => handleHistorySelect(q)}
+                    >
+                      <span className={styles.searchHistoryItemText}>{q}</span>
+                      <span
+                        role="button"
+                        aria-label={`Xóa "${q}"`}
+                        className={styles.searchHistoryItemDelete}
+                        onClick={(e) => handleHistoryDelete(e, q)}
+                      >
+                        ×
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
         ) : null}

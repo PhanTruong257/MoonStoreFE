@@ -12,7 +12,7 @@ import {
   formatSellerDateTime,
 } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 
 const t = UI_TEXT.seller.orderDetail;
 
@@ -42,42 +42,47 @@ export const SellerOrderDetailPage = () => {
   } = useSellerOrderDetail();
   const navigate = useNavigate();
 
+  const shellTitle = loading ? t.title : group ? `Order #${group.id}` : t.title;
+  const shellSubtitle = loading
+    ? t.loadingSubtitle
+    : error
+      ? (error ?? t.notFound)
+      : group
+        ? `Order ${group.orderId} · ${formatSellerDateTime(group.createdAt)}`
+        : t.notFound;
+  const shellActions =
+    !loading && !error && group ? (
+      <Link to={SELLER_ROUTES.orders} className={styles.backLink}>
+        {t.backToOrders}
+      </Link>
+    ) : undefined;
+
+  useSetSellerShell({ title: shellTitle, subtitle: shellSubtitle, actions: shellActions });
+
   if (loading) {
     return (
-      <SellerShell title={t.title} subtitle={t.loadingSubtitle}>
-        <div className={styles.card}>
-          <Skeleton active paragraph={{ rows: 6 }} />
-        </div>
-      </SellerShell>
+      <div className={styles.card}>
+        <Skeleton active paragraph={{ rows: 6 }} />
+      </div>
     );
   }
 
   if (error || !group) {
     return (
-      <SellerShell title={t.title} subtitle={error ?? t.notFound}>
-        <div className={styles.card}>
-          <Button
-            onClick={() => {
-              void navigate(SELLER_ROUTES.orders);
-            }}
-          >
-            {t.backToOrders}
-          </Button>
-        </div>
-      </SellerShell>
+      <div className={styles.card}>
+        <Button
+          onClick={() => {
+            void navigate(SELLER_ROUTES.orders);
+          }}
+        >
+          {t.backToOrders}
+        </Button>
+      </div>
     );
   }
 
   return (
-    <SellerShell
-      title={`Order #${group.id}`}
-      subtitle={`Order ${group.orderId} · ${formatSellerDateTime(group.createdAt)}`}
-      actions={
-        <Link to={SELLER_ROUTES.orders} className={styles.backLink}>
-          {t.backToOrders}
-        </Link>
-      }
-    >
+    <>
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.card}>
@@ -286,6 +291,6 @@ export const SellerOrderDetailPage = () => {
           placeholder={t.cancelPlaceholder}
         />
       </Modal>
-    </SellerShell>
+    </>
   );
 };

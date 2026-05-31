@@ -1,0 +1,159 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fafafa;
+}
+
+.groupHeader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.groupNameInput {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #db4444;
+  }
+}
+
+.groupFlags {
+  display: flex;
+  gap: 16px;
+}
+
+.flagLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #374151;
+
+  input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: #db4444;
+  }
+}
+
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 12px;
+  border-left: 2px solid #e5e7eb;
+}
+
+.optionRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.optionNameInput {
+  flex: 2;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #db4444;
+  }
+}
+
+.optionPriceInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #db4444;
+  }
+}
+
+.removeBtn {
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #dc2626;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #fee2e2;
+    border-color: #dc2626;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.addOptionBtn {
+  align-self: flex-start;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px dashed #9ca3af;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: #db4444;
+    color: #db4444;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.addGroupBtn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px dashed #9ca3af;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    border-color: #db4444;
+    color: #db4444;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

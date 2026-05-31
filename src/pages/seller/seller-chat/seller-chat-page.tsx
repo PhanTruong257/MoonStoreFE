@@ -7,7 +7,7 @@ import {
   MessageComposer,
   MessageThread,
 } from "@/features/chat";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 
 export const SellerChatPage = () => {
   const {
@@ -25,12 +25,14 @@ export const SellerChatPage = () => {
     currentUserId,
   } = useSellerChat();
 
+  useSetSellerShell({
+    title: "Tin nhắn",
+    subtitle: "Trả lời khách hàng đang quan tâm tới sản phẩm và đơn hàng của shop.",
+    fullHeight: true,
+  });
+
   return (
-    <SellerShell
-      title="Tin nhắn"
-      subtitle="Trả lời khách hàng đang quan tâm tới sản phẩm và đơn hàng của shop."
-      fullHeight
-    >
+    <>
       <div className={styles.layout}>
         <ConversationList
           conversations={conversations}
@@ -61,6 +63,6 @@ export const SellerChatPage = () => {
           ) : null}
         </div>
       </div>
-    </SellerShell>
+    </>
   );
 };

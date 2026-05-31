@@ -1,12 +1,21 @@
 
 import type { MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { toCategorySlug } from "@/app/utils/category-slug";
+import {
+  addCompareItem,
+  isInCompare,
+  subscribeCompareUpdated,
+} from "@/app/utils/compare-store";
 import { formatMoneyShort } from "@/app/utils/format";
 import { ProductCard } from "@/component/product-card/product-card";
 import styles from "@/features/home/product-list/product-list-section.module.scss";
 import { useProductList } from "@/features/home/product-list/use-product-list";
+import { UI_TEXT } from "@/const/ui-text";
+
+const t = UI_TEXT.home.productList;
 
 type ProductListSectionProps = {
   initialCategorySlug?: string;
@@ -32,6 +41,12 @@ export const ProductListSection = ({
   searchQuery,
 }: ProductListSectionProps) => {
   const navigate = useNavigate();
+  const [, setCompareVersion] = useState(0);
+  useEffect(() => {
+    const unsub = subscribeCompareUpdated(() => setCompareVersion((v) => v + 1));
+    return unsub;
+  }, []);
+
   const {
     categories,
     error,
@@ -124,6 +139,16 @@ export const ProductListSection = ({
                 discountLabel={
                   discountPercent > 0 ? `Giảm ${discountPercent}%` : undefined
                 }
+                compareLabel={isInCompare(product.id) ? "✓ Đang so sánh" : "So sánh"}
+                onCompare={() => {
+                  addCompareItem({
+                    id: product.id,
+                    name: product.name,
+                    image: product.image,
+                    price: product.price,
+                    rating: product.rating,
+                  });
+                }}
                 renderPrice={
                   <div className={styles.priceBlock}>
                     {product.oldPrice > product.price ? (
@@ -168,9 +193,7 @@ export const ProductListSection = ({
       ) : null}
 
       {!isLoading && !error && !hasItems ? (
-        <p className={styles.emptyState}>
-          No products matched this category or keyword.
-        </p>
+        <p className={styles.emptyState}>{t.empty}</p>
       ) : null}
 
       <div className={styles.paginationRow}>
@@ -180,7 +203,7 @@ export const ProductListSection = ({
           onClick={previousPage}
           disabled={isLoading || page <= 1}
         >
-          Previous
+          {t.prev}
         </button>
 
         <div className={styles.paginationNumbers}>
@@ -203,7 +226,7 @@ export const ProductListSection = ({
         </div>
 
         <span className={styles.paginationInfo}>
-          Page {page}/{totalPages} - {total} products
+          {t.pageInfo(page, totalPages, total)}
         </span>
 
         <button
@@ -212,7 +235,7 @@ export const ProductListSection = ({
           onClick={nextPage}
           disabled={isLoading || page >= totalPages}
         >
-          Next
+          {t.next}
         </button>
       </div>
     </section>

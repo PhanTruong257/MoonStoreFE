@@ -58,7 +58,7 @@
 
 .sidebar {
   position: sticky;
-  top: 24px;
+  top: calc(var(--header-h) + 24px);
   align-self: start;
   background: var(--color-surface);
   border: 1px solid var(--color-border);

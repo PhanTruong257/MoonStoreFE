@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 
 import { AboutPage } from "@/pages/about/about-page";
 import { AuthPage } from "@/pages/auth/auth-page";
+import { CompareProductsPage } from "@/pages/compare/compare-products-page";
 import { ContactPage } from "@/pages/contact/contact-page";
 import { HomePage } from "@/pages/home/home-page";
 import { PaymentResultPage } from "@/pages/payment/payment-result-page";
@@ -59,6 +60,11 @@ export const publicRoutes: RouteObject[] = [
     path: "/payment/result",
     element: <PaymentResultPage />,
     handle: { title: "Payment Result" },
+  },
+  {
+    path: "/so-sanh",
+    element: <CompareProductsPage />,
+    handle: { title: "So sánh sản phẩm" },
   },
   {
     path: "/:categorySlug",

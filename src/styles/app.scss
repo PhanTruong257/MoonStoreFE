@@ -1,6 +1,7 @@
 :root {
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
+  --header-h: 174px; /* topStrip(30) + mainRow(102) + linksRow(42) */
   --color-bg: #fcf8f3;
   --color-surface: #ffffff;
   --color-surface-compact: #fff;
@@ -74,6 +75,7 @@
 
 body {
   margin: 0;
+  overflow-y: scroll; /* prevent scrollbar-width layout shift on page navigation */
   font-family: var(--font-body);
   color: var(--color-text);
   background:

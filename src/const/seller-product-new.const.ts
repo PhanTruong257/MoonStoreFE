@@ -12,6 +12,3 @@ export const SELLER_PRODUCT_NEW_DEFAULTS = {
 
 export const SELLER_PRODUCT_STATUS_OPTIONS =
   UI_TEXT.statusOptions.productStatusOptions;
-
-export const OPTION_GROUPS_JSON_PLACEHOLDER =
-  '[{"name":"Kích cỡ","required":true,"multiSelect":false,"options":[{"name":"S","priceDelta":0},{"name":"M","priceDelta":0}]}]';

@@ -127,6 +127,27 @@ export const UI_TEXT = {
       { title: "Loa", description: "Loa không dây Amazon" },
       { title: "Nước hoa", description: "GUCCI INTENSE OUD EDP" },
     ],
+    flashSale: {
+      label: "Hôm nay",
+      title: "Flash Sale",
+      days: "Ngày",
+      hours: "Giờ",
+      minutes: "Phút",
+      seconds: "Giây",
+      addToCart: "Thêm vào giỏ",
+      viewAll: "Xem tất cả",
+      showLess: "Thu gọn",
+      saved: "Đã lưu",
+      wish: "Yêu thích",
+      inCart: (count: number) => `${count} trong giỏ`,
+    },
+    productList: {
+      empty: "Không có sản phẩm phù hợp với danh mục hoặc từ khoá.",
+      prev: "Trước",
+      next: "Sau",
+      pageInfo: (page: number, total: number, count: number) =>
+        `Trang ${page}/${total} — ${count} sản phẩm`,
+    },
   },
 
   auth: {
@@ -519,7 +540,7 @@ export const UI_TEXT = {
       stockLabel: "Tồn kho",
       imageUrlLabel: "URL hình ảnh",
       statusLabel: "Trạng thái",
-      optionGroupsLabel: "Nhóm tuỳ chọn (JSON, tuỳ chọn)",
+      optionGroupsLabel: "Nhóm tuỳ chọn (tuỳ chọn)",
       tipText: "Mẹo: Dùng ID danh mục/thương hiệu từ cơ sở dữ liệu của bạn.",
       savingBtn: "Đang lưu...",
       publishBtn: "Đăng sản phẩm",
@@ -725,6 +746,8 @@ export const UI_TEXT = {
       statPendingRefunds: "Hoàn tiền chờ xử lý",
       statPendingWithdrawals: "Rút tiền chờ xử lý",
       reviewNow: "Xem ngay →",
+      pendingOverviewTitle: "Tổng quan yêu cầu chờ xử lý",
+      pendingOverviewDesc: "So sánh số lượng yêu cầu hoàn tiền và rút tiền đang chờ admin xử lý.",
       commissionTitle: "Tỉ lệ hoa hồng",
       commissionDesc: (rate: string) =>
         `Tỉ lệ hiện tại: ${rate}%. Người bán nhận (100 − tỉ lệ)% doanh thu sau giao hàng.`,

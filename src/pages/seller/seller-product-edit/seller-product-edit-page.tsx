@@ -16,7 +16,7 @@ import { useSellerProductEdit } from "./use-seller-product-edit";
 import { ImageUploader } from "@/component/image-uploader/image-uploader";
 import { SELLER_ROUTES } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 
 const t = UI_TEXT.seller.productEdit;
 
@@ -55,16 +55,18 @@ export const SellerProductEditPage = () => {
     handleDelete,
   } = useSellerProductEdit();
 
+  useSetSellerShell({
+    title: t.title,
+    subtitle: t.subtitle,
+    actions: (
+      <Link to={SELLER_ROUTES.products} className={styles.backLink}>
+        {t.backToProducts}
+      </Link>
+    ),
+  });
+
   return (
-    <SellerShell
-      title={t.title}
-      subtitle={t.subtitle}
-      actions={
-        <Link to={SELLER_ROUTES.products} className={styles.backLink}>
-          {t.backToProducts}
-        </Link>
-      }
-    >
+    <>
       <div className={styles.card}>
         {loading ? (
           <Skeleton active paragraph={{ rows: 6 }} />
@@ -280,6 +282,6 @@ export const SellerProductEditPage = () => {
           </Form>
         )}
       </div>
-    </SellerShell>
+    </>
   );
 };

@@ -37,6 +37,74 @@
   &:hover { text-decoration: underline; }
 }
 
+.chartBox {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.chartTitle {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.chartDesc {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.chartBars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.barMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.barLabel {
+  font-size: 13px;
+  color: #374151;
+}
+
+.barCount {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin-left: auto;
+}
+
+.barTrack {
+  flex: 1;
+  height: 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #db4444);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+  min-width: 0;
+}
+
 .commissionBox {
   background: #fff;
   border: 1px solid #e5e7eb;

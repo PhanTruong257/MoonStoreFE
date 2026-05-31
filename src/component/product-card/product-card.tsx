@@ -11,6 +11,8 @@ type ProductCardProps = {
   discountLabel?: string;
   wishlistLabel?: string;
   onWishlist?: () => void;
+  compareLabel?: string;
+  onCompare?: () => void;
   renderPrice?: ReactNode;
   renderMeta?: ReactNode;
   actionLabel?: string;
@@ -19,6 +21,7 @@ type ProductCardProps = {
   imageWrapClassName?: string;
   discountClassName?: string;
   wishlistClassName?: string;
+  compareClassName?: string;
   priceRowClassName?: string;
   metaRowClassName?: string;
   actionClassName?: string;
@@ -32,6 +35,8 @@ export const ProductCard = ({
   discountLabel,
   wishlistLabel,
   onWishlist,
+  compareLabel,
+  onCompare,
   renderPrice,
   renderMeta,
   actionLabel,
@@ -40,6 +45,7 @@ export const ProductCard = ({
   imageWrapClassName,
   discountClassName,
   wishlistClassName,
+  compareClassName,
   priceRowClassName,
   metaRowClassName,
   actionClassName,
@@ -62,6 +68,16 @@ export const ProductCard = ({
             onClick={onWishlist}
           >
             {wishlistLabel}
+          </button>
+        ) : null}
+        {compareLabel ? (
+          <button
+            type="button"
+            className={compareClassName ?? styles.compare}
+            onClick={onCompare}
+            title={compareLabel}
+          >
+            {compareLabel}
           </button>
         ) : null}
       </div>

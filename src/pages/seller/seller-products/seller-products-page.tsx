@@ -9,7 +9,7 @@ import {
   SELLER_ROUTES,
 } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 import type { SellerProductListItem } from "@/services/seller-service";
 
 const t = UI_TEXT.seller.products;
@@ -25,16 +25,18 @@ export const SellerProductsPage = () => {
     columns,
   } = useSellerProducts();
 
+  useSetSellerShell({
+    title: t.title,
+    subtitle: t.subtitle,
+    actions: (
+      <Link to={SELLER_ROUTES.productNew} className={styles.uploadLink}>
+        {t.uploadProductBtn}
+      </Link>
+    ),
+  });
+
   return (
-    <SellerShell
-      title={t.title}
-      subtitle={t.subtitle}
-      actions={
-        <Link to={SELLER_ROUTES.productNew} className={styles.uploadLink}>
-          {t.uploadProductBtn}
-        </Link>
-      }
-    >
+    <>
       <div className={styles.toolbar}>
         <Select
           value={statusFilter}
@@ -68,6 +70,6 @@ export const SellerProductsPage = () => {
           }}
         />
       </div>
-    </SellerShell>
+    </>
   );
 };

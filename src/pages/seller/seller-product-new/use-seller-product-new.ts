@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { safeParseJsonArray } from "@/app/utils/safe-parse";
 import { SELLER_PRODUCT_NEW_DEFAULTS } from "@/const/seller-product-new.const";
 import { SELLER_ROUTES } from "@/const/seller.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
@@ -22,7 +21,7 @@ type FormState = {
   basePrice: number;
   stock: number;
   imageUrl: string;
-  optionGroupsJson: string;
+  optionGroups: SellerProductOptionGroupInput[];
   status: string;
 };
 
@@ -34,7 +33,7 @@ const initialForm: FormState = {
   basePrice: SELLER_PRODUCT_NEW_DEFAULTS.BASE_PRICE,
   stock: SELLER_PRODUCT_NEW_DEFAULTS.STOCK,
   imageUrl: SELLER_PRODUCT_NEW_DEFAULTS.IMAGE_URL,
-  optionGroupsJson: "",
+  optionGroups: [],
   status: SELLER_PRODUCT_NEW_DEFAULTS.STATUS,
 };
 
@@ -102,10 +101,6 @@ export const useSellerProductNew = () => {
     setError("");
 
     try {
-      const optionGroups = safeParseJsonArray<SellerProductOptionGroupInput>(
-        form.optionGroupsJson,
-      );
-
       const response = await createProduct({
         name: form.name,
         description: form.description,
@@ -115,7 +110,7 @@ export const useSellerProductNew = () => {
         stock: form.stock,
         imageUrl: form.imageUrl,
         status: form.status,
-        optionGroups,
+        optionGroups: form.optionGroups.length > 0 ? form.optionGroups : undefined,
       });
 
       const current = loadSellerProducts(user.id);

@@ -10,6 +10,34 @@ import { useAdminRevenue } from "./use-admin-revenue";
 
 const t = UI_TEXT.admin.revenue;
 
+const PendingBar = ({
+  label,
+  value,
+  max,
+  href,
+  linkLabel,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  href: string;
+  linkLabel: string;
+}) => {
+  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  return (
+    <div className={styles.barRow}>
+      <div className={styles.barMeta}>
+        <span className={styles.barLabel}>{label}</span>
+        <strong className={styles.barCount}>{value}</strong>
+      </div>
+      <div className={styles.barTrack}>
+        <div className={styles.barFill} style={{ width: `${Math.max(pct, value > 0 ? 4 : 0)}%` }} />
+      </div>
+      <a href={href} className={styles.link}>{linkLabel}</a>
+    </div>
+  );
+};
+
 export const AdminRevenuePage = () => {
   const { data, isLoading, error, commissionRate, isUpdatingRate, updateCommissionRate } =
     useAdminRevenue();
@@ -18,6 +46,12 @@ export const AdminRevenuePage = () => {
   const handleUpdateRate = () => {
     if (rateInput !== null) updateCommissionRate(rateInput);
   };
+
+  const pendingMax = Math.max(
+    data?.pendingRefunds ?? 0,
+    data?.pendingWithdrawals ?? 0,
+    1,
+  );
 
   return (
     <AdminShell title={t.title} subtitle={t.subtitle}>
@@ -48,6 +82,27 @@ export const AdminRevenuePage = () => {
               <strong className={styles.statValue}>{data?.pendingWithdrawals ?? 0}</strong>
               <a href={ADMIN_ROUTES.withdrawals} className={styles.link}>{t.reviewNow}</a>
             </article>
+          </div>
+
+          <div className={styles.chartBox}>
+            <h3 className={styles.chartTitle}>{t.pendingOverviewTitle}</h3>
+            <p className={styles.chartDesc}>{t.pendingOverviewDesc}</p>
+            <div className={styles.chartBars}>
+              <PendingBar
+                label={t.statPendingRefunds}
+                value={data?.pendingRefunds ?? 0}
+                max={pendingMax}
+                href={ADMIN_ROUTES.refunds}
+                linkLabel={t.reviewNow}
+              />
+              <PendingBar
+                label={t.statPendingWithdrawals}
+                value={data?.pendingWithdrawals ?? 0}
+                max={pendingMax}
+                href={ADMIN_ROUTES.withdrawals}
+                linkLabel={t.reviewNow}
+              />
+            </div>
           </div>
 
           <div className={styles.commissionBox}>

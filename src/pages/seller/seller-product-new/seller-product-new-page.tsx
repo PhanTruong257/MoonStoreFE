@@ -4,13 +4,11 @@ import styles from "./seller-product-new-page.module.scss";
 import { useSellerProductNew } from "./use-seller-product-new";
 
 import { ImageUploader } from "@/component/image-uploader/image-uploader";
-import {
-  OPTION_GROUPS_JSON_PLACEHOLDER,
-  SELLER_PRODUCT_STATUS_OPTIONS,
-} from "@/const/seller-product-new.const";
+import { OptionGroupsEditor } from "@/component/option-groups-editor/option-groups-editor";
+import { SELLER_PRODUCT_STATUS_OPTIONS } from "@/const/seller-product-new.const";
 import { SELLER_ROUTES } from "@/const/seller.const";
 import { UI_TEXT } from "@/const/ui-text";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 
 const t = UI_TEXT.seller.productNew;
 
@@ -25,16 +23,18 @@ export const SellerProductNewPage = () => {
     submit,
   } = useSellerProductNew();
 
+  useSetSellerShell({
+    title: t.title,
+    subtitle: t.subtitle,
+    actions: (
+      <Link to={SELLER_ROUTES.products} className={styles.secondaryButton}>
+        {t.backToProducts}
+      </Link>
+    ),
+  });
+
   return (
-    <SellerShell
-      title={t.title}
-      subtitle={t.subtitle}
-      actions={
-        <Link to={SELLER_ROUTES.products} className={styles.secondaryButton}>
-          {t.backToProducts}
-        </Link>
-      }
-    >
+    <>
       <form
         className={styles.form}
         onSubmit={(event) => {
@@ -146,15 +146,11 @@ export const SellerProductNewPage = () => {
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="optionGroupsJson">{t.optionGroupsLabel}</label>
-          <textarea
-            id="optionGroupsJson"
-            value={form.optionGroupsJson}
-            onChange={(event) =>
-              setField("optionGroupsJson", event.target.value)
-            }
-            placeholder={OPTION_GROUPS_JSON_PLACEHOLDER}
-            rows={6}
+          <label>{t.optionGroupsLabel}</label>
+          <OptionGroupsEditor
+            value={form.optionGroups}
+            onChange={(groups) => setField("optionGroups", groups)}
+            disabled={isSaving}
           />
         </div>
 
@@ -179,6 +175,6 @@ export const SellerProductNewPage = () => {
           </Link>
         </div>
       </form>
-    </SellerShell>
+    </>
   );
 };
