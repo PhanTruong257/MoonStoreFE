@@ -1,7 +1,6 @@
 import { http } from "@/app/api/http";
 
 export type AddToCartPayload = {
-  userId?: number;
   productId: number;
   optionIds?: number[];
   quantity?: number;
@@ -48,8 +47,8 @@ export const addToCart = async (payload: AddToCartPayload) => {
   return response.data;
 };
 
-export const fetchCartByUser = async (userId: number) => {
-  const response = await http.get<CartResponse>(`/cart/user/${userId}`);
+export const fetchMyCart = async () => {
+  const response = await http.get<CartResponse>("/cart/me");
   return response.data;
 };
 

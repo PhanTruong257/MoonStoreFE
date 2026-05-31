@@ -1,4 +1,4 @@
-import { Button, Empty, Form, Input, InputNumber, Modal, Popconfirm, Skeleton, Tag } from "antd";
+import { Button, Empty, Form, Input, InputNumber, Modal, Popconfirm, Select, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 import styles from "./order-detail-page.module.scss";
@@ -12,6 +12,7 @@ import {
   formatOrdersCurrency,
   formatOrdersDateTime,
 } from "@/const/orders.const";
+import { RETURN_REQUEST_TYPE_OPTIONS } from "@/const/return.const";
 import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
@@ -22,6 +23,7 @@ const th = UI_TEXT.header;
 
 export const OrderDetailPage = () => {
   const [refundForm] = Form.useForm();
+  const [returnForm] = Form.useForm();
   const {
     order,
     isLoading,
@@ -39,6 +41,11 @@ export const OrderDetailPage = () => {
     isRefundRequesting,
     refundError,
     canRequestRefund,
+    returnModalGroupId,
+    openReturnModal,
+    closeReturnModal,
+    submitReturnRequest,
+    isReturnRequesting,
   } = useOrderDetail();
 
   return (
@@ -119,6 +126,14 @@ export const OrderDetailPage = () => {
                               {t.cancelGroupBtn}
                             </Button>
                           </Popconfirm>
+                        ) : null}
+                        {group.status === ORDER_STATUS.DELIVERED ? (
+                          <Button
+                            size="small"
+                            onClick={() => openReturnModal(group.id)}
+                          >
+                            Yêu cầu đổi/trả
+                          </Button>
                         ) : null}
                       </div>
                     </div>
@@ -228,6 +243,42 @@ export const OrderDetailPage = () => {
         sections={homeFooterSections}
         copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
       />
+
+      <Modal
+        title="Yêu cầu đổi/trả hàng"
+        open={returnModalGroupId !== null}
+        onCancel={() => {
+          closeReturnModal();
+          returnForm.resetFields();
+        }}
+        onOk={() => returnForm.submit()}
+        okText="Gửi yêu cầu"
+        confirmLoading={isReturnRequesting}
+      >
+        <Form
+          form={returnForm}
+          layout="vertical"
+          onFinish={(values) => {
+            submitReturnRequest(values);
+            returnForm.resetFields();
+          }}
+        >
+          <Form.Item
+            label="Loại yêu cầu"
+            name="type"
+            rules={[{ required: true, message: "Vui lòng chọn loại yêu cầu." }]}
+          >
+            <Select options={RETURN_REQUEST_TYPE_OPTIONS} placeholder="Chọn loại" />
+          </Form.Item>
+          <Form.Item
+            label="Lý do"
+            name="reason"
+            rules={[{ required: true, message: "Vui lòng nhập lý do." }]}
+          >
+            <Input.TextArea rows={4} placeholder="Mô tả lý do bạn muốn đổi/trả hàng..." />
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Modal
         title={t.refundModalTitle}

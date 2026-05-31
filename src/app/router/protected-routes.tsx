@@ -4,6 +4,7 @@ import {
   RequireAdmin,
   RequireAuth,
   RequireSeller,
+  RequireShipper,
 } from "@/app/router/route-guards";
 import { AccountPage } from "@/pages/account/account-page";
 import { AdminBrandsPage } from "@/pages/admin/admin-brands";
@@ -14,8 +15,10 @@ import {
   AdminOrdersPage,
 } from "@/pages/admin/admin-orders";
 import { AdminRefundsPage } from "@/pages/admin/admin-refunds/admin-refunds-page";
+import { AdminReturnsPage } from "@/pages/admin/admin-returns/admin-returns-page";
 import { AdminRevenuePage } from "@/pages/admin/admin-revenue/admin-revenue-page";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
+import { AdminShippersPage } from "@/pages/admin/admin-shippers/admin-shippers-page";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
 import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
 import { AdminWithdrawalsPage } from "@/pages/admin/admin-withdrawals/admin-withdrawals-page";
@@ -33,6 +36,10 @@ import { SellerOrdersPage } from "@/pages/seller/seller-orders";
 import { SellerProductEditPage } from "@/pages/seller/seller-product-edit";
 import { SellerProductNewPage } from "@/pages/seller/seller-product-new";
 import { SellerProductsPage } from "@/pages/seller/seller-products";
+import { SellerReturnsPage } from "@/pages/seller/seller-returns/seller-returns-page";
+import { ShipperApplyPage } from "@/pages/shipper/shipper-apply/shipper-apply-page";
+import { ShipperPendingPage } from "@/pages/shipper/shipper-pending/shipper-pending-page";
+import { ShipperShipmentsPage } from "@/pages/shipper/shipper-shipments/shipper-shipments-page";
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -67,6 +74,16 @@ export const protectedRoutes: RouteObject[] = [
         path: "/seller/apply",
         element: <SellerApplyPage />,
         handle: { title: "Become a Seller" },
+      },
+      {
+        path: "/shipper/apply",
+        element: <ShipperApplyPage />,
+        handle: { title: "Become a Shipper" },
+      },
+      {
+        path: "/shipper/pending",
+        element: <ShipperPendingPage />,
+        handle: { title: "Application Pending" },
       },
       {
         path: "/chat",
@@ -132,7 +149,27 @@ export const protectedRoutes: RouteObject[] = [
             element: <SellerWalletPage />,
             handle: { title: "My Wallet" },
           },
+          {
+            path: "/seller/returns",
+            element: <SellerReturnsPage />,
+            handle: { title: "Return Requests" },
+          },
         ],
+      },
+    ],
+  },
+  {
+    element: <RequireShipper />,
+    children: [
+      {
+        path: "/shipper",
+        element: <ShipperShipmentsPage />,
+        handle: { title: "My Shipments" },
+      },
+      {
+        path: "/shipper/shipments",
+        element: <ShipperShipmentsPage />,
+        handle: { title: "My Shipments" },
       },
     ],
   },
@@ -193,6 +230,16 @@ export const protectedRoutes: RouteObject[] = [
         path: "/admin/withdrawals",
         element: <AdminWithdrawalsPage />,
         handle: { title: "Withdrawal Requests" },
+      },
+      {
+        path: "/admin/shippers",
+        element: <AdminShippersPage />,
+        handle: { title: "Shippers" },
+      },
+      {
+        path: "/admin/returns",
+        element: <AdminReturnsPage />,
+        handle: { title: "Return Requests" },
       },
     ],
   },

@@ -2,6 +2,7 @@
 import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Rate } from "antd";
 
 import { toCategorySlug } from "@/app/utils/category-slug";
 import {
@@ -170,12 +171,12 @@ export const ProductListSection = ({
                   product.rating > 0 || product.sold > 0 ? (
                     <p className={styles.metaRow}>
                       {product.rating > 0 ? (
-                        <span aria-label={`Rating ${product.rating}`}>
-                          {"★".repeat(product.rating)}
-                          <span className={styles.metaRatingDim}>
-                            {"★".repeat(Math.max(0, 5 - product.rating))}
-                          </span>
-                        </span>
+                        <Rate
+                          disabled
+                          allowHalf
+                          value={product.rating}
+                          style={{ fontSize: 12, color: "#f59e0b" }}
+                        />
                       ) : null}
                       {product.sold > 0 ? (
                         <small>Đã bán {product.sold}</small>

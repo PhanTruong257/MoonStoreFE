@@ -17,8 +17,7 @@ import { STORAGE_KEYS } from "@/const/storage.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import { useVoucher } from "@/features/vouchers";
-import { fetchProfile } from "@/services/auth-service";
-import { fetchCartByUser } from "@/services/cart-service";
+import { fetchMyCart } from "@/services/cart-service";
 import { createOrder } from "@/services/orders-service";
 import { fetchMyAddresses } from "@/services/users-service";
 import type { UserAddress } from "@/services/users-service";
@@ -50,21 +49,26 @@ type BillingForm = Record<BillingField, string>;
 const SHIPPING_FEE = 0;
 const NEW_ADDRESS = "__new__";
 
-const initialBillingForm: BillingForm = {
-  firstName: "",
-  companyName: "",
-  streetAddress: "",
-  apartment: "",
-  city: "",
-  phone: "",
-  email: "",
-};
-
 export const useCheckoutPageData = () => {
   const [items, setItems] = useState<CheckoutItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [billing, setBilling] = useState<BillingForm>(initialBillingForm);
+
+  const { user } = useSelector<RootState, AuthState>((state) => state.auth);
+  const storedUser = getStoredUser();
+  const activeUser = user ?? storedUser;
+  const activeUserId = activeUser?.id;
+
+  const [billing, setBilling] = useState<BillingForm>({
+    firstName: activeUser?.fullName ?? "",
+    companyName: "",
+    streetAddress: "",
+    apartment: "",
+    city: "",
+    phone: "",
+    email: activeUser?.email ?? "",
+  });
+
   const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentOption>(
     CHECKOUT_PAYMENT_OPTIONS.QR,
   );
@@ -76,8 +80,6 @@ export const useCheckoutPageData = () => {
 
   const voucherState = useVoucher();
   const navigate = useNavigate();
-  const { user } = useSelector<RootState, AuthState>((state) => state.auth);
-  const activeUserId = user?.id ?? getStoredUser()?.id;
 
   useEffect(() => {
     if (!activeUserId) {
@@ -90,7 +92,7 @@ export const useCheckoutPageData = () => {
 
     const loadCart = async () => {
       try {
-        const cart = await fetchCartByUser(activeUserId);
+        const cart = await fetchMyCart();
         if (!isMounted) {
           return;
         }
@@ -156,27 +158,8 @@ export const useCheckoutPageData = () => {
       }
     };
 
-    const prefillBilling = async () => {
-      try {
-        const profile = await fetchProfile();
-        if (!isMounted) {
-          return;
-        }
-        setBilling((prev) => ({
-          ...prev,
-          firstName: prev.firstName || profile.user.fullName || "",
-          email: prev.email || profile.user.email || "",
-          phone: prev.phone || profile.user.phone || "",
-          streetAddress: prev.streetAddress || profile.address || "",
-        }));
-      } catch {
-        // Profile prefill is best-effort; ignore failures.
-      }
-    };
-
     void loadCart();
     void loadAddresses();
-    void prefillBilling();
 
     return () => {
       isMounted = false;

@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { message } from "antd";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { extractApiErrorMessage } from "@/app/utils/error-message";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { ORDER_STATUS } from "@/const/orders.const";
 import { PAYMENT_METHOD, PAYMENT_STATUS } from "@/const/payment.const";
 import { chatActions } from "@/features/chat/chat.slice";
 import { ordersActions } from "@/features/orders/orders.slice";
 import { paymentsActions } from "@/features/payments/payments.slice";
+import { returnService } from "@/services/return-service";
 
 export const useOrderDetail = () => {
   const params = useParams<{ orderId: string }>();
@@ -21,6 +24,8 @@ export const useOrderDetail = () => {
     (state: RootState) => state.orders,
   );
   const [refundModalOpen, setRefundModalOpen] = useState(false);
+  const [returnModalGroupId, setReturnModalGroupId] = useState<number | null>(null);
+  const [isReturnRequesting, setIsReturnRequesting] = useState(false);
   const { qrInfo, isQrLoading } = useSelector(
     (state: RootState) => state.payments,
   );
@@ -124,6 +129,23 @@ export const useOrderDetail = () => {
     return detail.groups.some((g) => g.status === ORDER_STATUS.DELIVERED);
   }, [detail]);
 
+  const openReturnModal = (groupId: number) => setReturnModalGroupId(groupId);
+  const closeReturnModal = () => setReturnModalGroupId(null);
+
+  const submitReturnRequest = async (values: { type: string; reason: string }) => {
+    if (!returnModalGroupId) return;
+    setIsReturnRequesting(true);
+    try {
+      await returnService.createReturnRequest(returnModalGroupId, values);
+      message.success("Gửi yêu cầu đổi/trả thành công!");
+      closeReturnModal();
+    } catch (err) {
+      message.error(extractApiErrorMessage(err, "Gửi yêu cầu thất bại."));
+    } finally {
+      setIsReturnRequesting(false);
+    }
+  };
+
   return {
     orderId,
     order: detail,
@@ -143,5 +165,10 @@ export const useOrderDetail = () => {
     isRefundRequesting,
     refundError,
     canRequestRefund,
+    returnModalGroupId,
+    openReturnModal,
+    closeReturnModal,
+    submitReturnRequest,
+    isReturnRequesting,
   };
 };

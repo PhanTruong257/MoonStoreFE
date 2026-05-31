@@ -627,6 +627,7 @@ export const UI_TEXT = {
       manageProducts: "Quản lý sản phẩm",
       uploadProduct: "Đăng sản phẩm",
       wallet: "Ví tiền",
+      returns: "Đổi/Trả hàng",
     },
   },
 
@@ -803,6 +804,7 @@ export const UI_TEXT = {
     nav: {
       dashboard: "Tổng quan",
       sellers: "Người bán",
+      shippers: "Shipper",
       users: "Người dùng",
       orders: "Đơn hàng",
       categories: "Danh mục",
@@ -811,6 +813,7 @@ export const UI_TEXT = {
       revenue: "Doanh thu",
       refunds: "Hoàn tiền",
       withdrawals: "Rút tiền",
+      returns: "Đổi/Trả hàng",
     },
   },
 

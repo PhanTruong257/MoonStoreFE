@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import { getStoredUser } from "@/features/auth/auth-storage";
 import {
   flashSaleActions,
   type FlashProduct,
@@ -53,12 +52,10 @@ function* handleAddToCart(
   action: ReturnType<typeof flashSaleActions.flashSaleAddToCartRequested>,
 ) {
   try {
-    const user = getStoredUser();
     if (!action.payload.productIdNumber) {
       throw new Error("Missing product id");
     }
     yield call(addToCartApi, {
-      userId: user?.id,
       productId: action.payload.productIdNumber,
       quantity: 1,
     });

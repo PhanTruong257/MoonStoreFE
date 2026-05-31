@@ -108,6 +108,14 @@ export const SellerShell = ({
             >
               {ts.nav.wallet}
             </NavLink>
+            <NavLink
+              to="/seller/returns"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              {ts.nav.returns}
+            </NavLink>
           </nav>
         </aside>
 

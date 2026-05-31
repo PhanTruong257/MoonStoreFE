@@ -132,6 +132,22 @@ export const AdminShell = ({
             >
               {ta.nav.withdrawals}
             </NavLink>
+            <NavLink
+              to="/admin/shippers"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              {ta.nav.shippers}
+            </NavLink>
+            <NavLink
+              to="/admin/returns"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              {ta.nav.returns}
+            </NavLink>
           </nav>
         </aside>
 

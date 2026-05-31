@@ -13,7 +13,7 @@ import { STORAGE_KEYS } from "@/const/storage.const";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import {
-  fetchCartByUser,
+  fetchMyCart,
   removeCartItem,
   updateCartItem,
 } from "@/services/cart-service";
@@ -58,7 +58,7 @@ export const useCartPageData = () => {
         return;
       }
       try {
-        const cart = await fetchCartByUser(activeUserId);
+        const cart = await fetchMyCart();
         if (!isMounted) return;
 
         const nextItems: CartItem[] = cart.items.map((item) => ({

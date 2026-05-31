@@ -268,11 +268,8 @@ export const useProductDetailData = () => {
       return false;
     }
 
-    const user = getStoredUser();
-
     try {
       await addToCart({
-        userId: user?.id,
         productId: product.rawId,
         optionIds: selectedOptionIds,
         quantity,

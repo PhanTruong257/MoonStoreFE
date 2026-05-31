@@ -54,3 +54,21 @@ export const RequireAdmin = () => {
 
   return <Outlet />;
 };
+
+export const RequireShipper = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (user.role === "admin") {
+    return <Navigate to="/admin" replace />;
+  }
+
+  if (user.role !== "shipper") {
+    return <Navigate to="/shipper/apply" replace />;
+  }
+
+  return <Outlet />;
+};

@@ -1,4 +1,5 @@
 import type { MouseEvent } from "react";
+import { Rate } from "antd";
 
 import { formatMoneyShort } from "@/app/utils/format";
 import { ProductCard } from "@/component/product-card/product-card";
@@ -121,8 +122,8 @@ export const FlashSaleSection = ({
               }
               renderMeta={
                 <p className={styles.metaRow}>
-                  <span>{"*".repeat(product.rating)}</span>
-                  <small>({product.sold})</small>
+                  <Rate disabled allowHalf value={product.rating} style={{ fontSize: 12, color: "#f59e0b" }} />
+                  {product.sold > 0 ? <small>Đã bán {product.sold}</small> : null}
                 </p>
               }
               actionLabel={t.addToCart}
