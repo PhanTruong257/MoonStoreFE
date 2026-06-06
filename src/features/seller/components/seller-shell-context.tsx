@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useLayoutEffect,
+  useRef,
   type ReactNode,
 } from "react";
 
@@ -24,12 +25,18 @@ export const SellerShellContext = createContext<ContextValue | null>(null);
  */
 export const useSetSellerShell = (props: SellerShellPageProps) => {
   const ctx = useContext(SellerShellContext);
-
-  // Serialize actions sang string để dùng làm dependency (không thể dùng ReactNode trực tiếp)
+  const propsRef = useRef<SellerShellPageProps>(props);
   const { title, subtitle, fullHeight } = props;
 
   useLayoutEffect(() => {
-    ctx?.setPageProps(props);
+    if (
+      propsRef.current.title !== title ||
+      propsRef.current.subtitle !== subtitle ||
+      propsRef.current.fullHeight !== fullHeight
+    ) {
+      propsRef.current = props;
+      ctx?.setPageProps(props);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ctx, title, subtitle, fullHeight]);
 };

@@ -121,10 +121,10 @@ export const FlashSaleSection = ({
                 </p>
               }
               renderMeta={
-                <p className={styles.metaRow}>
+                <div className={styles.metaRow}>
                   <Rate disabled allowHalf value={product.rating} style={{ fontSize: 12, color: "#f59e0b" }} />
                   {product.sold > 0 ? <small>Đã bán {product.sold}</small> : null}
-                </p>
+                </div>
               }
               actionLabel={t.addToCart}
               onAction={() => {

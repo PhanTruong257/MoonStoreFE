@@ -169,7 +169,7 @@ export const ProductListSection = ({
                 }
                 renderMeta={
                   product.rating > 0 || product.sold > 0 ? (
-                    <p className={styles.metaRow}>
+                    <div className={styles.metaRow}>
                       {product.rating > 0 ? (
                         <Rate
                           disabled
@@ -181,7 +181,7 @@ export const ProductListSection = ({
                       {product.sold > 0 ? (
                         <small>Đã bán {product.sold}</small>
                       ) : null}
-                    </p>
+                    </div>
                   ) : null
                 }
                 className={styles.productCard}
