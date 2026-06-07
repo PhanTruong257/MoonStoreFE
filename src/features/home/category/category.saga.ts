@@ -51,10 +51,10 @@ const buildHierarchy = (categories: ApiCategoryDto[]): CategoryItem[] => {
   return parentCategories;
 };
 
-function* handleCategoryInit() {
+function* handleCategoryInit(): Generator {
   try {
     console.log("[Category Saga] Fetching categories from API...");
-    const response = yield call(() =>
+    const response: any = yield call(() =>
       http.get("/catalog/categories"),
     );
 

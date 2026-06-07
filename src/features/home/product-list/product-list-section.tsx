@@ -1,10 +1,8 @@
 
 import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Rate } from "antd";
 
-import { toCategorySlug } from "@/app/utils/category-slug";
 import {
   addCompareItem,
   isInCompare,
@@ -41,7 +39,6 @@ export const ProductListSection = ({
   onProductClick,
   searchQuery,
 }: ProductListSectionProps) => {
-  const navigate = useNavigate();
   const [, setCompareVersion] = useState(0);
   useEffect(() => {
     const unsub = subscribeCompareUpdated(() => setCompareVersion((v) => v + 1));
@@ -49,7 +46,6 @@ export const ProductListSection = ({
   }, []);
 
   const {
-    categories,
     error,
     isLoading,
     items,
@@ -57,8 +53,6 @@ export const ProductListSection = ({
     page,
     previousPage,
     goToPage,
-    selectedCategoryId,
-    setCategory,
     total,
     totalPages,
   } = useProductList(searchQuery, initialCategorySlug);

@@ -20,9 +20,6 @@ type SellerShellProps = {
 };
 
 export const SellerShell = ({
-  title,
-  subtitle,
-  actions,
   children,
   fullHeight = false,
 }: SellerShellProps) => {

@@ -5,7 +5,6 @@ import { message } from "antd";
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { authActions } from "@/features/auth/auth-slice";
 import styles from "./signup-modal.module.scss";
-import { UI_TEXT } from "@/const/ui-text";
 
 type SignupModalProps = {
   isOpen: boolean;
@@ -58,8 +57,6 @@ export const SignupModal = ({ isOpen, onClose, onSignupSuccess }: SignupModalPro
   };
 
   if (!isOpen) return null;
-
-  const t = UI_TEXT.auth.signup || UI_TEXT.auth.login;
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>

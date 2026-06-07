@@ -52,10 +52,8 @@ type SiteHeaderProps = {
 
 export const SiteHeader = ({
   brand,
-  navLinks,
   search,
   categoryLink,
-  categoryItems,
   cartCount,
 }: SiteHeaderProps) => {
   const navigate = useNavigate();
@@ -67,15 +65,11 @@ export const SiteHeader = ({
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [apiCategoryItems, setApiCategoryItems] = useState<HeaderLink[]>([]);
   const [activeParentCategoryId, setActiveParentCategoryId] = useState<
     string | null
   >(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-
-  const resolvedCategoryItems =
-    categoryItems ?? (apiCategoryItems.length > 0 ? apiCategoryItems : []);
 
   const dispatch = useDispatch<AppDispatch>();
   const selectAuth = (state: RootState): AuthState => state.auth;
@@ -134,12 +128,9 @@ export const SiteHeader = ({
     let isMounted = true;
     const loadCategories = async () => {
       try {
-        const categories = await fetchCategories();
+        await fetchCategories();
         if (!isMounted) return;
-        const top = categories.filter((c) => c.parentId == null);
-        setApiCategoryItems(
-          top.map((c) => ({ label: c.name, to: `/${toCategorySlug(c.name)}` })),
-        );
+        // Categories fetched but not used (headerNav uses Redux categories instead)
       } catch {
         if (!isMounted) return;
       }

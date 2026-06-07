@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { homeCategories, type HomeCategory } from "@/pages/home/mock-data";
+import type { HomeCategory } from "@/pages/home/mock-data";
 
 export type CategoryItem = HomeCategory;
 
