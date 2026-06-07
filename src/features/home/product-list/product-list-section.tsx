@@ -67,39 +67,6 @@ export const ProductListSection = ({
 
   return (
     <section className={`page-section ${styles.sectionShell}`}>
-      <div className={styles.categoryRow}>
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            type="button"
-            aria-pressed={selectedCategoryId === category.id}
-            className={`${styles.categoryButton} ${
-              selectedCategoryId === category.id
-                ? styles.categoryButtonActive
-                : ""
-            }`}
-            onClick={() => {
-              if (selectedCategoryId === category.id) {
-                return;
-              }
-
-              setCategory(category.id);
-              if (category.id === "all") {
-                void navigate("/categories");
-                return;
-              }
-
-              const categorySlug =
-                category.slug || toCategorySlug(category.label);
-              void navigate(`/${categorySlug}`);
-            }}
-            disabled={isLoading && selectedCategoryId !== category.id}
-          >
-            {category.label}
-          </button>
-        ))}
-      </div>
-
       {isLoading ? (
         <div className={styles.loadingRow} aria-live="polite" aria-busy="true">
           <span className={styles.loadingBar} />
@@ -208,22 +175,51 @@ export const ProductListSection = ({
         </button>
 
         <div className={styles.paginationNumbers}>
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button
-                key={pageNumber}
-                type="button"
-                className={`${styles.paginationNumberButton} ${
-                  page === pageNumber ? styles.paginationNumberButtonActive : ""
-                }`}
-                onClick={() => goToPage(pageNumber)}
-                disabled={isLoading}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
+          {(() => {
+            const pages: (number | string)[] = [];
+            const range = 2;
+            const showPages = [1];
+
+            // Add pages around current page
+            for (let i = Math.max(2, page - range); i <= Math.min(totalPages - 1, page + range); i++) {
+              showPages.push(i);
+            }
+
+            // Add last page
+            if (totalPages > 1) showPages.push(totalPages);
+
+            let prevPage = 0;
+            for (const pageNum of showPages) {
+              if (pageNum !== prevPage + 1 && prevPage > 0) {
+                pages.push("...");
+              }
+              pages.push(pageNum);
+              prevPage = pageNum as number;
+            }
+
+            return pages.map((pageNum, idx) => {
+              if (pageNum === "...") {
+                return (
+                  <span key={`ellipsis-${idx}`} className={styles.paginationEllipsis}>
+                    {pageNum}
+                  </span>
+                );
+              }
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  className={`${styles.paginationNumberButton} ${
+                    page === pageNum ? styles.paginationNumberButtonActive : ""
+                  }`}
+                  onClick={() => goToPage(pageNum as number)}
+                  disabled={isLoading}
+                >
+                  {pageNum}
+                </button>
+              );
+            });
+          })()}
         </div>
 
         <span className={styles.paginationInfo}>

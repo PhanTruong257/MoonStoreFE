@@ -7,7 +7,7 @@ import {
   RETURN_REQUEST_STATUS_LABELS,
   RETURN_REQUEST_TYPE_LABELS,
 } from "@/const/return.const";
-import { SellerShell } from "@/features/seller/components/seller-shell";
+import { useSetSellerShell } from "@/features/seller/components/seller-shell-context";
 import type { ReturnRequest } from "@/services/return-service";
 import { useSellerReturns } from "./use-seller-returns";
 import styles from "./seller-returns-page.module.scss";
@@ -32,6 +32,11 @@ export const SellerReturnsPage = () => {
     handleReject,
     handleConfirmReceived,
   } = useSellerReturns();
+
+  useSetSellerShell({
+    title: "Yêu cầu Đổi/Trả hàng",
+    subtitle: "Quản lý các yêu cầu đổi/trả từ khách hàng.",
+  });
 
   const columns: ColumnsType<ReturnRequest> = [
     {
@@ -103,10 +108,7 @@ export const SellerReturnsPage = () => {
   ];
 
   return (
-    <SellerShell
-      title="Yêu cầu Đổi/Trả hàng"
-      subtitle="Quản lý các yêu cầu đổi/trả từ khách hàng."
-    >
+    <>
       <div className={styles.filterRow}>
         <span>Lọc:</span>
         <Select
@@ -128,6 +130,6 @@ export const SellerReturnsPage = () => {
           />
         )}
       </Spin>
-    </SellerShell>
+    </>
   );
 };

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { homeCategoryActions } from "@/features/home/category/category.slice";
 import { subscribeCartUpdated } from "@/app/utils/cart-event";
 import {
   addSavedSearch,
@@ -18,6 +19,8 @@ import { CartIcon, ChatIcon, SearchIcon, UserIcon } from "@/component/icons";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
+import { LoginModal } from "@/features/auth/components/login-modal";
+import { SignupModal } from "@/features/auth/components/signup-modal";
 import { useUnreadCount } from "@/features/chat/use-unread-count";
 import styles from "@/features/layout/components/site-header.module.scss";
 import { fetchMyCart } from "@/services/cart-service";
@@ -65,14 +68,21 @@ export const SiteHeader = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [apiCategoryItems, setApiCategoryItems] = useState<HeaderLink[]>([]);
+  const [activeParentCategoryId, setActiveParentCategoryId] = useState<
+    string | null
+  >(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const resolvedCategoryItems =
-    categoryItems ??
-    (apiCategoryItems.length > 0 ? apiCategoryItems : []);
+    categoryItems ?? (apiCategoryItems.length > 0 ? apiCategoryItems : []);
 
   const dispatch = useDispatch<AppDispatch>();
   const selectAuth = (state: RootState): AuthState => state.auth;
   const { user } = useSelector(selectAuth);
+  const { items: categories } = useSelector(
+    (state: RootState) => state.homeCategory,
+  );
   const storedUser = getStoredUser();
   const isLoggedIn = Boolean(user ?? storedUser);
   const [apiCartCount, setApiCartCount] = useState(0);
@@ -86,6 +96,12 @@ export const SiteHeader = ({
   const unreadChatCount = useUnreadCount(isLoggedIn);
 
   useEffect(() => {
+    if (categories.length === 0) {
+      dispatch(homeCategoryActions.categoryInitRequested());
+    }
+  }, [dispatch, categories.length]);
+
+  useEffect(() => {
     if (!isLoggedIn || !activeUserId) return;
 
     let isMounted = true;
@@ -93,7 +109,10 @@ export const SiteHeader = ({
       try {
         const cart = await fetchMyCart();
         if (!isMounted) return;
-        const nextCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        const nextCount = cart.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
         setApiCartCount(nextCount);
       } catch {
         if (!isMounted) return;
@@ -102,8 +121,13 @@ export const SiteHeader = ({
     };
 
     void loadCartCount();
-    const unsubscribe = subscribeCartUpdated(() => { void loadCartCount(); });
-    return () => { isMounted = false; unsubscribe(); };
+    const unsubscribe = subscribeCartUpdated(() => {
+      void loadCartCount();
+    });
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, [isLoggedIn, activeUserId]);
 
   useEffect(() => {
@@ -121,12 +145,17 @@ export const SiteHeader = ({
       }
     };
     void loadCategories();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node)) {
+      if (
+        searchWrapRef.current &&
+        !searchWrapRef.current.contains(e.target as Node)
+      ) {
         setIsHistoryOpen(false);
       }
     };
@@ -176,39 +205,119 @@ export const SiteHeader = ({
 
   return (
     <header className={styles.header}>
-      {/* ── Top utility strip ── */}
-      <div className={styles.topStrip}>
-        <div className={styles.topInner}>
-          <span className={styles.topPromo}>{t.promoMessage}</span>
-          <div className={styles.topLinks}>
-            {user?.role === "user" ? (
-              <Link to="/seller/apply" className={styles.topLink}>
-                {t.becomeSeller}
-              </Link>
-            ) : user?.role === "seller" ? (
-              <Link to="/seller" className={styles.topLink}>
-                {t.sellerHub}
-              </Link>
-            ) : null}
-            <Link to="/orders" className={styles.topLink}>
-              {t.myOrders}
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main row: logo | search | icons ── */}
+      {/* ── Main row: logo | category | search | icons ── */}
       <div className={styles.mainRow}>
         <Link to={brand.to} className={styles.brand}>
           {brand.label}
         </Link>
+
+        {/* Category menu */}
+        <div
+          className={styles.categoryMenu}
+          onMouseEnter={() => setIsCategoryOpen(true)}
+          onMouseLeave={() => {
+            setIsCategoryOpen(false);
+            setActiveParentCategoryId(null);
+          }}
+        >
+          <button
+            type="button"
+            className={styles.categoryButton}
+            aria-haspopup="menu"
+            aria-expanded={isCategoryOpen}
+          >
+            <span className={styles.categoryIcon}>
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>{categoryLink?.label ?? t.categoryLabel}</span>
+          </button>
+
+          <div
+            className={`${styles.categoryDropdown} ${
+              isCategoryOpen ? styles.categoryDropdownOpen : ""
+            }`}
+            role="menu"
+          >
+            {/* Left sidebar: main categories */}
+            <div className={styles.categorySidebar}>
+              {(() => {
+                const parentCategories = categories.filter(
+                  (cat) => cat.id !== "all" && cat.children?.length,
+                );
+                if (parentCategories.length === 0) return null;
+                const active = activeParentCategoryId || parentCategories[0].id;
+                return parentCategories.map((parentCat) => (
+                  <button
+                    key={parentCat.id}
+                    className={`${styles.categoryMainItem} ${
+                      active === parentCat.id
+                        ? styles.categoryMainItemActive
+                        : ""
+                    }`}
+                    type="button"
+                    onMouseEnter={() => setActiveParentCategoryId(parentCat.id)}
+                  >
+                    {parentCat.label}
+                  </button>
+                ));
+              })()}
+            </div>
+
+            {/* Right content: subcategories of active parent */}
+            <div className={styles.categoryContent}>
+              {(() => {
+                const parentCategories = categories.filter(
+                  (cat) => cat.id !== "all" && cat.children?.length,
+                );
+                const active =
+                  activeParentCategoryId ||
+                  (parentCategories.length > 0 ? parentCategories[0].id : null);
+                const activeParent = parentCategories.find(
+                  (cat) => cat.id === active,
+                );
+
+                if (!activeParent?.children) return null;
+
+                return activeParent.children.map((child) => (
+                  <div key={child.id} className={styles.categorySubSection}>
+                    <Link
+                      to={`/${toCategorySlug(child.label)}`}
+                      className={styles.categorySubTitle}
+                      onClick={() => setIsCategoryOpen(false)}
+                    >
+                      {child.label}
+                    </Link>
+                    {child.children && child.children.length > 0 ? (
+                      <div className={styles.categorySubList}>
+                        {child.children.map((subchild) => (
+                          <Link
+                            key={subchild.id}
+                            to={`/${toCategorySlug(subchild.label)}`}
+                            className={styles.categorySubLink}
+                            onClick={() => setIsCategoryOpen(false)}
+                          >
+                            {subchild.label}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+        </div>
 
         {search ? (
           <div className={styles.searchWrapper} ref={searchWrapRef}>
             <div className={styles.searchBar}>
               <input
                 placeholder={search.placeholder}
-                aria-label={search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel}
+                aria-label={
+                  search.ariaLabel ?? HEADER_TEXT.defaultSearchAriaLabel
+                }
                 value={inputValue}
                 onChange={(event) => {
                   const nextValue = event.target.value;
@@ -312,7 +421,11 @@ export const SiteHeader = ({
           >
             {user ? (
               <>
-                <button type="button" className={styles.iconBtn} title={user.fullName}>
+                <button
+                  type="button"
+                  className={styles.iconBtn}
+                  title={user.fullName}
+                >
                   <UserIcon size={22} />
                 </button>
                 <div
@@ -320,10 +433,18 @@ export const SiteHeader = ({
                     isMenuOpen ? styles.accountDropdownOpen : ""
                   }`}
                 >
-                  <Link to="/account" className={styles.accountItem} onClick={closeMenu}>
+                  <Link
+                    to="/account"
+                    className={styles.accountItem}
+                    onClick={closeMenu}
+                  >
                     {t.accountSettings}
                   </Link>
-                  <Link to="/orders" className={styles.accountItem} onClick={closeMenu}>
+                  <Link
+                    to="/orders"
+                    className={styles.accountItem}
+                    onClick={closeMenu}
+                  >
                     {t.myOrders}
                   </Link>
                   <Link
@@ -339,16 +460,28 @@ export const SiteHeader = ({
                     ) : null}
                   </Link>
                   {user.role === "admin" ? (
-                    <Link to="/admin" className={styles.accountItem} onClick={closeMenu}>
+                    <Link
+                      to="/admin"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
                       {t.adminConsole}
                     </Link>
                   ) : null}
                   {user.role === "seller" ? (
-                    <Link to="/seller" className={styles.accountItem} onClick={closeMenu}>
+                    <Link
+                      to="/seller"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
                       {t.sellerHub}
                     </Link>
                   ) : user.role === "user" ? (
-                    <Link to="/seller/apply" className={styles.accountItem} onClick={closeMenu}>
+                    <Link
+                      to="/seller/apply"
+                      className={styles.accountItem}
+                      onClick={closeMenu}
+                    >
                       {t.becomeSeller}
                     </Link>
                   ) : null}
@@ -363,63 +496,34 @@ export const SiteHeader = ({
                 </div>
               </>
             ) : (
-              <Link to="/login" className={styles.iconBtn} title={t.login} aria-label={t.login}>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                title={t.login}
+                aria-label={t.login}
+                onClick={() => setIsLoginModalOpen(true)}
+              >
                 <UserIcon size={22} />
-              </Link>
+              </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Nav row: categories + page links ── */}
-      <div className={styles.navRow}>
-        <nav className={styles.navInner}>
-          <div
-            className={styles.categoryMenu}
-            onMouseEnter={() => setIsCategoryOpen(true)}
-            onMouseLeave={() => setIsCategoryOpen(false)}
-          >
-            <button
-              type="button"
-              className={styles.categoryButton}
-              aria-haspopup="menu"
-              aria-expanded={isCategoryOpen}
-              onClick={() => setIsCategoryOpen((prev) => !prev)}
-            >
-              <span className={styles.categoryIcon}>
-                <span />
-                <span />
-                <span />
-              </span>
-              <span>{categoryLink?.label ?? t.categoryLabel}</span>
-            </button>
+      {/* ── Nav row: page links ── */}
 
-            <div
-              className={`${styles.categoryDropdown} ${
-                isCategoryOpen ? styles.categoryDropdownOpen : ""
-              }`}
-              role="menu"
-            >
-              {resolvedCategoryItems.map((item) => (
-                <Link
-                  key={`${item.label}-${item.to}`}
-                  to={item.to}
-                  className={styles.categoryItem}
-                  onClick={() => setIsCategoryOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {navLinks.map((link) => (
-            <Link key={link.to} to={link.to} className={styles.navLink}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSignupClick={() => {
+          setIsLoginModalOpen(false);
+          setIsSignupModalOpen(true);
+        }}
+      />
+      <SignupModal
+        isOpen={isSignupModalOpen}
+        onClose={() => setIsSignupModalOpen(false)}
+      />
     </header>
   );
 };

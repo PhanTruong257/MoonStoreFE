@@ -15,7 +15,7 @@ function* handleProductListRequested(
   try {
     const selectedCategoryId = action.payload?.categoryId ?? "all";
     const page = action.payload?.page ?? 1;
-    const limit = action.payload?.limit ?? 8;
+    const limit = action.payload?.limit ?? 24;
 
     const existingCategories = (yield select(
       (state: RootState) => state.productList.categories,
@@ -31,13 +31,11 @@ function* handleProductListRequested(
 
       categories = [
         { id: "all", label: "All", slug: "all" },
-        ...categoryResponse
-          .filter((item) => item.parentId == null)
-          .map((item) => ({
-            id: String(item.id),
-            label: item.name,
-            slug: toCategorySlug(item.name),
-          })),
+        ...categoryResponse.map((item) => ({
+          id: String(item.id),
+          label: item.name,
+          slug: toCategorySlug(item.name),
+        })),
       ];
     }
 

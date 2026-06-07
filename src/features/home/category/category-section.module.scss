@@ -35,22 +35,122 @@
 .categoryGrid {
   margin-top: 18px;
   display: grid;
-  grid-template-columns: repeat(6, minmax(100px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
 
-  button {
-    height: 96px;
-    border: 1px solid var(--color-gray-220);
-    border-radius: 8px;
-    background: #fff;
-    cursor: pointer;
+.categoryCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-decoration: none;
+  background: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #db4444;
+    box-shadow: 0 4px 12px rgba(219, 68, 68, 0.1);
+    transform: translateY(-2px);
   }
+}
+
+.categoryCardIcon {
+  font-size: 32px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categoryCardLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.categoryItem {
+  position: relative;
+}
+
+.categoryButton {
+  height: 96px;
+  width: 100%;
+  border: 1px solid var(--color-gray-220);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-danger);
+    background: var(--color-danger-50, rgba(239, 68, 68, 0.05));
+  }
+}
+
+.arrow {
+  font-size: 18px;
+  margin-left: 4px;
 }
 
 .categoryActive {
   background: var(--color-danger) !important;
   color: #fff;
   border-color: var(--color-danger) !important;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--color-gray-220);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  margin-top: -1px;
+  display: none;
+  flex-direction: column;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+.categoryItem:hover .dropdown {
+  display: flex;
+}
+
+.dropdownItem {
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text);
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--color-danger-50, rgba(239, 68, 68, 0.08));
+    color: var(--color-danger);
+    font-weight: 500;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-gray-220);
+  }
 }
 
 @media (max-width: 1100px) {

@@ -50,7 +50,7 @@ const initialState: ProductListState = {
   categories: [{ id: "all", label: "All", slug: "all" }],
   selectedCategoryId: "all",
   page: 1,
-  limit: 8,
+  limit: 24,
   total: 0,
   totalPages: 1,
   isLoading: false,

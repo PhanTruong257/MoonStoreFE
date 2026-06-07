@@ -327,8 +327,9 @@
 .paginationNumbers {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
+  max-width: 600px;
 }
 
 .paginationNumberButton {
@@ -361,6 +362,16 @@
 .paginationNumberButton:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.paginationEllipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-slate-400);
+  font-weight: 500;
 }
 
 .skeletonGrid {

@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -16,9 +16,9 @@ import { sellerProductsActions } from "@/features/seller/seller-products/seller-
 import type { SellerProductListItem } from "@/services/seller-service";
 
 const DEFAULT_STATUS_FILTER = "ALL";
-const STATUS_LABEL_LIVE = "Live";
-const STATUS_LABEL_DRAFT = "Draft";
-const STATUS_LABEL_DELETED = "Deleted";
+const STATUS_LABEL_LIVE = "Đang bán";
+const STATUS_LABEL_DRAFT = "Nháp";
+const STATUS_LABEL_DELETED = "Đã xoá";
 
 const getStatusTag = (status: string) => {
   if (status === SELLER_PRODUCT_STATUS.ACTIVE) {
@@ -48,17 +48,48 @@ export const useSellerProducts = () => {
     dispatch(sellerProductsActions.sellerProductDeleteRequested(productId));
   };
 
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    products.forEach((p) => {
+      if (p.categoryName) cats.add(p.categoryName);
+    });
+    return Array.from(cats).sort();
+  }, [products]);
+
+  // State for filters
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+
   const filtered = useMemo(() => {
-    if (statusFilter === DEFAULT_STATUS_FILTER) {
-      return products;
+    let result = products;
+
+    // Filter by status
+    if (statusFilter !== DEFAULT_STATUS_FILTER) {
+      result = result.filter((item) => item.status === statusFilter);
     }
-    return products.filter((item) => item.status === statusFilter);
-  }, [products, statusFilter]);
+
+    // Filter by category
+    if (selectedCategory) {
+      result = result.filter((item) => item.categoryName === selectedCategory);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((item) =>
+        item.name.toLowerCase().includes(query) ||
+        item.id.toString().includes(query)
+      );
+    }
+
+    return result;
+  }, [products, statusFilter, selectedCategory, searchQuery]);
 
   const columns: ColumnsType<SellerProductListItem> = useMemo(
     () => [
       {
-        title: "Product",
+        title: "Sản phẩm",
         key: "product",
         render: (_, record) => (
           <div className={styles.productCell}>
@@ -75,17 +106,17 @@ export const useSellerProducts = () => {
         ),
       },
       {
-        title: "Price",
+        title: "Giá",
         align: "right",
         render: (_, record) => formatSellerCurrency(record.basePrice),
       },
       {
-        title: "Stock",
+        title: "Tồn kho",
         align: "right",
-        render: (_, record) => `${record.stock} units`,
+        render: (_, record) => `${record.stock} cái`,
       },
       {
-        title: "Status",
+        title: "Trạng thái",
         dataIndex: "status",
         render: (status: string) => {
           const tag = getStatusTag(status);
@@ -99,11 +130,12 @@ export const useSellerProducts = () => {
         render: (_, record) => (
           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
             <Link to={`${SELLER_ROUTES.products}/${record.id}/edit`}>
-              <Button size="small">Edit</Button>
+              <Button size="small">Chỉnh sửa</Button>
             </Link>
             <Popconfirm
-              title="Delete this product?"
-              okText="Delete"
+              title="Xoá sản phẩm này?"
+              okText="Xoá"
+              cancelText="Huỷ"
               okButtonProps={{ danger: true }}
               onConfirm={() => handleDelete(record.id)}
               disabled={record.status === "deleted"}
@@ -113,7 +145,7 @@ export const useSellerProducts = () => {
                 danger
                 disabled={record.status === "deleted"}
               >
-                Delete
+                Xoá
               </Button>
             </Popconfirm>
           </div>
@@ -132,6 +164,11 @@ export const useSellerProducts = () => {
     filtered,
     statusFilter,
     setStatusFilter,
+    searchQuery,
+    setSearchQuery,
+    categories,
+    selectedCategory,
+    setSelectedCategory,
     columns,
   };
 };

@@ -1,4 +1,4 @@
-import { Button, Select, Table } from "antd";
+import { Button, Input, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 
 import styles from "./seller-products-page.module.scss";
@@ -22,6 +22,11 @@ export const SellerProductsPage = () => {
     filtered,
     statusFilter,
     setStatusFilter,
+    searchQuery,
+    setSearchQuery,
+    categories,
+    selectedCategory,
+    setSelectedCategory,
     columns,
   } = useSellerProducts();
 
@@ -38,6 +43,24 @@ export const SellerProductsPage = () => {
   return (
     <>
       <div className={styles.toolbar}>
+        <Input
+          placeholder="Tìm sản phẩm..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ width: 200 }}
+          allowClear
+        />
+        <Select
+          placeholder="Danh mục"
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          options={[
+            { label: "Tất cả danh mục", value: null },
+            ...categories.map((cat) => ({ label: cat, value: cat })),
+          ]}
+          style={{ width: 180 }}
+          allowClear
+        />
         <Select
           value={statusFilter}
           onChange={setStatusFilter}

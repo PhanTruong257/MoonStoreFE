@@ -10,6 +10,7 @@ export type HomeBanner = {
 export type HomeCategory = {
   id: string;
   label: string;
+  children?: HomeCategory[];
 };
 
 export type HomeProduct = {
@@ -112,14 +113,216 @@ export const homeBanners: HomeBanner[] = [
 
 export const homeCategories: HomeCategory[] = [
   { id: "all", label: "All" },
-  { id: "phone", label: "Phones" },
-  { id: "computer", label: "Computers" },
-  { id: "watch", label: "Smart Watch" },
-  { id: "camera", label: "Camera" },
-  { id: "headphone", label: "Headphones" },
-  { id: "gaming", label: "Gaming" },
-  { id: "fashion", label: "Fashion" },
-  { id: "furniture", label: "Furniture" },
+  {
+    id: "phones-devices",
+    label: "Điện Thoại & Thiết Bị Số",
+    children: [
+      {
+        id: "smartphone",
+        label: "Điện thoại",
+        children: [
+          { id: "phone-apple", label: "Apple (iPhone)" },
+          { id: "phone-samsung", label: "Samsung (Galaxy)" },
+          { id: "phone-oppo", label: "OPPO" },
+          { id: "phone-xiaomi", label: "Xiaomi" },
+          { id: "phone-honor", label: "HONOR" },
+          { id: "phone-other", label: "Hãng khác" },
+          { id: "phone-ai", label: "Điện thoại AI" },
+          { id: "phone-foldable", label: "Điện thoại gập" },
+          { id: "phone-5g", label: "5G" },
+          { id: "phone-gaming", label: "Gaming Phone" },
+        ],
+      },
+      {
+        id: "tablet",
+        label: "Máy tính bảng & Máy đọc sách",
+        children: [
+          { id: "ipad", label: "iPad" },
+          { id: "galaxy-tab", label: "Samsung Galaxy Tab" },
+          { id: "honor-pad", label: "Honor Pad" },
+          { id: "e-reader", label: "Máy đọc sách (Kindle, Boox)" },
+        ],
+      },
+      {
+        id: "smartwatch",
+        label: "Đồng hồ thông minh",
+        children: [
+          { id: "apple-watch", label: "Apple Watch" },
+          { id: "samsung-watch", label: "Samsung Watch" },
+          { id: "garmin", label: "Garmin" },
+          { id: "amazfit", label: "Amazfit" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "computers-office",
+    label: "Máy Tính & Thiết Bị Văn Phòng",
+    children: [
+      {
+        id: "laptop",
+        label: "Laptop",
+        children: [
+          { id: "macbook", label: "MacBook" },
+          { id: "asus", label: "Asus" },
+          { id: "lenovo", label: "Lenovo" },
+          { id: "dell", label: "Dell" },
+          { id: "acer", label: "Acer" },
+          { id: "hp", label: "HP" },
+          { id: "laptop-gaming-graphics", label: "Gaming & Đồ họa" },
+          { id: "laptop-ai", label: "Laptop AI" },
+          { id: "laptop-student", label: "Sinh viên - Văn phòng" },
+          { id: "laptop-ultrabook", label: "Mỏng nhẹ" },
+        ],
+      },
+      {
+        id: "desktop-pc",
+        label: "PC - Máy tính để bàn",
+        children: [
+          { id: "pc-office", label: "PC Văn phòng" },
+          { id: "pc-gaming", label: "PC Gaming" },
+          { id: "pc-workstation", label: "PC Workstation" },
+        ],
+      },
+      {
+        id: "monitor",
+        label: "Màn hình",
+        children: [
+          { id: "monitor-asus", label: "Asus" },
+          { id: "monitor-dell", label: "Dell" },
+          { id: "monitor-lg", label: "LG" },
+          { id: "monitor-msi", label: "MSI" },
+        ],
+      },
+      {
+        id: "pc-components",
+        label: "Linh kiện PC",
+        children: [
+          { id: "cpu", label: "CPU" },
+          { id: "ram", label: "RAM" },
+          { id: "vga", label: "VGA (Card màn hình)" },
+          { id: "motherboard", label: "Mainboard" },
+          { id: "storage", label: "Ổ cứng (SSD/HDD)" },
+          { id: "psu", label: "Nguồn" },
+          { id: "case", label: "Vỏ Case" },
+          { id: "cooler", label: "Tản nhiệt" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "home-appliances",
+    label: "Điện Máy & Điện Lạnh",
+    children: [
+      {
+        id: "television",
+        label: "Tivi",
+        children: [
+          { id: "tv-4k", label: "Tivi 4K" },
+          { id: "tv-qled", label: "Tivi QLED" },
+          { id: "tv-google", label: "Google TV" },
+          { id: "tv-samsung", label: "Samsung" },
+          { id: "tv-sony", label: "Sony" },
+          { id: "tv-lg", label: "LG" },
+        ],
+      },
+      {
+        id: "air-conditioner",
+        label: "Máy lạnh - Điều hòa",
+        children: [
+          { id: "ac-1way", label: "1 chiều" },
+          { id: "ac-2way", label: "2 chiều" },
+          { id: "ac-inverter", label: "Inverter" },
+          { id: "ac-panasonic", label: "Panasonic" },
+          { id: "ac-daikin", label: "Daikin" },
+        ],
+      },
+      {
+        id: "refrigerator",
+        label: "Tủ lạnh - Tủ đông",
+        children: [
+          { id: "fridge-sbs", label: "Tủ Side-by-Side" },
+          { id: "fridge-multi", label: "Multi-Door" },
+          { id: "fridge-bottom", label: "Ngăn đá dưới" },
+          { id: "fridge-lg", label: "LG" },
+          { id: "fridge-samsung", label: "Samsung" },
+        ],
+      },
+      {
+        id: "washing-machine",
+        label: "Máy giặt & Máy sấy",
+        children: [
+          { id: "washer-front", label: "Máy giặt cửa trước" },
+          { id: "washer-top", label: "Máy giặt cửa trên" },
+          { id: "washer-dryer", label: "Máy giặt sấy" },
+          { id: "dryer-air", label: "Máy sấy thông hơi" },
+          { id: "dryer-condense", label: "Máy sấy ngưng tụ" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "accessories-gaming",
+    label: "Phụ Kiện & Gaming Gear",
+    children: [
+      {
+        id: "audio",
+        label: "Âm thanh",
+        children: [
+          { id: "headphone-earbuds", label: "Tai nghe nhét tai" },
+          { id: "headphone-over", label: "Tai nghe chụp tai" },
+          { id: "headphone-wireless", label: "Tai nghe không dây" },
+          { id: "speaker-bluetooth", label: "Loa Bluetooth" },
+          { id: "speaker-karaoke", label: "Loa Karaoke" },
+        ],
+      },
+      {
+        id: "mobile-accessories",
+        label: "Phụ kiện di động",
+        children: [
+          { id: "charger-cable", label: "Sạc & Cáp" },
+          { id: "powerbank", label: "Pin dự phòng" },
+          { id: "case", label: "Ốp lưng" },
+          { id: "screen-protector", label: "Dán màn hình" },
+          { id: "memory-card", label: "Thẻ nhớ" },
+          { id: "tracker", label: "Airtag/Định vị" },
+        ],
+      },
+      {
+        id: "laptop-accessories",
+        label: "Phụ kiện Laptop",
+        children: [
+          { id: "mouse", label: "Chuột" },
+          { id: "keyboard", label: "Bàn phím" },
+          { id: "laptop-bag", label: "Balo" },
+          { id: "hub", label: "Hub chuyển đổi" },
+          { id: "external-drive", label: "Ổ cứng di động" },
+          { id: "usb-device", label: "USB & Thiết bị ngoại vi" },
+        ],
+      },
+      {
+        id: "gaming-gear",
+        label: "Gaming Gear",
+        children: [
+          { id: "gaming-mouse", label: "Chuột Gaming" },
+          { id: "gaming-keyboard", label: "Bàn phím Gaming" },
+          { id: "gaming-headset", label: "Tai nghe Gaming" },
+          { id: "gaming-controller", label: "Tay cầm chơi game" },
+          { id: "gaming-mousepad", label: "Lót chuột Gaming" },
+        ],
+      },
+      {
+        id: "other-devices",
+        label: "Thiết bị khác",
+        children: [
+          { id: "action-camera", label: "Camera hành động" },
+          { id: "drone", label: "Flycam" },
+          { id: "smartglass", label: "Kính thông minh" },
+          { id: "tvbox", label: "TV Box" },
+        ],
+      },
+    ],
+  },
 ];
 
 const _sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

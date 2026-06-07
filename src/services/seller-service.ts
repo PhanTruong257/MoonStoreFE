@@ -91,6 +91,7 @@ export type SellerProductListItem = {
   description: string | null;
   status: string;
   categoryId: number;
+  categoryName?: string;
   brandId: number;
   basePrice: number;
   stock: number;

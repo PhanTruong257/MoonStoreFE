@@ -1,12 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { homeCategories } from "@/pages/home/mock-data";
+import { homeCategories, type HomeCategory } from "@/pages/home/mock-data";
 
-export type CategoryItem = {
-  id: string;
-  label: string;
-};
+export type CategoryItem = HomeCategory;
 
 type HomeCategoryState = {
   items: CategoryItem[];
@@ -17,10 +14,10 @@ type HomeCategoryState = {
 };
 
 const initialState: HomeCategoryState = {
-  items: homeCategories,
+  items: [],
   start: 0,
   activeCategoryId: "all",
-  isLoading: false,
+  isLoading: true,
   error: null,
 };
 

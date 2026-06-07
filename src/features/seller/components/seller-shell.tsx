@@ -38,13 +38,6 @@ export const SellerShell = ({
         search={{ placeholder: UI_TEXT.header.searchPlaceholder }}
       />
 
-      <section className={styles.hero}>
-        <span className={styles.heroLabel}>{ts.studioLabel}</span>
-        <h1 className={styles.heroTitle}>{title}</h1>
-        <p className={styles.heroSubtitle}>{subtitle}</p>
-        {actions ? <div className={styles.heroActions}>{actions}</div> : null}
-      </section>
-
       <section
         className={`${styles.main}${fullHeight ? ` ${styles.mainFullHeight}` : ""}`}
       >
