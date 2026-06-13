@@ -48,11 +48,12 @@ export const useSellerOrderDetail = () => {
     dispatch(sellerOrderDetailActions.sellerOrderDetailRequested(groupId));
   }, [dispatch, groupId, qrInfo]);
 
-  const nextStatus = group ? getNextOrderStatus(group.status) : null;
+  const nextStatus =
+    group?.status === SELLER_ORDER_STATUS.PENDING
+      ? getNextOrderStatus(group.status)
+      : null;
   const canCancel = Boolean(
-    group &&
-      group.status !== SELLER_ORDER_STATUS.CANCELLED &&
-      group.status !== SELLER_ORDER_STATUS.DELIVERED,
+    group && group.status === SELLER_ORDER_STATUS.PENDING,
   );
   const totalAmount = group ? group.subtotal + group.shippingFee : 0;
 

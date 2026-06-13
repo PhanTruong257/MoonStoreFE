@@ -87,6 +87,22 @@ export const setUserStatus = async (
   return response.data.user;
 };
 
+export type GrantUserRolePayload = {
+  role: "seller" | "shipper";
+  shopName?: string;
+};
+
+export const grantUserRole = async (
+  userId: number,
+  payload: GrantUserRolePayload,
+) => {
+  const response = await http.patch<{ user: AdminUser }>(
+    `/admin/users/${userId}/grant-role`,
+    payload,
+  );
+  return response.data.user;
+};
+
 export const setSellerStatus = async (
   sellerId: number,
   next: "disable" | "enable",

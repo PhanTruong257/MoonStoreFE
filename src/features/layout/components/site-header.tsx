@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { homeCategoryActions } from "@/features/home/category/category.slice";
 import { subscribeCartUpdated } from "@/app/utils/cart-event";
+import { dispatchOpenLoginModal } from "@/app/utils/login-modal-event";
 import {
   addSavedSearch,
   clearSavedSearches,
@@ -19,8 +20,6 @@ import { CartIcon, ChatIcon, SearchIcon, UserIcon } from "@/component/icons";
 import type { AuthState } from "@/features/auth/auth-slice";
 import { authActions } from "@/features/auth/auth-slice";
 import { getStoredUser } from "@/features/auth/auth-storage";
-import { LoginModal } from "@/features/auth/components/login-modal";
-import { SignupModal } from "@/features/auth/components/signup-modal";
 import { useUnreadCount } from "@/features/chat/use-unread-count";
 import styles from "@/features/layout/components/site-header.module.scss";
 import { fetchMyCart } from "@/services/cart-service";
@@ -68,8 +67,6 @@ export const SiteHeader = ({
   const [activeParentCategoryId, setActiveParentCategoryId] = useState<
     string | null
   >(null);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const selectAuth = (state: RootState): AuthState => state.auth;
@@ -123,6 +120,7 @@ export const SiteHeader = ({
       unsubscribe();
     };
   }, [isLoggedIn, activeUserId]);
+
 
   useEffect(() => {
     let isMounted = true;
@@ -392,7 +390,7 @@ export const SiteHeader = ({
               if (isLoggedIn) {
                 void navigate("/cart");
               } else {
-                void navigate("/login", { state: { from: "/cart" } });
+                dispatchOpenLoginModal();
               }
             }}
             aria-label={t.cartLabel}
@@ -492,7 +490,7 @@ export const SiteHeader = ({
                 className={styles.iconBtn}
                 title={t.login}
                 aria-label={t.login}
-                onClick={() => setIsLoginModalOpen(true)}
+                onClick={() => dispatchOpenLoginModal()}
               >
                 <UserIcon size={22} />
               </button>
@@ -502,19 +500,6 @@ export const SiteHeader = ({
       </div>
 
       {/* ── Nav row: page links ── */}
-
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onSignupClick={() => {
-          setIsLoginModalOpen(false);
-          setIsSignupModalOpen(true);
-        }}
-      />
-      <SignupModal
-        isOpen={isSignupModalOpen}
-        onClose={() => setIsSignupModalOpen(false)}
-      />
     </header>
   );
 };

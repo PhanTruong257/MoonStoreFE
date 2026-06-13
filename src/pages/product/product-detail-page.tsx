@@ -1,6 +1,8 @@
 import { Image, Rate } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import styles from "./product-detail-page.module.scss";
 import { useProductDetailData } from "./use-product-detail-data";
 
@@ -92,7 +94,7 @@ export const ProductDetailPage = () => {
                   onClick={() => setSelectedImage(index)}
                   className={index === selectedImage ? styles.thumbActive : ""}
                 >
-                  <img src={image} alt={`${product.name} ${index + 1}`} />
+                  <img src={resolveImageUrl(image)} alt={`${product.name} ${index + 1}`} />
                 </button>
               ))}
             </div>

@@ -2,6 +2,7 @@ import styles from "./checkout-page.module.scss";
 import { useCheckoutPageData } from "./use-checkout-page-data";
 
 import { formatMoneyShort } from "@/app/utils/format";
+import { resolveImageUrl } from "@/app/utils/image-url";
 import { Breadcrumb } from "@/component/breadcrumb/breadcrumb";
 import { SharedButton } from "@/component/shared-button/shared-button";
 import { SharedInput } from "@/component/shared-input/shared-input";
@@ -196,7 +197,7 @@ export const CheckoutPage = () => {
               {checkoutItems.map((item) => (
                 <article key={item.id} className={styles.item}>
                   <div className={styles.itemInfo}>
-                    <img src={item.image} alt={item.name} />
+                    <img src={resolveImageUrl(item.image)} alt={item.name} />
                     <span>{item.name}</span>
                   </div>
                   <strong>{formatMoneyShort(item.price * item.quantity)}</strong>
@@ -226,7 +227,7 @@ export const CheckoutPage = () => {
             </div>
 
             <div className={styles.paymentOptions}>
-                <div className={styles.paymentRow}>
+              <div className={styles.paymentRow}>
                 <label>
                   <input
                     type="radio"
@@ -238,6 +239,20 @@ export const CheckoutPage = () => {
                     disabled={isSubmitting}
                   />
                   {CHECKOUT_TEXT.paymentQR}
+                </label>
+              </div>
+              <div className={styles.paymentRow}>
+                <label>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY}
+                    onChange={() =>
+                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.VNPAY)
+                    }
+                    disabled={isSubmitting}
+                  />
+                  {CHECKOUT_TEXT.paymentVNPay}
                 </label>
               </div>
             </div>

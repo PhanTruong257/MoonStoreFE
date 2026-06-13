@@ -3,7 +3,6 @@ import { http } from "@/app/api/http";
 export interface ShipperProfile {
   id: number;
   userId: number;
-  vehicleType: string;
   status: string;
   rejectReason: string | null;
   createdAt: string;
@@ -25,8 +24,8 @@ export interface ShipperShipment {
 }
 
 export const shipperService = {
-  apply: async (vehicleType: string): Promise<{ id: number; status: string }> => {
-    const res = await http.post("/shipper/apply", { vehicleType });
+  apply: async (): Promise<{ id: number; status: string }> => {
+    const res = await http.post("/shipper/apply", {});
     return res.data;
   },
 

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import styles from "./conversation-list.module.scss";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import type { AppDispatch } from "@/app/app-store";
 import { formatChatRelativeDate } from "@/const/chat.const";
 import { chatActions } from "@/features/chat/chat.slice";
@@ -91,7 +93,7 @@ export const ConversationList = ({
           >
             <div className={styles.avatar}>
               {conversation.product?.imageUrl ? (
-                <img src={conversation.product.imageUrl} alt={peer} />
+                <img src={resolveImageUrl(conversation.product.imageUrl)} alt={peer} />
               ) : (
                 <span>{peer.charAt(0).toUpperCase()}</span>
               )}

@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 
+import { env } from "@/app/config/env";
+
 export type AiChatRole = "user" | "assistant";
 
 export type AiMessage = {
@@ -14,7 +16,7 @@ type AiSseChunk = {
   error?: string;
 };
 
-const AI_CHAT_ENDPOINT = "/api/ai/chat";
+const AI_CHAT_ENDPOINT = `${env.apiBaseUrl}/ai/chat`;
 
 export const useAiChat = () => {
   const [isOpen, setIsOpen] = useState(false);

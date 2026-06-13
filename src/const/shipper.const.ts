@@ -56,10 +56,3 @@ export const SHIPMENT_STATUS_COLORS: Record<string, string> = {
   [SHIPMENT_STATUS.DELIVERED]: "green",
   [SHIPMENT_STATUS.FAILED]: "red",
 };
-
-export const VEHICLE_TYPE_OPTIONS = [
-  { value: "motorcycle", label: "Xe máy" },
-  { value: "bicycle", label: "Xe đạp" },
-  { value: "car", label: "Ô tô" },
-  { value: "truck", label: "Xe tải" },
-];

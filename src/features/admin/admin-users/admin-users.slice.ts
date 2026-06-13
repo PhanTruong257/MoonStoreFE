@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { ADMIN_FILTER_ALL } from "@/const/admin.const";
 import type { AdminUserRoleFilter as RoleFilter } from "@/const/admin.const";
-import type { AdminUser } from "@/services/admin-service";
+import type { AdminUser, GrantUserRolePayload } from "@/services/admin-service";
 
 export type { RoleFilter };
 
@@ -14,6 +14,10 @@ export type AdminUsersState = {
   isActing: boolean;
   actingId: number | null;
   error: string | null;
+  grantRoleModal: {
+    open: boolean;
+    userId: number | null;
+  };
 };
 
 const initialState: AdminUsersState = {
@@ -23,6 +27,10 @@ const initialState: AdminUsersState = {
   isActing: false,
   actingId: null,
   error: null,
+  grantRoleModal: {
+    open: false,
+    userId: null,
+  },
 };
 
 const slice = createSlice({
@@ -56,9 +64,23 @@ const slice = createSlice({
       state.isActing = true;
       state.actingId = action.payload;
     },
+    grantRoleModalOpened: (state, action: PayloadAction<number>) => {
+      state.grantRoleModal = { open: true, userId: action.payload };
+    },
+    grantRoleModalClosed: (state) => {
+      state.grantRoleModal = { open: false, userId: null };
+    },
+    grantRoleRequested: (
+      state,
+      _action: PayloadAction<{ userId: number } & GrantUserRolePayload>,
+    ) => {
+      state.isActing = true;
+      state.actingId = _action.payload.userId;
+    },
     actionSucceeded: (state) => {
       state.isActing = false;
       state.actingId = null;
+      state.grantRoleModal = { open: false, userId: null };
     },
     actionFailed: (state, action: PayloadAction<string>) => {
       state.isActing = false;

@@ -9,12 +9,28 @@ import { HomePage } from "@/pages/home/home-page";
 import { PaymentResultPage } from "@/pages/payment/payment-result-page";
 import { ProductDetailPage } from "@/pages/product/product-detail-page";
 import { ShopPage } from "@/pages/shop/shop-page/shop-page";
+import { RedirectByRole } from "@/app/router/route-guards";
 
 export const publicRoutes: RouteObject[] = [
   {
-    path: "/",
-    element: <Navigate to="/home" replace />,
-    handle: { title: "Home" },
+    element: <RedirectByRole />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/home" replace />,
+        handle: { title: "Home" },
+      },
+      {
+        path: "/login",
+        element: <AuthPage />,
+        handle: { title: "Login" },
+      },
+      {
+        path: "/register",
+        element: <AuthPage />,
+        handle: { title: "Register" },
+      },
+    ],
   },
   {
     path: "/home",
@@ -35,16 +51,6 @@ export const publicRoutes: RouteObject[] = [
     path: "/contact",
     element: <ContactPage />,
     handle: { title: "Contact" },
-  },
-  {
-    path: "/login",
-    element: <AuthPage />,
-    handle: { title: "Login" },
-  },
-  {
-    path: "/register",
-    element: <AuthPage />,
-    handle: { title: "Register" },
   },
   {
     path: "/product/:productId",

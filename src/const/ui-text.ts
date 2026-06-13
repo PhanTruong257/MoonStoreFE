@@ -283,6 +283,7 @@ export const UI_TEXT = {
     freeShipping: "Miễn phí",
     noDiscount: "-",
     paymentQR: "Chuyển khoản QR",
+    paymentVNPay: "Thanh toán VNPay",
   },
 
   contact: {
@@ -731,6 +732,7 @@ export const UI_TEXT = {
       editModalTitle: "Sửa mã giảm giá",
       newModalTitle: "Mã giảm giá mới",
       saveOk: "Lưu",
+      generateCodeBtn: "Tạo mới",
       codeRequired: "Mã là bắt buộc",
       valueRequired: "Giá trị là bắt buộc",
       expired: "HẾT HẠN",
@@ -805,6 +807,7 @@ export const UI_TEXT = {
       dashboard: "Tổng quan",
       sellers: "Người bán",
       shippers: "Shipper",
+      shipments: "Giao hàng",
       users: "Người dùng",
       orders: "Đơn hàng",
       categories: "Danh mục",

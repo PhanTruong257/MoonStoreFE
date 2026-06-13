@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./seller-order-detail-page.module.scss";
 import { useSellerOrderDetail } from "./use-seller-order-detail";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
 import { PAYMENT_STATUS } from "@/const/payment.const";
 import {
   SELLER_ORDER_STATUS_COLORS,
@@ -96,7 +97,7 @@ export const SellerOrderDetailPage = () => {
               {group.items.map((item) => (
                 <div key={item.id} className={styles.item}>
                   <img
-                    src={item.imageUrl}
+                    src={resolveImageUrl(item.imageUrl)}
                     alt={item.productName}
                     className={styles.itemThumb}
                   />

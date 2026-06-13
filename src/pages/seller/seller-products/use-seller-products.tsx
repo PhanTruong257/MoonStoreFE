@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import styles from "./seller-products-page.module.scss";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { resolveImageUrl } from "@/app/utils/image-url";
 import {
   SELLER_PRODUCT_STATUS,
   SELLER_ROUTES,
@@ -94,7 +95,7 @@ export const useSellerProducts = () => {
         render: (_, record) => (
           <div className={styles.productCell}>
             <img
-              src={record.imageUrl}
+              src={resolveImageUrl(record.imageUrl)}
               alt={record.name}
               className={styles.productThumb}
             />

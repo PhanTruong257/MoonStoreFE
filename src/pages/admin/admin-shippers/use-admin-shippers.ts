@@ -8,7 +8,6 @@ import { SHIPPER_STATUS } from "@/const/shipper.const";
 export interface AdminShipperItem {
   id: number;
   userId: number;
-  vehicleType: string;
   status: string;
   rejectReason: string | null;
   createdAt: string;

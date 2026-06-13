@@ -24,11 +24,18 @@ export const ADMIN_USER_ROLE_OPTIONS = [
   ADMIN_FILTER_ALL,
   USER_ROLE.USER,
   USER_ROLE.SELLER,
+  USER_ROLE.SHIPPER,
   USER_ROLE.ADMIN,
 ] as const;
 
 export type AdminUserRoleFilter =
   (typeof ADMIN_USER_ROLE_OPTIONS)[number];
+
+export const ADMIN_GRANT_ROLE_OPTIONS = [
+  { label: "Seller", value: USER_ROLE.SELLER },
+  { label: "Shipper", value: USER_ROLE.SHIPPER },
+] as const;
+
 
 export const ADMIN_SELLER_STATUS_OPTIONS = [
   SELLER_APPLICATION_STATUS.PENDING,

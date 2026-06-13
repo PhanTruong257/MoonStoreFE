@@ -1,3 +1,4 @@
+import { resolveImageUrl } from "@/app/utils/image-url";
 import type { SellerProductItem } from "../seller-storage";
 
 import styles from "./seller-products-table.module.scss";
@@ -22,7 +23,7 @@ export const SellerProductsTable = ({ items }: SellerProductsTableProps) => {
     <div className={styles.table}>
       {items.map((item) => (
         <div key={item.id} className={styles.row}>
-          <img src={item.imageUrl} alt={item.name} />
+          <img src={resolveImageUrl(item.imageUrl)} alt={item.name} />
           <div>
             <strong>{item.name}</strong>
             <p>ID: {item.id}</p>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import {
   clearCompareItems,
   getCompareItems,
@@ -105,7 +107,7 @@ const CompareCell = ({ rowKey, item }: { rowKey: string; item: CompareItem }) =>
     case "image":
       return (
         <Link to={`/product/${item.id}`}>
-          <img src={item.image} alt={item.name} className={styles.productImg} />
+          <img src={resolveImageUrl(item.image)} alt={item.name} className={styles.productImg} />
         </Link>
       );
     case "price":

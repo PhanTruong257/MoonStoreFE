@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { env } from "@/app/config/env";
+import { dispatchOpenLoginModal } from "@/app/utils/login-modal-event";
 
 export const http = axios.create({
   baseURL: env.apiBaseUrl,
@@ -17,7 +18,7 @@ http.interceptors.response.use(
       const isAuthEndpoint = AUTH_ENDPOINTS.some((ep) => url.includes(ep));
       if (!isAuthEndpoint) {
         localStorage.removeItem("auth_user");
-        window.location.replace("/login");
+        dispatchOpenLoginModal();
       }
     }
     return Promise.reject(error);

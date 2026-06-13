@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import styles from "./message-thread.module.scss";
 
 import { formatChatTime } from "@/const/chat.const";
@@ -64,7 +66,7 @@ export const MessageThread = ({
               className={styles.productLink}
             >
               <img
-                src={conversation.product.imageUrl}
+                src={resolveImageUrl(conversation.product.imageUrl)}
                 alt={conversation.product.name}
               />
               <span>{conversation.product.name}</span>

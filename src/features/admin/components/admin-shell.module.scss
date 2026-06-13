@@ -1,7 +1,8 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: var(--color-bg);
 }
 
@@ -51,15 +52,16 @@
 .main {
   display: grid;
   grid-template-columns: 248px 1fr;
+  grid-template-rows: 1fr;
   gap: 24px;
-  padding: 28px 64px 56px;
+  padding: 28px 64px;
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar {
-  position: sticky;
-  top: calc(var(--header-h) + 24px);
-  align-self: start;
+  overflow-y: auto;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -119,25 +121,41 @@
 }
 
 .content {
+  overflow-y: auto;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
   padding: 28px;
   box-shadow: var(--shadow-card);
-  min-height: 480px;
+}
+
+.contentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.contentTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 @media (max-width: 1024px) {
-  .hero {
-    padding: 28px 24px 24px;
-  }
-
   .main {
     grid-template-columns: 1fr;
-    padding: 20px 24px 40px;
+    grid-template-rows: auto 1fr;
+    padding: 20px 24px;
+    overflow-y: auto;
   }
 
   .sidebar {
-    position: static;
+    overflow-y: visible;
+  }
+
+  .content {
+    overflow-y: visible;
   }
 }

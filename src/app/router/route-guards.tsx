@@ -1,23 +1,21 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 import type { RootState } from "@/app/app-store";
-import { appConfig } from "@/app/config/app-config";
+import { dispatchOpenLoginModal } from "@/app/utils/login-modal-event";
 
 export const RequireAuth = () => {
-  const location = useLocation();
   const user = useSelector((state: RootState) => state.auth.user);
 
+  useEffect(() => {
+    if (!user) {
+      dispatchOpenLoginModal();
+    }
+  }, [user]);
+
   if (!user) {
-    return (
-      <Navigate
-        to={appConfig.loginPath}
-        replace
-        state={{
-          from: `${location.pathname}${location.search}${location.hash}`,
-        }}
-      />
-    );
+    return null;
   }
 
   return <Outlet />;
@@ -26,8 +24,14 @@ export const RequireAuth = () => {
 export const RequireSeller = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
+  useEffect(() => {
+    if (!user) {
+      dispatchOpenLoginModal();
+    }
+  }, [user]);
+
   if (!user) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   if (user.role === "admin") {
@@ -44,8 +48,14 @@ export const RequireSeller = () => {
 export const RequireAdmin = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
+  useEffect(() => {
+    if (!user) {
+      dispatchOpenLoginModal();
+    }
+  }, [user]);
+
   if (!user) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   if (user.role !== "admin") {
@@ -58,8 +68,14 @@ export const RequireAdmin = () => {
 export const RequireShipper = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
+  useEffect(() => {
+    if (!user) {
+      dispatchOpenLoginModal();
+    }
+  }, [user]);
+
   if (!user) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   if (user.role === "admin") {
@@ -69,6 +85,16 @@ export const RequireShipper = () => {
   if (user.role !== "shipper") {
     return <Navigate to="/shipper/apply" replace />;
   }
+
+  return <Outlet />;
+};
+
+export const RedirectByRole = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  if (user?.role === "admin") return <Navigate to="/admin" replace />;
+  if (user?.role === "seller") return <Navigate to="/seller" replace />;
+  if (user?.role === "shipper") return <Navigate to="/shipper/shipments" replace />;
 
   return <Outlet />;
 };

@@ -6,9 +6,8 @@ import styles from "./admin-shell.module.scss";
 
 import type { RootState } from "@/app/app-store";
 import { UI_TEXT } from "@/const/ui-text";
-import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
-import { homeFooterSections, homeHeaderLinks } from "@/pages/home/mock-data";
+import { homeHeaderLinks } from "@/pages/home/mock-data";
 
 const ta = UI_TEXT.admin;
 
@@ -34,13 +33,6 @@ export const AdminShell = ({
         navLinks={homeHeaderLinks}
         search={{ placeholder: UI_TEXT.header.searchPlaceholder }}
       />
-
-      <section className={styles.hero}>
-        <span className={styles.heroLabel}>{ta.consoleLabel}</span>
-        <h1 className={styles.heroTitle}>{title}</h1>
-        <p className={styles.heroSubtitle}>{subtitle}</p>
-        {actions ? <div className={styles.heroActions}>{actions}</div> : null}
-      </section>
 
       <section className={styles.main}>
         <aside className={styles.sidebar}>
@@ -141,6 +133,14 @@ export const AdminShell = ({
               {ta.nav.shippers}
             </NavLink>
             <NavLink
+              to="/admin/shipments"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              {ta.nav.shipments}
+            </NavLink>
+            <NavLink
               to="/admin/returns"
               className={({ isActive }) =>
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`
@@ -151,13 +151,17 @@ export const AdminShell = ({
           </nav>
         </aside>
 
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content}>
+          <div className={styles.contentHeader}>
+            <div>
+              <h2 className={styles.contentTitle}>{title}</h2>
+              {subtitle ? <p className={styles.contentSubtitle}>{subtitle}</p> : null}
+            </div>
+            {actions ? <div>{actions}</div> : null}
+          </div>
+          {children}
+        </div>
       </section>
-
-      <SiteFooter
-        sections={homeFooterSections}
-        copyright={UI_TEXT.common.copyright(new Date().getFullYear())}
-      />
     </main>
   );
 };

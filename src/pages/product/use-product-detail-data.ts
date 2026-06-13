@@ -1,8 +1,9 @@
 import { message } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import { dispatchOpenLoginModal } from "@/app/utils/login-modal-event";
 import { extractApiErrorMessage } from "@/app/utils/error-message";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
@@ -230,7 +231,6 @@ export const useProductDetailData = () => {
   };
 
   const navigate = useNavigate();
-  const location = useLocation();
   const [isStartingChat, setIsStartingChat] = useState(false);
 
   const chatWithSeller = async () => {
@@ -239,9 +239,7 @@ export const useProductDetailData = () => {
     }
     const user = getStoredUser();
     if (!user) {
-      void navigate("/login", {
-        state: { from: location.pathname + location.search },
-      });
+      dispatchOpenLoginModal();
       return;
     }
     setIsStartingChat(true);

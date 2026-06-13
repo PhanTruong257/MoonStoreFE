@@ -9,10 +9,10 @@ export const useShipperApply = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
 
-  const handleApply = async (values: { vehicleType: string }) => {
+  const handleApply = async () => {
     setSubmitting(true);
     try {
-      await shipperService.apply(values.vehicleType);
+      await shipperService.apply();
       message.success("Đăng ký shipper thành công! Vui lòng chờ admin xét duyệt.");
       navigate("/shipper/pending");
     } catch (err) {

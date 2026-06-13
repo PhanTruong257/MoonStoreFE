@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import styles from "./product-card.module.scss";
 
 type ProductCardProps = {
@@ -59,7 +61,7 @@ export const ProductCard = ({
           </span>
         ) : null}
         <Link to={to} onClick={onLinkClick} aria-label={`View ${name}`}>
-          <img src={image} alt={name} />
+          <img src={resolveImageUrl(image)} alt={name} />
         </Link>
         {wishlistLabel ? (
           <button

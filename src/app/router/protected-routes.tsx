@@ -19,6 +19,7 @@ import { AdminReturnsPage } from "@/pages/admin/admin-returns/admin-returns-page
 import { AdminRevenuePage } from "@/pages/admin/admin-revenue/admin-revenue-page";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
 import { AdminShippersPage } from "@/pages/admin/admin-shippers/admin-shippers-page";
+import { AdminShipmentsPage } from "@/pages/admin/admin-shipments/admin-shipments-page";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
 import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
 import { AdminWithdrawalsPage } from "@/pages/admin/admin-withdrawals/admin-withdrawals-page";
@@ -235,6 +236,11 @@ export const protectedRoutes: RouteObject[] = [
         path: "/admin/shippers",
         element: <AdminShippersPage />,
         handle: { title: "Shippers" },
+      },
+      {
+        path: "/admin/shipments",
+        element: <AdminShipmentsPage />,
+        handle: { title: "Shipments" },
       },
       {
         path: "/admin/returns",

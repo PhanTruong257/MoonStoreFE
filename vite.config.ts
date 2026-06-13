@@ -19,6 +19,19 @@ export default defineConfig(({ mode }) => {
     server: {
       host: env.VITE_HOST || "0.0.0.0",
       port,
+      proxy: {
+        "/uploads": {
+          target: (() => {
+            try {
+              const url = new URL(env.VITE_API_BASE_URL || "http://localhost:2000");
+              return `http://localhost:${url.port || 2000}`;
+            } catch {
+              return "http://localhost:2000";
+            }
+          })(),
+          changeOrigin: true,
+        },
+      },
     },
     preview: {
       host: env.VITE_HOST || "0.0.0.0",

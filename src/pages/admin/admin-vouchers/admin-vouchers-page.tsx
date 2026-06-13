@@ -29,6 +29,14 @@ const t = UI_TEXT.admin.vouchers;
 
 const DEFAULT_PERCENT_VALUE = 10;
 const DEFAULT_EXPIRY_DAYS = 30;
+const VOUCHER_CODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const VOUCHER_CODE_LENGTH = 6;
+
+const generateVoucherCode = () =>
+  Array.from(
+    { length: VOUCHER_CODE_LENGTH },
+    () => VOUCHER_CODE_CHARS[Math.floor(Math.random() * VOUCHER_CODE_CHARS.length)],
+  ).join("");
 
 type FormValues = {
   code: string;
@@ -57,6 +65,7 @@ export const AdminVouchersPage = () => {
     setEditing(null);
     form.resetFields();
     form.setFieldsValue({
+      code: generateVoucherCode(),
       discountType: VOUCHER_DISCOUNT_TYPE.PERCENT,
       value: DEFAULT_PERCENT_VALUE,
       expiredAt: dayjs().add(DEFAULT_EXPIRY_DAYS, "day"),
@@ -183,7 +192,23 @@ export const AdminVouchersPage = () => {
             name="code"
             rules={[{ required: true, message: t.codeRequired }]}
           >
-            <Input placeholder={t.codePlaceholder} />
+            <Input
+              placeholder={t.codePlaceholder}
+              addonAfter={
+                editing ? null : (
+                  <Button
+                    type="link"
+                    size="small"
+                    style={{ padding: 0 }}
+                    onClick={() =>
+                      form.setFieldsValue({ code: generateVoucherCode() })
+                    }
+                  >
+                    {t.generateCodeBtn}
+                  </Button>
+                )
+              }
+            />
           </Form.Item>
           <Form.Item
             label={t.discountTypeLabel}

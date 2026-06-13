@@ -9,6 +9,7 @@ import {
   formatMoney,
   renderAddressLine,
 } from "@/app/utils/format";
+import { resolveImageUrl } from "@/app/utils/image-url";
 import { ADMIN_ROUTES } from "@/const/admin.const";
 import { ORDER_STATUS_COLORS } from "@/const/orders.const";
 import { UI_TEXT } from "@/const/ui-text";
@@ -46,7 +47,7 @@ export const AdminOrderDetailPage = () => {
                 </div>
                 {group.items.map((item) => (
                   <div key={item.id} className={styles.item}>
-                    <img src={item.imageUrl} alt={item.productName} />
+                    <img src={resolveImageUrl(item.imageUrl)} alt={item.productName} />
                     <div className={styles.itemInfo}>
                       <strong>{item.productName}</strong>
                       <small>

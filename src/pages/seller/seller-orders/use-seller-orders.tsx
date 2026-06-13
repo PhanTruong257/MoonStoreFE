@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import styles from "./seller-orders-page.module.scss";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
+import { resolveImageUrl } from "@/app/utils/image-url";
 import { SELLER_ROUTES, formatSellerCurrency, formatSellerDateTime } from "@/const/seller.const";
 import { sellerOrdersActions } from "@/features/seller/seller-orders/seller-orders.slice";
 import type { SellerOrderGroup } from "@/services/seller-service";
@@ -90,7 +91,7 @@ export const useSellerOrders = () => {
           return (
             <div className={styles.productCell}>
               <img
-                src={first.imageUrl ?? ""}
+                src={resolveImageUrl(first.imageUrl)}
                 alt={first.productName}
                 className={styles.productThumb}
               />

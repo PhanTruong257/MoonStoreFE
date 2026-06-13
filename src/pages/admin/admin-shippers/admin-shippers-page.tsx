@@ -53,9 +53,6 @@ export const AdminShippersPage = () => {
                   <span className={styles.meta}>
                     {s.user.email} · {s.user.phone}
                   </span>
-                  <span className={styles.meta}>
-                    Phương tiện: {s.vehicleType}
-                  </span>
                   {s.rejectReason && (
                     <span className={styles.meta} style={{ color: "#ff4d4f" }}>
                       Lý do từ chối: {s.rejectReason}

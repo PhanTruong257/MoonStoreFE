@@ -1,6 +1,8 @@
 import { Button, Empty, Form, Input, InputNumber, Modal, Popconfirm, Select, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import styles from "./order-detail-page.module.scss";
 import { QrPaymentCard } from "./qr-payment-card";
 import { useOrderDetail } from "./use-order-detail";
@@ -81,9 +83,6 @@ export const OrderDetailPage = () => {
               <div className={styles.summaryTotals}>
                 <span>{t.totalLabel}</span>
                 <strong>{formatOrdersCurrency(order.finalAmount)}</strong>
-                <Tag color={ORDER_STATUS_COLORS[order.status] ?? "default"}>
-                  {order.status}
-                </Tag>
                 {canRequestRefund ? (
                   <Button size="small" onClick={openRefundModal}>
                     {t.requestRefund}
@@ -144,7 +143,7 @@ export const OrderDetailPage = () => {
                           to={`/product/${item.productId}`}
                           className={styles.productLink}
                         >
-                          <img src={item.imageUrlAtTime} alt={item.productName} />
+                          <img src={resolveImageUrl(item.imageUrlAtTime)} alt={item.productName} />
                         </Link>
                         <div className={styles.itemInfo}>
                           <Link

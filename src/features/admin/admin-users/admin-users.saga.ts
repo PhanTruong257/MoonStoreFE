@@ -7,10 +7,11 @@ import { adminUsersActions, type RoleFilter } from "./admin-users.slice";
 import type { RootState } from "@/app/app-store";
 import {
   fetchAdminUsers,
+  grantUserRole,
   promoteUserToAdmin,
   setUserStatus,
 } from "@/services/admin-service";
-import type { AdminUser } from "@/services/admin-service";
+import type { AdminUser, GrantUserRolePayload } from "@/services/admin-service";
 
 function* loadList() {
   try {
@@ -63,10 +64,29 @@ function* handleEnable(action: PayloadAction<number>) {
   }
 }
 
+function* handleGrantRole(
+  action: PayloadAction<{ userId: number } & GrantUserRolePayload>,
+) {
+  try {
+    const { userId, ...payload } = action.payload;
+    yield call(grantUserRole, userId, payload);
+    void message.success(`Role "${payload.role}" granted successfully.`);
+    yield put(adminUsersActions.actionSucceeded());
+    yield call(loadList);
+  } catch (e: unknown) {
+    const msg =
+      (e as { response?: { data?: { message?: string } } })?.response?.data
+        ?.message ?? "Unable to grant role.";
+    void message.error(msg);
+    yield put(adminUsersActions.actionFailed(msg));
+  }
+}
+
 export function* adminUsersSaga() {
   yield takeLatest(adminUsersActions.requested.type, loadList);
   yield takeLatest(adminUsersActions.roleFilterChanged.type, loadList);
   yield takeLatest(adminUsersActions.promoteRequested.type, handlePromote);
   yield takeLatest(adminUsersActions.disableRequested.type, handleDisable);
   yield takeLatest(adminUsersActions.enableRequested.type, handleEnable);
+  yield takeLatest(adminUsersActions.grantRoleRequested.type, handleGrantRole);
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import {
   clearCompareItems,
   getCompareItems,
@@ -36,7 +38,7 @@ export const CompareBar = () => {
               >
                 ×
               </button>
-              <img src={item.image} alt={item.name} className={styles.thumb} />
+              <img src={resolveImageUrl(item.image)} alt={item.name} className={styles.thumb} />
               <span className={styles.itemName}>{item.name}</span>
               <span className={styles.itemPrice}>{formatMoneyShort(item.price)}</span>
             </div>

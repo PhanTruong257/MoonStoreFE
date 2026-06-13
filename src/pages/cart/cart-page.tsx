@@ -1,6 +1,8 @@
 import { Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 
+import { resolveImageUrl } from "@/app/utils/image-url";
+
 import styles from "./cart-page.module.scss";
 import { useCartPageData } from "./use-cart-page-data";
 
@@ -104,7 +106,7 @@ export const CartPage = () => {
                         to={`/product/${item.productId}`}
                         className={styles.productImageLink}
                       >
-                        <img src={item.image} alt={item.name} />
+                        <img src={resolveImageUrl(item.image)} alt={item.name} />
                       </Link>
                       <div className={styles.productMeta}>
                         <Link
