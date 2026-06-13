@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Phân rã – Seller" id="seller-detail">
+    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- System Boundary -->
+        <mxCell id="sb" value="&lt;b&gt;Moon Store – Seller&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="30" width="1720" height="1130" as="geometry" />
+        </mxCell>
+
+        <!-- Actor -->
+        <mxCell id="a-seller" value="Seller" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="40" height="80" as="geometry" />
+        </mxCell>
+        <!-- Note: Seller kế thừa toàn bộ UC của User -->
+        <mxCell id="note-inherit" value="(Seller kế thừa toàn bộ&lt;br&gt;use case của User)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="10" y="660" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== GROUP 1: Quản lý sản phẩm ===== -->
+        <mxCell id="grp1" value="Quản lý sản phẩm" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#555555;dashed=1;strokeWidth=1.5;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="60" width="730" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="s-prod-list"    value="Xem DS sản phẩm"           style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="180" y="120" width="170" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-create"  value="Tạo sản phẩm mới"          style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="390" y="120" width="160" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-edit"    value="Sửa sản phẩm"              style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="590" y="120" width="140" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-delete"  value="Xóa sản phẩm (soft delete)" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="180" y="230" width="200" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-img"     value="Upload ảnh sản phẩm"        style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="410" y="230" width="160" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-options" value="Khai báo option groups"     style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="610" y="230" width="170" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-prod-filter"  value="Lọc theo trạng thái"        style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="280" y="340" width="160" height="45" as="geometry" /></mxCell>
+        <!-- include: Tạo SP → Upload ảnh, Khai báo options -->
+        <mxCell id="inc-create-img"  value="&lt;&lt;include&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-prod-create" target="s-prod-img"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="inc-create-opts" value="&lt;&lt;include&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-prod-create" target="s-prod-options" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ===== GROUP 2: Quản lý đơn hàng ===== -->
+        <mxCell id="grp2" value="Quản lý đơn hàng" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#555555;dashed=1;strokeWidth=1.5;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="940" y="60" width="880" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="s-ord-list"    value="Xem DS đơn hàng"          style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="960"  y="120" width="160" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-detail"  value="Xem chi tiết đơn"         style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1160" y="120" width="160" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-confirm" value="Xác nhận đơn (CONFIRMED)" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1360" y="120" width="190" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-ship"    value="Chuyển sang SHIPPING"      style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="960"  y="230" width="180" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-deliver" value="Xác nhận giao (DELIVERED)" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1180" y="230" width="200" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-cancel"  value="Hủy đơn (kèm ghi chú)"   style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1410" y="230" width="170" height="45" as="geometry" /></mxCell>
+        <mxCell id="s-ord-qr"      value="Xác nhận thanh toán QR"   style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1070" y="340" width="180" height="45" as="geometry" /></mxCell>
+
+        <!-- ===== GROUP 3: Ví tiền ===== -->
+        <mxCell id="grp3" value="Ví tiền &amp; Rút tiền" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#555555;dashed=1;strokeWidth=1.5;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="510" width="440" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="s-wallet-view" value="Xem số dư &amp; lịch sử giao dịch" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="180" y="580" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-wallet-withdraw" value="Yêu cầu rút tiền"              style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="410" y="580" width="150" height="50" as="geometry" /></mxCell>
+
+        <!-- ===== GROUP 4: Chat với khách ===== -->
+        <mxCell id="grp4" value="Chat với khách" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#555555;dashed=1;strokeWidth=1.5;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="510" width="480" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="s-chat-list" value="Xem DS hội thoại"       style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="680" y="580" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-chat-msg"  value="Gửi &amp; nhận tin nhắn" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="880" y="580" width="170" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-chat-read" value="Đánh dấu đã đọc"        style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="780" y="680" width="160" height="40" as="geometry" /></mxCell>
+
+        <!-- ===== GROUP 5: Xử lý đổi/trả ===== -->
+        <mxCell id="grp5" value="Xử lý đổi/trả hàng" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#555555;dashed=1;strokeWidth=1.5;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="510" width="620" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="s-ret-list"    value="Xem DS yêu cầu đổi/trả"        style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1220" y="570" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-ret-approve" value="Duyệt yêu cầu"                 style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1450" y="570" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-ret-reject"  value="Từ chối yêu cầu"               style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1640" y="570" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="s-ret-receive" value="Xác nhận đã nhận lại hàng"     style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1320" y="680" width="210" height="45" as="geometry" /></mxCell>
+
+        <!-- ===== ACTOR ASSOCIATIONS ===== -->
+        <mxCell id="es-prod-list"    edge="1" source="a-seller" target="s-prod-list"    parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-prod-create"  edge="1" source="a-seller" target="s-prod-create"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-prod-edit"    edge="1" source="a-seller" target="s-prod-edit"    parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-prod-delete"  edge="1" source="a-seller" target="s-prod-delete"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-prod-filter"  edge="1" source="a-seller" target="s-prod-filter"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-list"     edge="1" source="a-seller" target="s-ord-list"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-detail"   edge="1" source="a-seller" target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-confirm"  edge="1" source="a-seller" target="s-ord-confirm"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-ship"     edge="1" source="a-seller" target="s-ord-ship"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-deliver"  edge="1" source="a-seller" target="s-ord-deliver"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-cancel"   edge="1" source="a-seller" target="s-ord-cancel"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ord-qr"       edge="1" source="a-seller" target="s-ord-qr"       parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-wallet-view"  edge="1" source="a-seller" target="s-wallet-view"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-wallet-w"     edge="1" source="a-seller" target="s-wallet-withdraw" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-chat-list"    edge="1" source="a-seller" target="s-chat-list"    parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-chat-msg"     edge="1" source="a-seller" target="s-chat-msg"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ret-list"     edge="1" source="a-seller" target="s-ret-list"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ret-approve"  edge="1" source="a-seller" target="s-ret-approve"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ret-reject"   edge="1" source="a-seller" target="s-ret-reject"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="es-ret-receive"  edge="1" source="a-seller" target="s-ret-receive"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ===== INCLUDE / EXTEND ===== -->
+        <!-- Sửa SP <<include>> Upload ảnh (có thể đổi ảnh khi sửa) -->
+        <mxCell id="inc-edit-img"      value="&lt;&lt;include&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-prod-edit"      target="s-prod-img"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- Quản lý đơn: các action <<extend>> Xem chi tiết đơn -->
+        <mxCell id="ext-confirm-det"   value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ord-confirm"    target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ext-ship-det"      value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ord-ship"       target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ext-deliver-det"   value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ord-deliver"    target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ext-cancel-det"    value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ord-cancel"     target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ext-qr-det"        value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ord-qr"         target="s-ord-detail"   parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- Đổi/trả: Duyệt / Từ chối <<extend>> Xem DS yêu cầu -->
+        <mxCell id="ext-approve-list"  value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ret-approve"    target="s-ret-list"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ext-reject-list"   value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ret-reject"     target="s-ret-list"     parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- Xác nhận nhận lại hàng <<extend>> Duyệt yêu cầu (sau khi đã APPROVED) -->
+        <mxCell id="ext-receive-app"   value="&lt;&lt;extend&gt;&gt;"  style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-ret-receive"    target="s-ret-approve"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- Yêu cầu rút tiền <<include>> Xem số dư (cần kiểm tra số dư trước) -->
+        <mxCell id="inc-withdraw-bal"  value="&lt;&lt;include&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-wallet-withdraw" target="s-wallet-view"  parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- Đánh dấu đã đọc <<include>> Gửi/nhận tin nhắn -->
+        <mxCell id="inc-read-msg"      value="&lt;&lt;include&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="s-chat-msg"        target="s-chat-read"    parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

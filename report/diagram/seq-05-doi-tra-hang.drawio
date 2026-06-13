@@ -1,0 +1,30 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Sequence - Doi tra hang" id="seq-return">
+    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Sơ đồ tuần tự – Đổi/trả hàng" style="text;html=1;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1"><mxGeometry x="20" y="10" width="960" height="30" as="geometry" /></mxCell>
+
+        <mxCell id="ll-user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="50" width="120" height="580" as="geometry" /></mxCell>
+        <mxCell id="ll-seller" value="Seller" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="240" y="50" width="120" height="580" as="geometry" /></mxCell>
+        <mxCell id="ll-admin" value="Admin" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="440" y="50" width="120" height="580" as="geometry" /></mxCell>
+        <mxCell id="ll-be" value="Backend" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="640" y="50" width="120" height="580" as="geometry" /></mxCell>
+        <mxCell id="ll-db" value="MySQL" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="840" y="50" width="120" height="580" as="geometry" /></mxCell>
+
+        <mxCell id="m1" value="1: Tạo yêu cầu đổi/trả (lý do, ảnh)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="100" y="120" as="sourcePoint" /><mxPoint x="700" y="120" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m2" value="2: Lưu ReturnRequest (PENDING)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="700" y="160" as="sourcePoint" /><mxPoint x="900" y="160" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m3" value="3: Duyệt yêu cầu (approve)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="210" as="sourcePoint" /><mxPoint x="700" y="210" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m4" value="4: status = APPROVED" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="700" y="250" as="sourcePoint" /><mxPoint x="900" y="250" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="n5" value="5: User gửi hàng trả lại" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1"><mxGeometry x="30" y="285" width="140" height="34" as="geometry" /></mxCell>
+        <mxCell id="m6" value="6: Xác nhận đã nhận (confirm-received)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="360" as="sourcePoint" /><mxPoint x="700" y="360" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m7" value="7: status = ITEM_RECEIVED" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="700" y="400" as="sourcePoint" /><mxPoint x="900" y="400" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m8" value="8: Hoàn tất (complete)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="500" y="450" as="sourcePoint" /><mxPoint x="700" y="450" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m9" value="9: status = COMPLETED + hoàn tiền (nếu trả hàng)" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="700" y="490" as="sourcePoint" /><mxPoint x="900" y="490" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="m10" value="10: OK" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="900" y="530" as="sourcePoint" /><mxPoint x="700" y="530" as="targetPoint" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

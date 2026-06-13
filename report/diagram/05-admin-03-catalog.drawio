@@ -1,0 +1,28 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Admin – Danh mục, Brand &amp; Voucher" id="adm-catalog">
+    <mxGraphModel grid="0" pageWidth="1100" pageHeight="520">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="sb" value="&lt;b&gt;Admin – Danh mục, Brand &amp; Voucher&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="130" y="30" width="940" height="460" as="geometry"/></mxCell>
+        <mxCell id="a" value="Admin" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;fontSize=13;" vertex="1" parent="1"><mxGeometry x="30" y="220" width="40" height="80" as="geometry"/></mxCell>
+
+        <!-- Danh mục -->
+        <mxCell id="uc-cat"    value="Quản lý danh mục sản phẩm&lt;br&gt;(Thêm / Sửa / Xoá)" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="185" y="80"  width="225" height="60" as="geometry"/></mxCell>
+        <!-- Brand -->
+        <mxCell id="uc-brand"  value="Quản lý thương hiệu (Brand)&lt;br&gt;(Thêm / Sửa / Xoá)" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="185" y="230" width="225" height="60" as="geometry"/></mxCell>
+        <!-- Voucher -->
+        <mxCell id="uc-v-list" value="Xem DS Voucher" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="185" y="380" width="170" height="50" as="geometry"/></mxCell>
+        <mxCell id="uc-v-create" value="Tạo Voucher mới" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="530" y="340" width="175" height="50" as="geometry"/></mxCell>
+        <mxCell id="uc-v-toggle" value="Bật / tắt Voucher" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="760" y="340" width="175" height="50" as="geometry"/></mxCell>
+
+        <mxCell id="ea1" style="endArrow=none;" edge="1" source="a" target="uc-cat"    parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea2" style="endArrow=none;" edge="1" source="a" target="uc-brand"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea3" style="endArrow=none;" edge="1" source="a" target="uc-v-list" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Tạo / bật-tắt <<extend>> Xem DS Voucher -->
+        <mxCell id="ext1" value="&lt;&lt;extend&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="uc-v-create" target="uc-v-list" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ext2" value="&lt;&lt;extend&gt;&gt;" style="dashed=1;endArrow=open;endFill=0;startArrow=none;fontSize=10;" edge="1" source="uc-v-toggle" target="uc-v-list" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
