@@ -42,7 +42,7 @@ const configuredApiBaseUrl = readOptional(
 export const env: AppEnv = {
   mode: readOptional(rawEnv.MODE, "development"),
   apiBaseUrl: resolveApiBaseUrl(configuredApiBaseUrl),
-  appName: readOptional(rawEnv.VITE_APP_NAME, "Exclusive"),
+  appName: readOptional(rawEnv.VITE_APP_NAME, "Moon Store"),
 };
 
 if (env.mode === "production") {

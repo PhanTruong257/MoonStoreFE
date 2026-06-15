@@ -1,4 +1,4 @@
-import { Button, Card, Empty, Spin, Tag } from "antd";
+import { Button, Card, Empty, Popconfirm, Spin, Tag } from "antd";
 
 import {
   SHIPMENT_STATUS,
@@ -68,14 +68,18 @@ export const ShipperShipmentsPage = () => {
                   </Button>
                 )}
                 {canFail && (
-                  <Button
-                    danger
-                    size="small"
-                    loading={updatingId === s.id}
-                    onClick={() => handleFailed(s)}
+                  <Popconfirm
+                    title="Đánh dấu giao thất bại?"
+                    description="Hành động này không thể hoàn tác."
+                    okText="Xác nhận"
+                    cancelText="Huỷ"
+                    okButtonProps={{ danger: true }}
+                    onConfirm={() => handleFailed(s)}
                   >
-                    Giao thất bại
-                  </Button>
+                    <Button danger size="small" loading={updatingId === s.id}>
+                      Giao thất bại
+                    </Button>
+                  </Popconfirm>
                 )}
               </div>
             </Card>

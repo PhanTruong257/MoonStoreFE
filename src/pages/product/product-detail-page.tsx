@@ -189,6 +189,20 @@ export const ProductDetailPage = () => {
 
             <p className={styles.description}>{product.description}</p>
 
+            {product.highlights.length > 0 ? (
+              <div className={styles.highlightsPanel}>
+                <h3 className={styles.highlightsTitle}>{t.highlightsTitle}</h3>
+                <dl className={styles.highlightsList}>
+                  {product.highlights.map((item) => (
+                    <div key={item.label} className={styles.highlightRow}>
+                      <dt>{item.label}</dt>
+                      <dd>{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ) : null}
+
             <div className={styles.optionsPanel}>
               {product.optionGroups.map((group) => {
                 const isColor = group.name.toLowerCase() === "color";

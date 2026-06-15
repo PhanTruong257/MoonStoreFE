@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import type { RootState } from "@/app/app-store";
 import { dispatchCartUpdated } from "@/app/utils/cart-event";
+import { extractApiErrorMessage } from "@/app/utils/error-message";
 import {
   readJsonFromStorage,
   removeFromStorage,
@@ -248,8 +249,12 @@ export const useCheckoutPageData = () => {
           ? "Order placed successfully. Payment method: Cash on delivery."
           : "Order placed successfully. Payment method: Bank transfer.",
       );
-    } catch {
-      setOrderMessage("Unable to place order. Please try again.");
+    } catch (error) {
+      // Surface the real reason (out of stock, invalid voucher, bad address, ...)
+      // instead of a generic message so the user knows what to fix.
+      setOrderMessage(
+        extractApiErrorMessage(error, "Unable to place order. Please try again."),
+      );
     } finally {
       setIsSubmitting(false);
     }

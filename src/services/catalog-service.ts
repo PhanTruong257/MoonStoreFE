@@ -50,11 +50,17 @@ export type CatalogProductListParams = {
   limit?: number;
 };
 
+export type ProductHighlight = {
+  label: string;
+  value: string;
+};
+
 export type CatalogProductDetail = CatalogProduct & {
   averageRating: number;
   totalReviews: number;
   sellerId: number;
   sellerShopName: string;
+  highlights: ProductHighlight[] | null;
   optionGroups: CatalogOptionGroup[];
 };
 

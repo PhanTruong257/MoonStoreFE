@@ -25,7 +25,7 @@ export const UI_TEXT = {
   },
 
   header: {
-    brand: "Exclusive",
+    brand: "Moon Store",
     searchPlaceholder: "Bạn đang tìm gì?",
     searchAriaLabel: "Tìm kiếm",
     searchActionLabel: "Tìm kiếm",
@@ -53,7 +53,7 @@ export const UI_TEXT = {
   },
 
   footer: {
-    exclusiveTitle: "Exclusive",
+    exclusiveTitle: "Moon Store",
     subscribeLabel: "Đăng ký nhận tin",
     subscribeDesc: "Nhận ưu đãi 10% cho đơn hàng đầu tiên",
     supportTitle: "Hỗ trợ",
@@ -152,7 +152,7 @@ export const UI_TEXT = {
 
   auth: {
     login: {
-      title: "Đăng nhập vào Exclusive",
+      title: "Đăng nhập vào Moon Store",
       subtitle: "Nhập thông tin của bạn bên dưới",
       emailPlaceholder: "Email hoặc số điện thoại",
       passwordPlaceholder: "Mật khẩu",
@@ -307,8 +307,8 @@ export const UI_TEXT = {
   about: {
     story: {
       title: "Câu chuyện của chúng tôi",
-      para1: "Ra mắt năm 2015, Exclusive là sàn thương mại điện tử hàng đầu Nam Á với sự hiện diện tích cực tại Việt Nam.",
-      para2: "Exclusive có hơn 1 triệu sản phẩm, tăng trưởng nhanh với nhiều danh mục đa dạng.",
+      para1: "Ra mắt năm 2015, Moon Store là sàn thương mại điện tử hàng đầu Nam Á với sự hiện diện tích cực tại Việt Nam.",
+      para2: "Moon Store có hơn 1 triệu sản phẩm, tăng trưởng nhanh với nhiều danh mục đa dạng.",
     },
     breadcrumbAbout: "Giới thiệu",
     stats: [
@@ -356,6 +356,7 @@ export const UI_TEXT = {
     returnDelivery: "Đổi trả miễn phí",
     returnDeliveryDesc: "Miễn phí đổi trả trong 30 ngày. Xem chi tiết",
     relatedItems: "Sản phẩm liên quan",
+    highlightsTitle: "Thông số nổi bật",
     wishButtonLabel: "Yêu thích",
     category: "Danh mục",
     selectOption: (optionName: string, groupName: string) =>

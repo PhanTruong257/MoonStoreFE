@@ -175,6 +175,51 @@
   line-height: 1.55;
 }
 
+.highlightsPanel {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-gray-240);
+}
+
+.highlightsTitle {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink-900);
+}
+
+.highlightsList {
+  margin: 0;
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--color-gray-240);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.highlightRow {
+  display: grid;
+  grid-template-columns: 40% 60%;
+
+  &:nth-child(odd) {
+    background: var(--color-gray-50, #fafafa);
+  }
+
+  dt {
+    margin: 0;
+    padding: 9px 12px;
+    color: var(--color-ink-650);
+    font-size: 13px;
+  }
+
+  dd {
+    margin: 0;
+    padding: 9px 12px;
+    color: var(--color-ink-900);
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
 .optionsPanel {
   display: grid;
   gap: 12px;

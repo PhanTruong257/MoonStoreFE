@@ -52,7 +52,7 @@ export const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) 
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>Đăng nhập vào Exclusive</h2>
+          <h2>Đăng nhập vào Moon Store</h2>
           <button
             type="button"
             className={styles.closeBtn}

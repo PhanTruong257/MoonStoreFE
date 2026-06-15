@@ -61,6 +61,11 @@ export const useProductList = (
   useEffect(() => {
     if (!initialCategorySlug) {
       syncedSlugRef.current = null;
+      // Home/all view: reset any previously selected category so clicking the
+      // brand logo returns to the default product list (page 1, all categories).
+      if (selectedCategoryId !== "all") {
+        dispatch(productListActions.productListSetCategory("all"));
+      }
       return;
     }
 

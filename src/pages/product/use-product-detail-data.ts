@@ -14,6 +14,7 @@ import type {
   CatalogOption,
   CatalogOptionGroup,
   CatalogProductDetail,
+  ProductHighlight,
 } from "@/services/catalog-service";
 import { createOrGetConversation } from "@/services/chat-service";
 
@@ -49,6 +50,7 @@ type ProductView = {
   gallery: string[];
   sellerId: number;
   sellerShopName: string;
+  highlights: ProductHighlight[];
   optionGroups: ProductOptionGroupView[];
 };
 
@@ -107,6 +109,7 @@ export const useProductDetailData = () => {
       gallery: [catalogProduct.imageUrl],
       sellerId: catalogProduct.sellerId,
       sellerShopName: catalogProduct.sellerShopName,
+      highlights: catalogProduct.highlights ?? [],
       optionGroups,
     };
   }, [catalogProduct, productId]);

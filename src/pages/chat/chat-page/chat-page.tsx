@@ -29,7 +29,7 @@ export const ChatPage = () => {
   return (
     <main className={styles.page}>
       <SiteHeader
-        brand={{ label: "Exclusive", to: "/" }}
+        brand={{ label: "Moon Store", to: "/" }}
         navLinks={homeHeaderLinks}
         search={{ placeholder: "Tìm sản phẩm" }}
       />
