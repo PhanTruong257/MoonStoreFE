@@ -7,9 +7,14 @@ import { useOrdersList } from "./use-orders-list";
 import {
   ORDER_STATUS_COLORS,
   ORDER_STATUS_FILTER_OPTIONS,
+  ORDER_STATUS_LABELS,
   formatOrdersCurrency,
   formatOrdersDateTime,
 } from "@/const/orders.const";
+import {
+  PAYMENT_METHOD_LABELS,
+  PAYMENT_STATUS_LABELS,
+} from "@/const/payment.const";
 import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
@@ -62,12 +67,16 @@ export const OrdersPage = () => {
                       <Tag
                         color={ORDER_STATUS_COLORS[order.status] ?? "default"}
                       >
-                        {order.status}
+                        {ORDER_STATUS_LABELS[order.status] ?? order.status}
                       </Tag>
                     </div>
                     <div className={styles.meta}>
                       {formatOrdersDateTime(order.createdAt)} ·{" "}
-                      {order.paymentMethod} · {t.paymentLabel} {order.paymentStatus}
+                      {PAYMENT_METHOD_LABELS[order.paymentMethod] ??
+                        order.paymentMethod}{" "}
+                      ·{" "}
+                      {PAYMENT_STATUS_LABELS[order.paymentStatus] ??
+                        order.paymentStatus}
                     </div>
                     <div className={styles.meta}>
                       {t.shopCount(order.groups?.length ?? 0)}

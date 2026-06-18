@@ -19,6 +19,14 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
   [ORDER_STATUS.CANCELLED]: "red",
 };
 
+export const ORDER_STATUS_LABELS: Record<string, string> = {
+  [ORDER_STATUS.PENDING]: "Chờ xác nhận",
+  [ORDER_STATUS.CONFIRMED]: "Đã xác nhận",
+  [ORDER_STATUS.SHIPPING]: "Đang giao",
+  [ORDER_STATUS.DELIVERED]: "Đã giao",
+  [ORDER_STATUS.CANCELLED]: "Đã huỷ",
+};
+
 export const ORDER_STATUS_FILTER_ALL = "ALL";
 
 export const ORDER_STATUS_FILTER_OPTIONS =

@@ -71,7 +71,7 @@ export const useCheckoutPageData = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentOption>(
-    CHECKOUT_PAYMENT_OPTIONS.QR,
+    CHECKOUT_PAYMENT_OPTIONS.VNPAY,
   );
   const [saveInfo, setSaveInfo] = useState(true);
   const [orderMessage, setOrderMessage] = useState("");

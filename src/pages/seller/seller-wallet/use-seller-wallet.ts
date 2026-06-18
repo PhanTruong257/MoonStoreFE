@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { FormInstance } from "antd";
 
@@ -17,12 +17,16 @@ export const useSellerWallet = (form?: FormInstance) => {
     dispatch(sellerWalletActions.walletRequested());
   }, [dispatch]);
 
+  // Close the modal only when an in-flight withdrawal just finished successfully —
+  // not the moment it opens (isWithdrawing is also false then, which used to close it instantly).
+  const wasWithdrawingRef = useRef(false);
   useEffect(() => {
-    if (!isWithdrawing && !withdrawError && withdrawModalOpen) {
+    if (wasWithdrawingRef.current && !isWithdrawing && !withdrawError) {
       setWithdrawModalOpen(false);
       form?.resetFields();
     }
-  }, [isWithdrawing, withdrawError, withdrawModalOpen, form]);
+    wasWithdrawingRef.current = isWithdrawing;
+  }, [isWithdrawing, withdrawError, form]);
 
   const openWithdrawModal = () => setWithdrawModalOpen(true);
   const closeWithdrawModal = () => {

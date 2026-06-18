@@ -1,4 +1,4 @@
-import { Button, Empty, Form, Input, InputNumber, Modal, Popconfirm, Select, Skeleton, Tag } from "antd";
+import { Button, Empty, Form, Input, Modal, Popconfirm, Skeleton, Tag } from "antd";
 import { Link } from "react-router-dom";
 
 import { resolveImageUrl } from "@/app/utils/image-url";
@@ -11,10 +11,14 @@ import { renderAddressLine } from "@/app/utils/format";
 import {
   ORDER_STATUS,
   ORDER_STATUS_COLORS,
+  ORDER_STATUS_LABELS,
   formatOrdersCurrency,
   formatOrdersDateTime,
 } from "@/const/orders.const";
-import { RETURN_REQUEST_TYPE_OPTIONS } from "@/const/return.const";
+import {
+  PAYMENT_METHOD_LABELS,
+  PAYMENT_STATUS_LABELS,
+} from "@/const/payment.const";
 import { UI_TEXT } from "@/const/ui-text";
 import { SiteFooter } from "@/features/layout/components/site-footer";
 import { SiteHeader } from "@/features/layout/components/site-header";
@@ -24,7 +28,6 @@ const t = UI_TEXT.orders;
 const th = UI_TEXT.header;
 
 export const OrderDetailPage = () => {
-  const [refundForm] = Form.useForm();
   const [returnForm] = Form.useForm();
   const {
     order,
@@ -36,13 +39,6 @@ export const OrderDetailPage = () => {
     isQrLoading,
     isChatCreating,
     startChatWithSeller,
-    refundModalOpen,
-    openRefundModal,
-    closeRefundModal,
-    submitRefundRequest,
-    isRefundRequesting,
-    refundError,
-    canRequestRefund,
     returnModalGroupId,
     openReturnModal,
     closeReturnModal,
@@ -83,11 +79,6 @@ export const OrderDetailPage = () => {
               <div className={styles.summaryTotals}>
                 <span>{t.totalLabel}</span>
                 <strong>{formatOrdersCurrency(order.finalAmount)}</strong>
-                {canRequestRefund ? (
-                  <Button size="small" onClick={openRefundModal}>
-                    {t.requestRefund}
-                  </Button>
-                ) : null}
               </div>
             </header>
 
@@ -101,7 +92,7 @@ export const OrderDetailPage = () => {
                         <Tag
                           color={ORDER_STATUS_COLORS[group.status] ?? "default"}
                         >
-                          {group.status}
+                          {ORDER_STATUS_LABELS[group.status] ?? group.status}
                         </Tag>
                         <Button
                           size="small"
@@ -131,7 +122,7 @@ export const OrderDetailPage = () => {
                             size="small"
                             onClick={() => openReturnModal(group.id)}
                           >
-                            Yêu cầu đổi/trả
+                            Trả hàng / hoàn tiền
                           </Button>
                         ) : null}
                       </div>
@@ -214,11 +205,17 @@ export const OrderDetailPage = () => {
                   <h3>{t.paymentTitle}</h3>
                   <div className={styles.row}>
                     <span>{t.paymentMethod}</span>
-                    <span>{order.paymentMethod}</span>
+                    <span>
+                      {PAYMENT_METHOD_LABELS[order.paymentMethod] ??
+                        order.paymentMethod}
+                    </span>
                   </div>
                   <div className={styles.row}>
                     <span>{t.paymentStatus}</span>
-                    <Tag>{order.paymentStatus}</Tag>
+                    <Tag>
+                      {PAYMENT_STATUS_LABELS[order.paymentStatus] ??
+                        order.paymentStatus}
+                    </Tag>
                   </div>
                 </article>
 
@@ -244,7 +241,7 @@ export const OrderDetailPage = () => {
       />
 
       <Modal
-        title="Yêu cầu đổi/trả hàng"
+        title="Trả hàng / hoàn tiền"
         open={returnModalGroupId !== null}
         onCancel={() => {
           closeReturnModal();
@@ -263,48 +260,11 @@ export const OrderDetailPage = () => {
           }}
         >
           <Form.Item
-            label="Loại yêu cầu"
-            name="type"
-            rules={[{ required: true, message: "Vui lòng chọn loại yêu cầu." }]}
-          >
-            <Select options={RETURN_REQUEST_TYPE_OPTIONS} placeholder="Chọn loại" />
-          </Form.Item>
-          <Form.Item
             label="Lý do"
             name="reason"
             rules={[{ required: true, message: "Vui lòng nhập lý do." }]}
           >
-            <Input.TextArea rows={4} placeholder="Mô tả lý do bạn muốn đổi/trả hàng..." />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Modal
-        title={t.refundModalTitle}
-        open={refundModalOpen}
-        onCancel={closeRefundModal}
-        onOk={() => refundForm.submit()}
-        okText={t.refundSubmitOk}
-        confirmLoading={isRefundRequesting}
-      >
-        {refundError ? (
-          <p style={{ color: "#b91c1c", fontSize: 13 }}>{refundError}</p>
-        ) : null}
-        <Form
-          form={refundForm}
-          layout="vertical"
-          onFinish={submitRefundRequest}
-          initialValues={{ amount: order?.finalAmount }}
-        >
-          <Form.Item label={t.refundReason} name="reason" rules={[{ required: true }]}>
-            <Input.TextArea rows={3} placeholder={t.refundReasonPlaceholder} />
-          </Form.Item>
-          <Form.Item
-            label={t.refundAmount}
-            name="amount"
-            rules={[{ required: true }]}
-          >
-            <InputNumber min={1} style={{ width: "100%" }} />
+            <Input.TextArea rows={4} placeholder="Mô tả lý do bạn muốn trả hàng..." />
           </Form.Item>
         </Form>
       </Modal>

@@ -90,6 +90,59 @@
   justify-content: flex-end;
 }
 
+/**
+ * Card variant: vertical layout (info header on top, actions below).
+ * Used by /admin/shipments, /admin/shippers, /admin/returns.
+ */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: rgba(222, 91, 44, 0.45);
+    box-shadow: 0 8px 24px rgba(22, 18, 14, 0.06);
+    transform: translateY(-1px);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+
+  // Info column: name/tracking code + meta lines stacked vertically.
+  > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.empty {
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
 .totals {
   display: flex;
   flex-direction: column;
@@ -137,5 +190,10 @@
 
   .actions {
     justify-content: flex-start;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    gap: 8px;
   }
 }

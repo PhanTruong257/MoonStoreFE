@@ -7,8 +7,9 @@ import {
 } from "./use-admin-orders";
 
 import { formatDateTime, formatMoney } from "@/app/utils/format";
-import { ADMIN_ROUTES } from "@/const/admin.const";
-import { ORDER_STATUS_COLORS } from "@/const/orders.const";
+import { ADMIN_FILTER_ALL, ADMIN_ROUTES } from "@/const/admin.const";
+import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/const/orders.const";
+import { PAYMENT_STATUS_LABELS } from "@/const/payment.const";
 import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 import styles from "@/styles/admin-list.module.scss";
@@ -28,7 +29,10 @@ export const AdminOrdersPage = () => {
           value={statusFilter}
           onChange={(value) => setStatusFilter(String(value))}
           options={ADMIN_ORDER_STATUS_OPTIONS.map((opt) => ({
-            label: opt.toUpperCase(),
+            label:
+              opt === ADMIN_FILTER_ALL
+                ? UI_TEXT.orders.statusFilterAll
+                : ORDER_STATUS_LABELS[opt] ?? opt,
             value: opt,
           }))}
         />
@@ -50,13 +54,17 @@ export const AdminOrdersPage = () => {
                     <strong>Order #{order.id}</strong>
                   </Link>
                   <Tag color={ORDER_STATUS_COLORS[order.status] ?? "default"}>
-                    {order.status}
+                    {ORDER_STATUS_LABELS[order.status] ?? order.status}
                   </Tag>
-                  <Tag>{order.paymentStatus}</Tag>
+                  <Tag>
+                    {PAYMENT_STATUS_LABELS[order.paymentStatus] ??
+                      order.paymentStatus}
+                  </Tag>
                 </div>
                 <div className={styles.meta}>
                   {t.buyerPrefix}{order.userFullName} (#{order.userId}) ·{" "}
-                  {order.groupCount} shop(s) · {formatDateTime(order.createdAt)}
+                  {UI_TEXT.orders.shopCount(order.groupCount)} ·{" "}
+                  {formatDateTime(order.createdAt)}
                 </div>
               </div>
               <div className={styles.totals}>

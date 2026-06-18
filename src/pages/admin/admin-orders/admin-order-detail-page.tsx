@@ -11,7 +11,11 @@ import {
 } from "@/app/utils/format";
 import { resolveImageUrl } from "@/app/utils/image-url";
 import { ADMIN_ROUTES } from "@/const/admin.const";
-import { ORDER_STATUS_COLORS } from "@/const/orders.const";
+import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/const/orders.const";
+import {
+  PAYMENT_METHOD_LABELS,
+  PAYMENT_STATUS_LABELS,
+} from "@/const/payment.const";
 import { UI_TEXT } from "@/const/ui-text";
 import { AdminShell } from "@/features/admin/components/admin-shell";
 
@@ -42,7 +46,7 @@ export const AdminOrderDetailPage = () => {
                 <div className={styles.cardHeader}>
                   <h3>{group.sellerShopName}</h3>
                   <Tag color={ORDER_STATUS_COLORS[group.status] ?? "default"}>
-                    {group.status}
+                    {ORDER_STATUS_LABELS[group.status] ?? group.status}
                   </Tag>
                 </div>
                 {group.items.map((item) => (
@@ -112,11 +116,17 @@ export const AdminOrderDetailPage = () => {
               <h3>{t.paymentTitle}</h3>
               <div className={styles.row}>
                 <span>{t.paymentMethod}</span>
-                <span>{order.paymentMethod}</span>
+                <span>
+                  {PAYMENT_METHOD_LABELS[order.paymentMethod] ??
+                    order.paymentMethod}
+                </span>
               </div>
               <div className={styles.row}>
                 <span>{t.paymentStatus}</span>
-                <Tag>{order.paymentStatus}</Tag>
+                <Tag>
+                  {PAYMENT_STATUS_LABELS[order.paymentStatus] ??
+                    order.paymentStatus}
+                </Tag>
               </div>
             </article>
 

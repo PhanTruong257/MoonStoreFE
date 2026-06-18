@@ -7,7 +7,12 @@ import styles from "./seller-orders-page.module.scss";
 
 import type { AppDispatch, RootState } from "@/app/app-store";
 import { resolveImageUrl } from "@/app/utils/image-url";
-import { SELLER_ROUTES, formatSellerCurrency, formatSellerDateTime } from "@/const/seller.const";
+import {
+  SELLER_ORDER_STATUS_LABELS,
+  SELLER_ROUTES,
+  formatSellerCurrency,
+  formatSellerDateTime,
+} from "@/const/seller.const";
 import { sellerOrdersActions } from "@/features/seller/seller-orders/seller-orders.slice";
 import type { SellerOrderGroup } from "@/services/seller-service";
 
@@ -19,14 +24,6 @@ const STATUS_CLASS: Record<string, string> = {
   SHIPPING:  styles.statusShipping,
   DELIVERED: styles.statusDelivered,
   CANCELLED: styles.statusCancelled,
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  PENDING:   "Chờ xử lý",
-  CONFIRMED: "Đã xác nhận",
-  SHIPPING:  "Đang giao",
-  DELIVERED: "Đã giao",
-  CANCELLED: "Đã huỷ",
 };
 
 export const useSellerOrders = () => {
@@ -119,7 +116,7 @@ export const useSellerOrders = () => {
         dataIndex: "status",
         render: (status: string) => (
           <span className={`${styles.statusBadge} ${STATUS_CLASS[status] ?? styles.statusDefault}`}>
-            {STATUS_LABEL[status] ?? status}
+            {SELLER_ORDER_STATUS_LABELS[status] ?? status}
           </span>
         ),
       },

@@ -232,20 +232,6 @@ export const CheckoutPage = () => {
                   <input
                     type="radio"
                     name="payment"
-                    checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.QR}
-                    onChange={() =>
-                      setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.QR)
-                    }
-                    disabled={isSubmitting}
-                  />
-                  {CHECKOUT_TEXT.paymentQR}
-                </label>
-              </div>
-              <div className={styles.paymentRow}>
-                <label>
-                  <input
-                    type="radio"
-                    name="payment"
                     checked={paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY}
                     onChange={() =>
                       setPaymentMethod(CHECKOUT_PAYMENT_OPTIONS.VNPAY)

@@ -28,6 +28,14 @@ export const SELLER_ORDER_STATUS_COLORS: Record<string, string> = {
 
 const t = UI_TEXT.seller.orders;
 
+export const SELLER_ORDER_STATUS_LABELS: Record<string, string> = {
+  [SELLER_ORDER_STATUS.PENDING]: t.statusPending,
+  [SELLER_ORDER_STATUS.CONFIRMED]: t.statusConfirmed,
+  [SELLER_ORDER_STATUS.SHIPPING]: t.statusShipping,
+  [SELLER_ORDER_STATUS.DELIVERED]: t.statusDelivered,
+  [SELLER_ORDER_STATUS.CANCELLED]: t.statusCancelled,
+};
+
 export const SELLER_ORDER_STATUS_FILTER_OPTIONS = [
   { label: t.statusAll, value: "ALL" },
   { label: t.statusPending, value: SELLER_ORDER_STATUS.PENDING },

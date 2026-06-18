@@ -5,9 +5,14 @@ import styles from "./seller-order-detail-page.module.scss";
 import { useSellerOrderDetail } from "./use-seller-order-detail";
 
 import { resolveImageUrl } from "@/app/utils/image-url";
-import { PAYMENT_STATUS } from "@/const/payment.const";
+import {
+  PAYMENT_METHOD_LABELS,
+  PAYMENT_STATUS,
+  PAYMENT_STATUS_LABELS,
+} from "@/const/payment.const";
 import {
   SELLER_ORDER_STATUS_COLORS,
+  SELLER_ORDER_STATUS_LABELS,
   SELLER_ROUTES,
   formatSellerCurrency,
   formatSellerDateTime,
@@ -90,7 +95,7 @@ export const SellerOrderDetailPage = () => {
             <h3 className={styles.cardTitle}>
               {t.orderItemsTitle}{" "}
               <Tag color={SELLER_ORDER_STATUS_COLORS[group.status]}>
-                {group.status}
+                {SELLER_ORDER_STATUS_LABELS[group.status] ?? group.status}
               </Tag>
             </h3>
             <div className={styles.itemList}>
@@ -104,7 +109,7 @@ export const SellerOrderDetailPage = () => {
                   <div>
                     <div className={styles.itemName}>{item.productName}</div>
                     <div className={styles.itemMeta}>
-                      Product #{item.productId} · x{item.quantity}
+                      Sản phẩm #{item.productId} · x{item.quantity}
                     </div>
                     {item.selectedOptions.length > 0 ? (
                       <div className={styles.itemMeta}>
@@ -130,7 +135,7 @@ export const SellerOrderDetailPage = () => {
                   loading={submitting}
                   onClick={openAdvance}
                 >
-                  {t.markAs(nextStatus)}
+                  {t.markAs(SELLER_ORDER_STATUS_LABELS[nextStatus] ?? nextStatus)}
                 </Button>
               ) : null}
 
@@ -157,7 +162,7 @@ export const SellerOrderDetailPage = () => {
                       <Tag
                         color={SELLER_ORDER_STATUS_COLORS[log.status] ?? "default"}
                       >
-                        {log.status}
+                        {SELLER_ORDER_STATUS_LABELS[log.status] ?? log.status}
                       </Tag>
                       {log.note ?? "—"}
                     </div>
@@ -185,7 +190,10 @@ export const SellerOrderDetailPage = () => {
             <h3 className={styles.cardTitle}>{t.paymentTitle}</h3>
             <div className={styles.row}>
               <span className={styles.rowLabel}>{t.paymentMethod}</span>
-              <span className={styles.rowValue}>{group.paymentMethod}</span>
+              <span className={styles.rowValue}>
+                {PAYMENT_METHOD_LABELS[group.paymentMethod] ??
+                  group.paymentMethod}
+              </span>
             </div>
             <div className={styles.row}>
               <span className={styles.rowLabel}>{t.paymentStatus}</span>
@@ -197,7 +205,8 @@ export const SellerOrderDetailPage = () => {
                       : "gold"
                   }
                 >
-                  {group.paymentStatus}
+                  {PAYMENT_STATUS_LABELS[group.paymentStatus] ??
+                    group.paymentStatus}
                 </Tag>
               </span>
             </div>
@@ -260,7 +269,9 @@ export const SellerOrderDetailPage = () => {
 
       <Modal
         open={advanceOpen}
-        title={t.advanceModalTitle(nextStatus ?? "")}
+        title={t.advanceModalTitle(
+          nextStatus ? SELLER_ORDER_STATUS_LABELS[nextStatus] ?? nextStatus : "",
+        )}
         okText={t.advanceModalOk}
         onOk={confirmAdvance}
         onCancel={closeAdvance}

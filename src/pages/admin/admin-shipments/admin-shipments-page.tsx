@@ -49,9 +49,11 @@ export const AdminShipmentsPage = () => {
             <div key={s.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div>
-                  <span className={styles.name}>#{s.trackingCode}</span>
+                  <span className={styles.name}>
+                    Nhóm đơn #{s.orderGroup.id} · Đơn hàng #{s.orderGroup.orderId}
+                  </span>
                   <span className={styles.meta}>
-                    Nhóm đơn #{s.orderGroup.id} · Đơn hàng #{s.orderGroup.orderId} · {s.orderGroup.seller.shopName}
+                    {s.orderGroup.seller.shopName}
                   </span>
                   <span className={styles.meta}>
                     Sản phẩm:{" "}

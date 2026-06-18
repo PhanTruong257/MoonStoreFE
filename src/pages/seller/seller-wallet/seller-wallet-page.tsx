@@ -56,15 +56,24 @@ export const SellerWalletPage = () => {
   useSetSellerShell({
     title: t.title,
     subtitle: t.subtitle,
-    actions: (
-      <Button type="primary" onClick={openWithdrawModal} disabled={!wallet || wallet.balance <= 0}>
-        {t.withdrawBtn}
-      </Button>
-    ),
   });
 
   return (
     <>
+      <div className={styles.pageHead}>
+        <div>
+          <h1 className={styles.pageTitle}>{t.title}</h1>
+          <p className={styles.pageSubtitle}>{t.subtitle}</p>
+        </div>
+        <Button
+          type="primary"
+          onClick={openWithdrawModal}
+          disabled={!wallet || wallet.balance <= 0}
+        >
+          {t.withdrawBtn}
+        </Button>
+      </div>
+
       {error ? <p className={styles.errorText}>{error}</p> : null}
 
       {isLoading ? (

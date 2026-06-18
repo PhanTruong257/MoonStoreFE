@@ -14,7 +14,6 @@ import {
   AdminOrderDetailPage,
   AdminOrdersPage,
 } from "@/pages/admin/admin-orders";
-import { AdminRefundsPage } from "@/pages/admin/admin-refunds/admin-refunds-page";
 import { AdminReturnsPage } from "@/pages/admin/admin-returns/admin-returns-page";
 import { AdminRevenuePage } from "@/pages/admin/admin-revenue/admin-revenue-page";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
@@ -221,11 +220,6 @@ export const protectedRoutes: RouteObject[] = [
         path: "/admin/revenue",
         element: <AdminRevenuePage />,
         handle: { title: "Revenue & Commission" },
-      },
-      {
-        path: "/admin/refunds",
-        element: <AdminRefundsPage />,
-        handle: { title: "Refund Requests" },
       },
       {
         path: "/admin/withdrawals",

@@ -45,6 +45,8 @@ export const useLogin = () => {
       target = "/admin";
     } else if (user.role === "seller") {
       target = "/seller";
+    } else if (user.role === "shipper") {
+      target = "/shipper/shipments";
     } else {
       target = fromPath ?? "/home";
     }

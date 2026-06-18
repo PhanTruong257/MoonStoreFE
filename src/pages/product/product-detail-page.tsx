@@ -101,14 +101,16 @@ export const ProductDetailPage = () => {
 
             <div className={styles.mainImageWrap}>
               <Image.PreviewGroup
-                items={product.gallery}
+                items={product.gallery.map(resolveImageUrl)}
                 preview={{
                   current: selectedImage,
                   onChange: (current) => setSelectedImage(current),
                 }}
               >
                 <Image
-                  src={product.gallery[selectedImage] ?? product.gallery[0]}
+                  src={resolveImageUrl(
+                    product.gallery[selectedImage] ?? product.gallery[0],
+                  )}
                   alt={product.name}
                   rootClassName={styles.mainImageRoot}
                   className={styles.mainImage}

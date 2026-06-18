@@ -8,6 +8,7 @@ import { extractApiErrorMessage } from "@/app/utils/error-message";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { ORDER_STATUS } from "@/const/orders.const";
 import { PAYMENT_METHOD, PAYMENT_STATUS } from "@/const/payment.const";
+import { RETURN_REQUEST_TYPE } from "@/const/return.const";
 import { chatActions } from "@/features/chat/chat.slice";
 import { ordersActions } from "@/features/orders/orders.slice";
 import { paymentsActions } from "@/features/payments/payments.slice";
@@ -132,11 +133,14 @@ export const useOrderDetail = () => {
   const openReturnModal = (groupId: number) => setReturnModalGroupId(groupId);
   const closeReturnModal = () => setReturnModalGroupId(null);
 
-  const submitReturnRequest = async (values: { type: string; reason: string }) => {
+  const submitReturnRequest = async (values: { reason: string }) => {
     if (!returnModalGroupId) return;
     setIsReturnRequesting(true);
     try {
-      await returnService.createReturnRequest(returnModalGroupId, values);
+      await returnService.createReturnRequest(returnModalGroupId, {
+        type: RETURN_REQUEST_TYPE.RETURN,
+        reason: values.reason,
+      });
       message.success("Gửi yêu cầu đổi/trả thành công!");
       closeReturnModal();
     } catch (err) {
