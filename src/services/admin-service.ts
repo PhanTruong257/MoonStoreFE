@@ -465,3 +465,52 @@ export const fetchAdminRevenueReport = async () => {
   const response = await http.get<AdminRevenueReport>("/admin/revenue");
   return response.data;
 };
+
+// === Analytics (NL2SQL) ===
+
+export type AnalyticsRevenuePoint = { period: string; revenue: number; orders: number };
+export type AnalyticsTopProduct = { name: string; quantity: number; revenue: number };
+export type AnalyticsStatusItem = { status: string; count: number };
+export type AnalyticsUserGrowthPoint = { period: string; newUsers: number };
+
+export type AdminAnalyticsDashboard = {
+  overview: {
+    totalRevenue: number;
+    totalOrders: number;
+    totalUsers: number;
+    activeSellers: number;
+    activeProducts: number;
+  };
+  revenue: { series: AnalyticsRevenuePoint[] };
+  topProducts: { items: AnalyticsTopProduct[] };
+  statusBreakdown: { items: AnalyticsStatusItem[] };
+  userGrowth: { series: AnalyticsUserGrowthPoint[] };
+  returnRefund: {
+    returns: number;
+    refunds: number;
+    totalOrders: number;
+    returnRefundRatePercent: number;
+  };
+};
+
+export type AnalyticsAskHistoryItem = { role: "user" | "assistant"; content: string };
+export type AnalyticsAskResult = { tool: string; result: Record<string, unknown> };
+export type AdminAnalyticsAskResponse = { text: string; data: AnalyticsAskResult[] };
+
+export const fetchAdminAnalyticsDashboard = async () => {
+  const response = await http.get<AdminAnalyticsDashboard>(
+    "/admin/analytics/dashboard",
+  );
+  return response.data;
+};
+
+export const askAdminAnalytics = async (
+  question: string,
+  history: AnalyticsAskHistoryItem[],
+) => {
+  const response = await http.post<AdminAnalyticsAskResponse>(
+    "/admin/analytics/ask",
+    { question, history },
+  );
+  return response.data;
+};

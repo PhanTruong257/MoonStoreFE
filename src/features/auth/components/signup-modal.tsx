@@ -43,7 +43,7 @@ export const SignupModal = ({ isOpen, onClose, onSignupSuccess }: SignupModalPro
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Mật khẩu không khớp");
       return;
     }
 

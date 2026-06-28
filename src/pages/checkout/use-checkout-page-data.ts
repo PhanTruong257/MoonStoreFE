@@ -186,7 +186,7 @@ export const useCheckoutPageData = () => {
 
   const placeOrder = async () => {
     if (items.length === 0) {
-      setOrderMessage("Cart is empty.");
+      setOrderMessage("Giỏ hàng trống.");
       return;
     }
 
@@ -198,7 +198,7 @@ export const useCheckoutPageData = () => {
         !billing.phone ||
         !billing.email
       ) {
-        setOrderMessage("Please fill all required billing fields.");
+        setOrderMessage("Vui lòng điền đầy đủ thông tin giao hàng bắt buộc.");
         return;
       }
     }
@@ -233,27 +233,27 @@ export const useCheckoutPageData = () => {
         paymentMethod === CHECKOUT_PAYMENT_OPTIONS.VNPAY &&
         response.paymentUrl
       ) {
-        setOrderMessage("Redirecting to VNPay...");
+        setOrderMessage("Đang chuyển tới VNPay...");
         window.location.href = response.paymentUrl;
         return;
       }
 
       if (paymentMethod === CHECKOUT_PAYMENT_OPTIONS.QR) {
-        setOrderMessage("Order placed. Redirecting to QR payment...");
+        setOrderMessage("Đã đặt đơn. Đang chuyển tới thanh toán QR...");
         void navigate(`/orders/${response.orderId}`);
         return;
       }
 
       setOrderMessage(
         paymentMethod === CHECKOUT_PAYMENT_OPTIONS.COD
-          ? "Order placed successfully. Payment method: Cash on delivery."
-          : "Order placed successfully. Payment method: Bank transfer.",
+          ? "Đặt hàng thành công. Phương thức: Thanh toán khi nhận hàng."
+          : "Đặt hàng thành công. Phương thức: Chuyển khoản ngân hàng.",
       );
     } catch (error) {
       // Surface the real reason (out of stock, invalid voucher, bad address, ...)
       // instead of a generic message so the user knows what to fix.
       setOrderMessage(
-        extractApiErrorMessage(error, "Unable to place order. Please try again."),
+        extractApiErrorMessage(error, "Không thể đặt hàng, vui lòng thử lại."),
       );
     } finally {
       setIsSubmitting(false);

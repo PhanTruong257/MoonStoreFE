@@ -47,6 +47,7 @@ export type OrderItem = {
 export type OrderGroupSummary = {
   id: number;
   sellerId: number;
+  shopName: string;
   status: string;
   subtotal: number;
   shippingFee: number;

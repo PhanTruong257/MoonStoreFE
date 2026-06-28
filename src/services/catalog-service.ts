@@ -99,6 +99,13 @@ export const fetchProductDetail = async (productId: number) => {
   return response.data.product;
 };
 
+export const fetchRelatedProducts = async (productId: number) => {
+  const response = await http.get<{ products: CatalogProduct[] }>(
+    `/catalog/products/${productId}/related`,
+  );
+  return response.data.products;
+};
+
 export type ShopStorefrontProduct = {
   id: number;
   name: string;

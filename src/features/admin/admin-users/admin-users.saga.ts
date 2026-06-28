@@ -24,43 +24,43 @@ function* loadList() {
     )) as AdminUser[];
     yield put(adminUsersActions.succeeded(users));
   } catch {
-    yield put(adminUsersActions.failed("Unable to load users."));
+    yield put(adminUsersActions.failed("Không tải được người dùng."));
   }
 }
 
 function* handlePromote(action: PayloadAction<number>) {
   try {
     yield call(promoteUserToAdmin, action.payload);
-    void message.success("User promoted to admin.");
+    void message.success("Đã thăng người dùng thành admin.");
     yield put(adminUsersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to promote user.");
-    yield put(adminUsersActions.actionFailed("Unable to promote user."));
+    void message.error("Không thể thăng cấp người dùng.");
+    yield put(adminUsersActions.actionFailed("Không thể thăng cấp người dùng."));
   }
 }
 
 function* handleDisable(action: PayloadAction<number>) {
   try {
     yield call(setUserStatus, action.payload, "disable");
-    void message.success("User disabled.");
+    void message.success("Đã vô hiệu hoá người dùng.");
     yield put(adminUsersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to disable user.");
-    yield put(adminUsersActions.actionFailed("Unable to disable user."));
+    void message.error("Không thể vô hiệu hoá người dùng.");
+    yield put(adminUsersActions.actionFailed("Không thể vô hiệu hoá người dùng."));
   }
 }
 
 function* handleEnable(action: PayloadAction<number>) {
   try {
     yield call(setUserStatus, action.payload, "enable");
-    void message.success("User enabled.");
+    void message.success("Đã kích hoạt người dùng.");
     yield put(adminUsersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to enable user.");
-    yield put(adminUsersActions.actionFailed("Unable to enable user."));
+    void message.error("Không thể kích hoạt người dùng.");
+    yield put(adminUsersActions.actionFailed("Không thể kích hoạt người dùng."));
   }
 }
 
@@ -70,13 +70,13 @@ function* handleGrantRole(
   try {
     const { userId, ...payload } = action.payload;
     yield call(grantUserRole, userId, payload);
-    void message.success(`Role "${payload.role}" granted successfully.`);
+    void message.success(`Đã cấp vai trò "${payload.role}" thành công.`);
     yield put(adminUsersActions.actionSucceeded());
     yield call(loadList);
   } catch (e: unknown) {
     const msg =
       (e as { response?: { data?: { message?: string } } })?.response?.data
-        ?.message ?? "Unable to grant role.";
+        ?.message ?? "Không thể cấp vai trò.";
     void message.error(msg);
     yield put(adminUsersActions.actionFailed(msg));
   }

@@ -87,32 +87,32 @@ export const homeSideMenu: HomeSideMenuItem[] = UI_TEXT.home.sideMenu;
 export const homeBanners: HomeBanner[] = [
   {
     id: "banner-1",
-    title: "Up to 10% off Voucher",
-    subtitle: "iPhone 14 Series",
-    ctaLabel: "Shop Now",
+    title: "Giảm đến 10% với Voucher",
+    subtitle: "Dòng iPhone 14",
+    ctaLabel: "Mua ngay",
     ctaTo: "/",
     image: "/images/products/product-1.jpg",
   },
   {
     id: "banner-2",
-    title: "Big Weekend Gaming Deals",
-    subtitle: "RGB accessories and monitor sale",
-    ctaLabel: "Discover",
+    title: "Ưu đãi Gaming cuối tuần",
+    subtitle: "Phụ kiện RGB & màn hình giảm giá",
+    ctaLabel: "Khám phá",
     ctaTo: "/",
     image: "/images/products/product-2.jpg",
   },
   {
     id: "banner-3",
-    title: "Upgrade Your Setup Today",
-    subtitle: "Laptops, cameras, and audio devices",
-    ctaLabel: "See Offers",
+    title: "Nâng cấp góc setup của bạn",
+    subtitle: "Laptop, máy ảnh và thiết bị âm thanh",
+    ctaLabel: "Xem ưu đãi",
     ctaTo: "/",
     image: "/images/products/product-3.jpg",
   },
 ];
 
 export const homeCategories: HomeCategory[] = [
-  { id: "all", label: "All" },
+  { id: "all", label: "Tất cả" },
   {
     id: "phones-devices",
     label: "Điện Thoại & Thiết Bị Số",

@@ -167,6 +167,90 @@
   align-self: flex-end;
 }
 
+// Bot column: bubble + product cards stacked
+.botColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+// Inline product link inside bot text
+.inlineProductLink {
+  color: #6366f1;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: #4f46e5;
+  }
+}
+
+// Product cards under the bot bubble
+.productCards {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.productCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+
+  &:hover {
+    border-color: #6366f1;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.productThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f1f5f9;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.productName {
+  font-size: 12px;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.productPrice {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ef4444;
+}
+
 .bubble {
   padding: 10px 14px;
   font-size: 13px;
@@ -301,4 +385,151 @@
 .fabLabel {
   font-size: 13px;
   font-weight: 500;
+}
+
+/* ===== Order draft card (đặt hàng qua chat) ===== */
+.orderCard {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #e6e8ec;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 13px;
+}
+
+.orderTitle {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.orderItems {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #e6e8ec;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.orderItemName {
+  color: #333;
+}
+
+.orderSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e6e8ec;
+}
+
+.orderRow {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+}
+
+.orderTotal {
+  color: #111;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.orderMeta {
+  padding: 8px 0;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orderWarnings {
+  margin: 0 0 8px;
+  padding-left: 4px;
+  list-style: none;
+  color: #d46b08;
+
+  li {
+    font-size: 12px;
+  }
+}
+
+.orderConfirmBtn {
+  width: 100%;
+  padding: 9px;
+  border: none;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.orderDoneNote {
+  text-align: center;
+  color: #389e0d;
+  font-weight: 600;
+}
+
+/* ===== Order result (sau khi đặt) ===== */
+.orderResult {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payBtn {
+  display: block;
+  text-align: center;
+  padding: 9px;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.qrBox {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #e6e8ec;
+  border-radius: 8px;
+}
+
+.qrImage {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.qrInfo {
+  font-size: 12px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viewOrderLink {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #1677ff;
+  border-radius: 8px;
+  color: #1677ff;
+  font-weight: 600;
+  text-decoration: none;
 }

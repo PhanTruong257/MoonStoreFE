@@ -85,7 +85,7 @@ export const useSellerApply = () => {
 
   const submit = async () => {
     if (!shopName.trim()) {
-      void message.error("Please enter a shop name.");
+      void message.error("Vui lòng nhập tên cửa hàng.");
       return;
     }
 
@@ -109,11 +109,11 @@ export const useSellerApply = () => {
       setProfile(next);
       void message.success(
         next?.status === SELLER_APPLICATION_STATUS.REJECTED
-          ? "Application updated and resubmitted."
-          : "Application submitted. Awaiting admin review.",
+          ? "Đã cập nhật và gửi lại đơn đăng ký."
+          : "Đã gửi đơn đăng ký. Đang chờ quản trị viên duyệt.",
       );
     } catch {
-      void message.error("Unable to submit application.");
+      void message.error("Không thể gửi đơn đăng ký.");
     } finally {
       setIsSubmitting(false);
     }

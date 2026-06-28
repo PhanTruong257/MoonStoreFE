@@ -31,7 +31,7 @@ function* handleLoadRequested(action: PayloadAction<number>) {
   } catch {
     yield put(
       sellerProductEditActions.sellerProductEditLoadFailed(
-        "Unable to load product.",
+        "Không tải được sản phẩm.",
       ),
     );
   }
@@ -49,13 +49,13 @@ function* handleUpdateRequested(
       action.payload.productId,
       action.payload.payload,
     );
-    void message.success("Product updated.");
+    void message.success("Đã cập nhật sản phẩm.");
     yield put(sellerProductEditActions.sellerProductEditUpdateSucceeded());
   } catch {
-    void message.error("Unable to update product.");
+    void message.error("Không thể cập nhật sản phẩm.");
     yield put(
       sellerProductEditActions.sellerProductEditUpdateFailed(
-        "Unable to update product.",
+        "Không thể cập nhật sản phẩm.",
       ),
     );
   }
@@ -64,13 +64,13 @@ function* handleUpdateRequested(
 function* handleDeleteRequested(action: PayloadAction<number>) {
   try {
     yield call(deleteSellerProduct, action.payload);
-    void message.success("Product deleted.");
+    void message.success("Đã xoá sản phẩm.");
     yield put(sellerProductEditActions.sellerProductEditDeleteSucceeded());
   } catch {
-    void message.error("Unable to delete product.");
+    void message.error("Không thể xoá sản phẩm.");
     yield put(
       sellerProductEditActions.sellerProductEditDeleteFailed(
-        "Unable to delete product.",
+        "Không thể xoá sản phẩm.",
       ),
     );
   }

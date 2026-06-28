@@ -8,7 +8,7 @@ import {
 } from "./seller-shell-context";
 
 const DEFAULT_PROPS: SellerShellPageProps = {
-  title: "Seller Hub",
+  title: "Kênh người bán",
   subtitle: "",
   fullHeight: false,
 };

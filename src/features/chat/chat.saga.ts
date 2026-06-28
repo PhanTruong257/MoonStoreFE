@@ -44,7 +44,7 @@ function* handleConversationsRequested() {
   } catch (error) {
     yield put(
       chatActions.conversationsFailed(
-        extractApiErrorMessage(error, "Unable to load conversations."),
+        extractApiErrorMessage(error, "Không tải được cuộc trò chuyện."),
       ),
     );
   }
@@ -61,7 +61,7 @@ function* handleConversationDetailRequested(action: PayloadAction<number>) {
   } catch (error) {
     yield put(
       chatActions.conversationDetailFailed(
-        extractApiErrorMessage(error, "Unable to load conversation."),
+        extractApiErrorMessage(error, "Không tải được cuộc trò chuyện."),
       ),
     );
   }
@@ -80,7 +80,7 @@ function* handleMessageSendRequested(
   } catch (error) {
     yield put(
       chatActions.messageSendFailed(
-        extractApiErrorMessage(error, "Unable to send message."),
+        extractApiErrorMessage(error, "Không thể gửi tin nhắn."),
       ),
     );
   }
@@ -116,7 +116,7 @@ function* handleConversationCreateRequested(
   } catch (error) {
     yield put(
       chatActions.conversationCreateFailed(
-        extractApiErrorMessage(error, "Unable to start conversation."),
+        extractApiErrorMessage(error, "Không thể bắt đầu trò chuyện."),
       ),
     );
   }

@@ -12,7 +12,7 @@ function* handleSellerOrdersRequested() {
     yield put(sellerOrdersActions.sellerOrdersSucceeded(groups));
   } catch {
     yield put(
-      sellerOrdersActions.sellerOrdersFailed("Unable to load orders."),
+      sellerOrdersActions.sellerOrdersFailed("Không tải được đơn hàng."),
     );
   }
 }

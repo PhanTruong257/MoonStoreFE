@@ -1,5 +1,6 @@
 import { all, fork } from "redux-saga/effects";
 
+import { adminAnalyticsSaga } from "@/features/admin/admin-analytics/admin-analytics.saga";
 import { adminBrandsSaga } from "@/features/admin/admin-brands/admin-brands.saga";
 import { adminCategoriesSaga } from "@/features/admin/admin-categories/admin-categories.saga";
 import { adminDashboardSaga } from "@/features/admin/admin-dashboard/admin-dashboard.saga";
@@ -51,6 +52,7 @@ export function* rootSaga() {
     fork(adminVouchersSaga),
     fork(adminOrdersSaga),
     fork(adminRevenueSaga),
+    fork(adminAnalyticsSaga),
     fork(adminRefundsSaga),
     fork(adminWithdrawalsSaga),
   ]);

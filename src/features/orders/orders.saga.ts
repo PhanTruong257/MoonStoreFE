@@ -18,7 +18,7 @@ function* handleListRequested() {
     const orders = (yield call(fetchMyOrders)) as OrderSummary[];
     yield put(ordersActions.ordersListSucceeded(orders));
   } catch {
-    yield put(ordersActions.ordersListFailed("Unable to load orders."));
+    yield put(ordersActions.ordersListFailed("Không tải được đơn hàng."));
   }
 }
 
@@ -27,7 +27,7 @@ function* handleDetailRequested(action: PayloadAction<number>) {
     const order = (yield call(fetchMyOrderDetail, action.payload)) as OrderSummary;
     yield put(ordersActions.orderDetailSucceeded(order));
   } catch {
-    yield put(ordersActions.orderDetailFailed("Unable to load order."));
+    yield put(ordersActions.orderDetailFailed("Không tải được đơn hàng."));
   }
 }
 
@@ -36,7 +36,7 @@ function* handleCancelRequested(
 ) {
   try {
     yield call(cancelOrderGroup, action.payload.groupId);
-    void message.success("Order group cancelled.");
+    void message.success("Đã huỷ nhóm đơn hàng.");
     yield put(ordersActions.orderGroupCancelSucceeded());
     const order = (yield call(
       fetchMyOrderDetail,
@@ -44,9 +44,9 @@ function* handleCancelRequested(
     )) as OrderSummary;
     yield put(ordersActions.orderDetailSucceeded(order));
   } catch {
-    void message.error("Unable to cancel order group.");
+    void message.error("Không thể huỷ nhóm đơn hàng.");
     yield put(
-      ordersActions.orderGroupCancelFailed("Unable to cancel order group."),
+      ordersActions.orderGroupCancelFailed("Không thể huỷ nhóm đơn."),
     );
   }
 }
@@ -59,10 +59,10 @@ function* handleRefundRequestRequested(
       reason: action.payload.reason,
       amount: action.payload.amount,
     });
-    void message.success("Refund request submitted.");
+    void message.success("Đã gửi yêu cầu hoàn tiền.");
     yield put(ordersActions.refundRequestSucceeded());
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to submit refund request.");
+    const msg = extractApiErrorMessage(error, "Không thể gửi yêu cầu hoàn tiền.");
     void message.error(msg);
     yield put(ordersActions.refundRequestFailed(msg));
   }

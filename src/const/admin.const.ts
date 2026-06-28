@@ -11,9 +11,17 @@ export const ADMIN_ROUTES = {
   brands: "/admin/brands",
   vouchers: "/admin/vouchers",
   revenue: "/admin/revenue",
+  analytics: "/admin/analytics",
   refunds: "/admin/refunds",
   withdrawals: "/admin/withdrawals",
 } as const;
+
+export const ADMIN_ANALYTICS_SAMPLE_QUESTIONS = [
+  "Doanh thu 6 tháng gần đây thế nào?",
+  "Top 5 sản phẩm bán chạy nhất?",
+  "Tỉ lệ đơn bị hủy là bao nhiêu?",
+  "Có bao nhiêu yêu cầu đổi/trả và hoàn tiền?",
+] as const;
 
 export const ADMIN_REFUND_STATUS_OPTIONS = ["PENDING", "APPROVED", "REJECTED"] as const;
 export const ADMIN_WITHDRAWAL_STATUS_OPTIONS = ["PENDING", "APPROVED", "REJECTED"] as const;

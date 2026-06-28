@@ -14,7 +14,7 @@ function* handleRefundsRequested() {
     const items = (yield call(fetchAdminRefundRequests)) as AdminRefundRequest[];
     yield put(adminRefundsActions.refundsSucceeded(items));
   } catch (error) {
-    yield put(adminRefundsActions.refundsFailed(extractApiErrorMessage(error, "Unable to load refund requests.")));
+    yield put(adminRefundsActions.refundsFailed(extractApiErrorMessage(error, "Không tải được yêu cầu hoàn tiền.")));
   }
 }
 

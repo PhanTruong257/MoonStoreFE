@@ -339,40 +339,27 @@ export const ProductDetailPage = () => {
           </header>
 
           <div className={styles.relatedGrid}>
-            {relatedProducts.map((item) => {
-              const discount = Math.round(
-                ((item.oldPrice - item.price) / item.oldPrice) * 100,
-              );
-
-              return (
-                <ProductCard
-                  key={item.id}
-                  name={item.name}
-                  image={item.image}
-                  to={`/product/${item.id}`}
-                  discountLabel={`-${discount}%`}
-                  wishlistLabel={t.wishButtonLabel}
-                  renderPrice={
-                    <p>
-                      <strong>{formatMoney(item.price)}</strong>
-                      <del>{formatMoney(item.oldPrice)}</del>
-                    </p>
-                  }
-                  renderMeta={
-                    <small className={styles.relatedMeta}>
-                      <Rate
-                        disabled
-                        value={item.rating}
-                        className={styles.relatedStars}
-                      />
-                      <span>({item.sold})</span>
-                    </small>
-                  }
-                  className={styles.relatedCard}
-                  imageWrapClassName={styles.relatedImageWrap}
-                />
-              );
-            })}
+            {relatedProducts.map((item) => (
+              <ProductCard
+                key={item.id}
+                name={item.name}
+                image={resolveImageUrl(item.imageUrl)}
+                to={`/product/${item.id}`}
+                wishlistLabel={t.wishButtonLabel}
+                renderPrice={
+                  <p>
+                    <strong>{formatMoney(item.basePrice)}</strong>
+                  </p>
+                }
+                renderMeta={
+                  <small className={styles.relatedMeta}>
+                    <span>{item.categoryName}</span>
+                  </small>
+                }
+                className={styles.relatedCard}
+                imageWrapClassName={styles.relatedImageWrap}
+              />
+            ))}
           </div>
         </section>
       </section>

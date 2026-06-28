@@ -19,7 +19,7 @@ function* handleValidateRequested(
     if (!result.isValid || !result.voucher) {
       yield put(
         vouchersActions.voucherValidateFailed(
-          result.reason ?? "Invalid voucher.",
+          result.reason ?? "Mã giảm giá không hợp lệ.",
         ),
       );
       return;
@@ -29,12 +29,12 @@ function* handleValidateRequested(
       vouchersActions.voucherValidateSucceeded({
         voucher: result.voucher,
         discountAmount: result.discountAmount,
-        message: `Voucher applied: -${result.discountAmount.toLocaleString("vi-VN")}`,
+        message: `Đã áp dụng mã giảm giá: -${result.discountAmount.toLocaleString("vi-VN")}`,
       }),
     );
   } catch {
     yield put(
-      vouchersActions.voucherValidateFailed("Unable to validate voucher."),
+      vouchersActions.voucherValidateFailed("Không thể kiểm tra mã giảm giá."),
     );
   }
 }

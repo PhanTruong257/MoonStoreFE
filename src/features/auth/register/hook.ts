@@ -37,7 +37,7 @@ export const useRegister = () => {
 
   const submit = () => {
     if (!form.name || !form.email || !form.password) {
-      setLocalError("Please fill all required fields.");
+      setLocalError("Vui lòng điền đầy đủ các trường bắt buộc.");
       return false;
     }
 

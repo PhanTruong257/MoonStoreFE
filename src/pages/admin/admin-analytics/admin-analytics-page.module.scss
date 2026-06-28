@@ -1,0 +1,233 @@
+.error {
+  color: #cf1322;
+}
+
+/* ===== KPI cards ===== */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.kpiLabel {
+  font-size: 13px;
+  color: #888;
+}
+
+.kpiValue {
+  font-size: 20px;
+  color: #111;
+}
+
+/* ===== Charts ===== */
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.chartCard,
+.returnBox,
+.askBox {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.chartTitle {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.barList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.barLabel {
+  font-size: 13px;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barTrack {
+  height: 10px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4096ff, #1677ff);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.barValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+}
+
+/* ===== Return/refund ===== */
+.returnBox {
+  margin-bottom: 20px;
+}
+
+.returnStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 14px;
+  color: #555;
+
+  strong {
+    color: #111;
+  }
+}
+
+/* ===== Ask (NL2SQL) ===== */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.suggestLabel {
+  font-size: 13px;
+  color: #888;
+}
+
+.suggestTag {
+  cursor: pointer;
+  margin: 0;
+}
+
+.askComposer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.askEmpty {
+  color: #999;
+  font-size: 14px;
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.qaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qaQuestion {
+  align-self: flex-end;
+  max-width: 80%;
+  margin: 0;
+  padding: 8px 12px;
+  background: #1677ff;
+  color: #fff;
+  border-radius: 12px 12px 0 12px;
+  font-size: 14px;
+}
+
+.qaAnswer {
+  align-self: flex-start;
+  max-width: 95%;
+  padding: 12px;
+  background: #f7f8fa;
+  border-radius: 12px 12px 12px 0;
+}
+
+.qaText {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #222;
+  white-space: pre-wrap;
+}
+
+.askData {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    border: 1px solid #e8e8e8;
+    padding: 6px 10px;
+    text-align: left;
+  }
+
+  th {
+    background: #fafafa;
+    font-weight: 600;
+  }
+}
+
+.dataNote {
+  margin: 0;
+  color: #cf1322;
+  font-size: 13px;
+}
+
+.kpiInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.kpiChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.kpiChipKey {
+  color: #888;
+}

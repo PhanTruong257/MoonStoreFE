@@ -18,54 +18,54 @@ export const publicRoutes: RouteObject[] = [
       {
         path: "/",
         element: <Navigate to="/home" replace />,
-        handle: { title: "Home" },
+        handle: { title: "Trang chủ" },
       },
       {
         path: "/login",
         element: <AuthPage />,
-        handle: { title: "Login" },
+        handle: { title: "Đăng nhập" },
       },
       {
         path: "/register",
         element: <AuthPage />,
-        handle: { title: "Register" },
+        handle: { title: "Đăng ký" },
       },
     ],
   },
   {
     path: "/home",
     element: <HomePage />,
-    handle: { title: "Home" },
+    handle: { title: "Trang chủ" },
   },
   {
     path: "/categories",
     element: <HomePage />,
-    handle: { title: "Categories" },
+    handle: { title: "Danh mục" },
   },
   {
     path: "/about",
     element: <AboutPage />,
-    handle: { title: "About" },
+    handle: { title: "Giới thiệu" },
   },
   {
     path: "/contact",
     element: <ContactPage />,
-    handle: { title: "Contact" },
+    handle: { title: "Liên hệ" },
   },
   {
     path: "/product/:productId",
     element: <ProductDetailPage />,
-    handle: { title: "Product Detail" },
+    handle: { title: "Chi tiết sản phẩm" },
   },
   {
     path: "/shop/:sellerId",
     element: <ShopPage />,
-    handle: { title: "Shop" },
+    handle: { title: "Cửa hàng" },
   },
   {
     path: "/payment/result",
     element: <PaymentResultPage />,
-    handle: { title: "Payment Result" },
+    handle: { title: "Kết quả thanh toán" },
   },
   {
     path: "/so-sanh",
@@ -75,6 +75,6 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/:categorySlug",
     element: <HomePage />,
-    handle: { title: "Category Products" },
+    handle: { title: "Sản phẩm theo danh mục" },
   },
 ];

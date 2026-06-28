@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import { rootSaga } from "@/app/app-saga";
+import { adminAnalyticsReducer } from "@/features/admin/admin-analytics/admin-analytics.slice";
 import { adminBrandsReducer } from "@/features/admin/admin-brands/admin-brands.slice";
 import { adminCategoriesReducer } from "@/features/admin/admin-categories/admin-categories.slice";
 import { adminDashboardReducer } from "@/features/admin/admin-dashboard/admin-dashboard.slice";
@@ -75,6 +76,7 @@ export const store = configureStore({
     adminVouchers: adminVouchersReducer,
     adminOrders: adminOrdersReducer,
     adminRevenue: adminRevenueReducer,
+    adminAnalytics: adminAnalyticsReducer,
     adminRefunds: adminRefundsReducer,
     adminWithdrawals: adminWithdrawalsReducer,
   },

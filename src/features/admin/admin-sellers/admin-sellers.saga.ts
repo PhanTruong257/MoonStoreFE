@@ -27,19 +27,19 @@ function* loadList() {
     )) as AdminSeller[];
     yield put(adminSellersActions.succeeded(sellers));
   } catch {
-    yield put(adminSellersActions.failed("Unable to load seller applications."));
+    yield put(adminSellersActions.failed("Không tải được danh sách đăng ký người bán."));
   }
 }
 
 function* handleApprove(action: PayloadAction<number>) {
   try {
     yield call(approveSeller, action.payload);
-    void message.success("Seller approved.");
+    void message.success("Đã duyệt người bán.");
     yield put(adminSellersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to approve seller.");
-    yield put(adminSellersActions.actionFailed("Unable to approve seller."));
+    void message.error("Không thể duyệt người bán.");
+    yield put(adminSellersActions.actionFailed("Không thể duyệt người bán."));
   }
 }
 
@@ -48,36 +48,36 @@ function* handleReject(
 ) {
   try {
     yield call(rejectSeller, action.payload.sellerId, action.payload.reason);
-    void message.success("Seller rejected.");
+    void message.success("Đã từ chối người bán.");
     yield put(adminSellersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to reject seller.");
-    yield put(adminSellersActions.actionFailed("Unable to reject seller."));
+    void message.error("Không thể từ chối người bán.");
+    yield put(adminSellersActions.actionFailed("Không thể từ chối người bán."));
   }
 }
 
 function* handleDisable(action: PayloadAction<number>) {
   try {
     yield call(setSellerStatus, action.payload, "disable");
-    void message.success("Seller disabled.");
+    void message.success("Đã vô hiệu hoá người bán.");
     yield put(adminSellersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to disable seller.");
-    yield put(adminSellersActions.actionFailed("Unable to disable seller."));
+    void message.error("Không thể vô hiệu hoá người bán.");
+    yield put(adminSellersActions.actionFailed("Không thể vô hiệu hoá người bán."));
   }
 }
 
 function* handleEnable(action: PayloadAction<number>) {
   try {
     yield call(setSellerStatus, action.payload, "enable");
-    void message.success("Seller enabled.");
+    void message.success("Đã kích hoạt người bán.");
     yield put(adminSellersActions.actionSucceeded());
     yield call(loadList);
   } catch {
-    void message.error("Unable to enable seller.");
-    yield put(adminSellersActions.actionFailed("Unable to enable seller."));
+    void message.error("Không thể kích hoạt người bán.");
+    yield put(adminSellersActions.actionFailed("Không thể kích hoạt người bán."));
   }
 }
 

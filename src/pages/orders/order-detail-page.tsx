@@ -87,7 +87,7 @@ export const OrderDetailPage = () => {
                 {order.groups?.map((group) => (
                   <article key={group.id} className={styles.card}>
                     <div className={styles.groupHeader}>
-                      <h3>{t.shopLabel(group.sellerId)}</h3>
+                      <h3>{group.shopName || t.shopLabel(group.sellerId)}</h3>
                       <div className={styles.groupActions}>
                         <Tag
                           color={ORDER_STATUS_COLORS[group.status] ?? "default"}

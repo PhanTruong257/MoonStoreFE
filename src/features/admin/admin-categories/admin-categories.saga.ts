@@ -22,18 +22,18 @@ function* loadList() {
     const items = (yield call(fetchAdminCategories)) as AdminCategory[];
     yield put(adminCategoriesActions.succeeded(items));
   } catch {
-    yield put(adminCategoriesActions.failed("Unable to load categories."));
+    yield put(adminCategoriesActions.failed("Không tải được danh mục."));
   }
 }
 
 function* handleCreate(action: PayloadAction<CreateAdminCategoryPayload>) {
   try {
     yield call(createAdminCategory, action.payload);
-    void message.success("Category created.");
+    void message.success("Đã tạo danh mục.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to create category.");
+    const msg = extractApiErrorMessage(error, "Không thể tạo danh mục.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }
@@ -44,11 +44,11 @@ function* handleUpdate(
 ) {
   try {
     yield call(updateAdminCategory, action.payload.id, action.payload.payload);
-    void message.success("Category updated.");
+    void message.success("Đã cập nhật danh mục.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to update category.");
+    const msg = extractApiErrorMessage(error, "Không thể cập nhật danh mục.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }
@@ -57,11 +57,11 @@ function* handleUpdate(
 function* handleDelete(action: PayloadAction<number>) {
   try {
     yield call(deleteAdminCategory, action.payload);
-    void message.success("Category deleted.");
+    void message.success("Đã xoá danh mục.");
     yield put(adminCategoriesActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to delete category.");
+    const msg = extractApiErrorMessage(error, "Không thể xoá danh mục.");
     void message.error(msg);
     yield put(adminCategoriesActions.actionFailed(msg));
   }

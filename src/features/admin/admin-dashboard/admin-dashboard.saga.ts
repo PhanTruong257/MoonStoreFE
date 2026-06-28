@@ -10,7 +10,7 @@ function* handleRequested() {
     const stats = (yield call(fetchAdminStats)) as AdminStats;
     yield put(adminDashboardActions.succeeded(stats));
   } catch {
-    yield put(adminDashboardActions.failed("Unable to load admin stats."));
+    yield put(adminDashboardActions.failed("Không tải được thống kê quản trị."));
   }
 }
 

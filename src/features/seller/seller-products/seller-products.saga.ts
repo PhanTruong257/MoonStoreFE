@@ -17,7 +17,7 @@ function* handleProductsRequested() {
     yield put(sellerProductsActions.sellerProductsSucceeded(products));
   } catch {
     yield put(
-      sellerProductsActions.sellerProductsFailed("Unable to load products."),
+      sellerProductsActions.sellerProductsFailed("Không tải được sản phẩm."),
     );
   }
 }
@@ -25,15 +25,15 @@ function* handleProductsRequested() {
 function* handleDeleteRequested(action: PayloadAction<number>) {
   try {
     yield call(deleteSellerProduct, action.payload);
-    void message.success("Product deleted.");
+    void message.success("Đã xoá sản phẩm.");
     yield put(
       sellerProductsActions.sellerProductDeleteSucceeded(action.payload),
     );
   } catch {
-    void message.error("Unable to delete product.");
+    void message.error("Không thể xoá sản phẩm.");
     yield put(
       sellerProductsActions.sellerProductDeleteFailed(
-        "Unable to delete product.",
+        "Không thể xoá sản phẩm.",
       ),
     );
   }

@@ -30,7 +30,7 @@ function* handleProductListRequested(
       }>;
 
       categories = [
-        { id: "all", label: "All", slug: "all" },
+        { id: "all", label: "Tất cả", slug: "all" },
         ...categoryResponse.map((item) => ({
           id: String(item.id),
           label: item.name,
@@ -83,7 +83,7 @@ function* handleProductListRequested(
       }),
     );
   } catch {
-    yield put(productListActions.productListFailed("Unable to load products."));
+    yield put(productListActions.productListFailed("Không tải được sản phẩm."));
   }
 }
 

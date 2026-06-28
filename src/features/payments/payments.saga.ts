@@ -24,7 +24,7 @@ function* handleQrInfoRequested(action: PayloadAction<number>) {
   } catch (error) {
     yield put(
       paymentsActions.qrInfoFailed(
-        extractApiErrorMessage(error, "Unable to load QR information."),
+        extractApiErrorMessage(error, "Không tải được thông tin QR."),
       ),
     );
   }
@@ -39,11 +39,11 @@ function* handleManualConfirmRequested(
       action.payload.paymentId,
     )) as ConfirmManualResponse;
     yield put(paymentsActions.manualConfirmSucceeded(result.paymentStatus));
-    void message.success("Payment marked as received.");
+    void message.success("Đã đánh dấu thanh toán là đã nhận.");
   } catch (error) {
     const reason = extractApiErrorMessage(
       error,
-      "Unable to confirm payment.",
+      "Không thể xác nhận thanh toán.",
     );
     void message.error(reason);
     yield put(paymentsActions.manualConfirmFailed(reason));

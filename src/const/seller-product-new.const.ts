@@ -6,7 +6,7 @@ export const SELLER_PRODUCT_NEW_DEFAULTS = {
   BRAND_ID: 1,
   BASE_PRICE: 0,
   STOCK: 10,
-  IMAGE_URL: "/images/products/product-1.jpg",
+  IMAGE_URL: "",
   STATUS: PRODUCT_STATUS.ACTIVE,
 } as const;
 

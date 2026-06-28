@@ -7,12 +7,12 @@ import { dispatchOpenLoginModal } from "@/app/utils/login-modal-event";
 import { extractApiErrorMessage } from "@/app/utils/error-message";
 import { CHAT_ROUTES } from "@/const/chat.const";
 import { getStoredUser } from "@/features/auth/auth-storage";
-import { homeProducts } from "@/pages/home/mock-data";
 import { addToCart } from "@/services/cart-service";
-import { fetchProductDetail } from "@/services/catalog-service";
+import { fetchProductDetail, fetchRelatedProducts } from "@/services/catalog-service";
 import type {
   CatalogOption,
   CatalogOptionGroup,
+  CatalogProduct,
   CatalogProductDetail,
   ProductHighlight,
 } from "@/services/catalog-service";
@@ -73,6 +73,7 @@ export const useProductDetailData = () => {
   const [catalogProduct, setCatalogProduct] =
     useState<CatalogProductDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [relatedProducts, setRelatedProducts] = useState<CatalogProduct[]>([]);
 
   const product = useMemo<ProductView | null>(() => {
     if (!productId) {
@@ -143,13 +144,18 @@ export const useProductDetailData = () => {
 
     const loadDetail = async () => {
       try {
-        const detail = await fetchProductDetail(numericId);
+        const [detail, related] = await Promise.all([
+          fetchProductDetail(numericId),
+          fetchRelatedProducts(numericId),
+        ]);
         if (isMounted) {
           setCatalogProduct(detail);
+          setRelatedProducts(related);
         }
       } catch {
         if (isMounted) {
           setCatalogProduct(null);
+          setRelatedProducts([]);
         }
       } finally {
         if (isMounted) {
@@ -187,13 +193,6 @@ export const useProductDetailData = () => {
   const selectedOptionIds = useMemo(() => {
     return Object.values(selectedOptions).flat();
   }, [selectedOptions]);
-
-  const relatedProducts = useMemo(() => {
-    if (!product) {
-      return homeProducts.slice(0, 4);
-    }
-    return homeProducts.filter((item) => item.id !== product.id).slice(0, 4);
-  }, [product]);
 
   const setOption = (group: ProductOptionGroupView, optionId: number) => {
     setSelectedOptions((prev) => {

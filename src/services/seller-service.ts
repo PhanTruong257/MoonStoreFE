@@ -39,6 +39,11 @@ export type SellerProductOptionGroupInput = {
   options: SellerProductOptionInput[];
 };
 
+export type ProductHighlight = {
+  label: string;
+  value: string;
+};
+
 export type CreateProductPayload = {
   name: string;
   description?: string;
@@ -49,6 +54,7 @@ export type CreateProductPayload = {
   imageUrl: string;
   status?: string;
   optionGroups?: SellerProductOptionGroupInput[];
+  highlights?: ProductHighlight[];
 };
 
 export type SellerProductOption = {
@@ -78,6 +84,7 @@ export type SellerProduct = {
   basePrice: number;
   stock: number;
   imageUrl: string;
+  highlights: ProductHighlight[];
   optionGroups: SellerProductOptionGroup[];
 };
 
@@ -195,6 +202,29 @@ export const updateMySellerProfile = async (
 export const createProduct = async (payload: CreateProductPayload) => {
   const response = await http.post<CreateProductResponse>(
     "/sellers/products",
+    payload,
+  );
+  return response.data;
+};
+
+export type GenerateProductContentPayload = {
+  imageUrl: string;
+  name?: string;
+  categoryId?: number;
+  brandId?: number;
+};
+
+export type GenerateProductContentResponse = {
+  title: string;
+  description: string;
+  highlights: ProductHighlight[];
+};
+
+export const generateProductContent = async (
+  payload: GenerateProductContentPayload,
+) => {
+  const response = await http.post<GenerateProductContentResponse>(
+    "/ai/product-content",
     payload,
   );
   return response.data;

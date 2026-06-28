@@ -109,6 +109,14 @@ export const AdminShell = ({
               {ta.nav.revenue}
             </NavLink>
             <NavLink
+              to="/admin/analytics"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navActive : ""}`
+              }
+            >
+              {ta.nav.analytics}
+            </NavLink>
+            <NavLink
               to="/admin/withdrawals"
               className={({ isActive }) =>
                 `${styles.navLink} ${isActive ? styles.navActive : ""}`

@@ -56,7 +56,7 @@ export const useLogin = () => {
 
   const submit = () => {
     if (!form.email || !form.password) {
-      setLocalError("Please enter email and password.");
+      setLocalError("Vui lòng nhập email và mật khẩu.");
       return false;
     }
 

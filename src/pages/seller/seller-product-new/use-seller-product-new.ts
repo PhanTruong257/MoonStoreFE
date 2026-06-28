@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { SELLER_PRODUCT_NEW_DEFAULTS } from "@/const/seller-product-new.const";
 import { SELLER_ROUTES } from "@/const/seller.const";
+import { UI_TEXT } from "@/const/ui-text";
 import { getStoredUser } from "@/features/auth/auth-storage";
 import {
   loadSellerProducts,
@@ -10,8 +11,17 @@ import {
 } from "@/features/seller/seller-storage";
 import type { CatalogCategory } from "@/services/catalog-service";
 import { fetchCategories } from "@/services/catalog-service";
-import { createProduct } from "@/services/seller-service";
-import type { SellerProductOptionGroupInput } from "@/services/seller-service";
+import { createProduct, generateProductContent } from "@/services/seller-service";
+import type {
+  ProductHighlight,
+  SellerProductOptionGroupInput,
+} from "@/services/seller-service";
+
+const aiText = UI_TEXT.seller.productNew;
+
+// AI chỉ đọc được ảnh đã upload thật (lưu ở /uploads/products/...), không đọc
+// được ảnh placeholder tĩnh mặc định (/images/...).
+const UPLOADED_IMAGE_PREFIX = "/uploads/";
 
 type FormState = {
   name: string;
@@ -22,6 +32,7 @@ type FormState = {
   stock: number;
   imageUrl: string;
   optionGroups: SellerProductOptionGroupInput[];
+  highlights: ProductHighlight[];
   status: string;
 };
 
@@ -34,6 +45,7 @@ const initialForm: FormState = {
   stock: SELLER_PRODUCT_NEW_DEFAULTS.STOCK,
   imageUrl: SELLER_PRODUCT_NEW_DEFAULTS.IMAGE_URL,
   optionGroups: [],
+  highlights: [],
   status: SELLER_PRODUCT_NEW_DEFAULTS.STATUS,
 };
 
@@ -46,6 +58,8 @@ export const useSellerProductNew = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [categories, setCategories] = useState<CatalogCategory[]>([]);
   const [categoriesError, setCategoriesError] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   const setField = <K extends keyof FormState>(
     field: K,
@@ -76,7 +90,7 @@ export const useSellerProductNew = () => {
         if (!isMounted) {
           return;
         }
-        setCategoriesError("Unable to load categories.");
+        setCategoriesError("Không tải được danh mục.");
       }
     };
 
@@ -89,11 +103,15 @@ export const useSellerProductNew = () => {
 
   const submit = async () => {
     if (!user) {
-      setError("Please login to continue.");
+      setError("Vui lòng đăng nhập để tiếp tục.");
       return;
     }
     if (!form.name.trim()) {
-      setError("Please enter product name.");
+      setError("Vui lòng nhập tên sản phẩm.");
+      return;
+    }
+    if (!form.imageUrl) {
+      setError("Vui lòng tải ảnh sản phẩm.");
       return;
     }
 
@@ -111,6 +129,7 @@ export const useSellerProductNew = () => {
         imageUrl: form.imageUrl,
         status: form.status,
         optionGroups: form.optionGroups.length > 0 ? form.optionGroups : undefined,
+        highlights: form.highlights.length > 0 ? form.highlights : undefined,
       });
 
       const current = loadSellerProducts(user.id);
@@ -129,9 +148,38 @@ export const useSellerProductNew = () => {
 
       void navigate(SELLER_ROUTES.products);
     } catch {
-      setError("Unable to create product.");
+      setError("Không thể tạo sản phẩm.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const canGenerate = form.imageUrl.includes(UPLOADED_IMAGE_PREFIX);
+
+  const generateContent = async () => {
+    if (!canGenerate) {
+      setAiError(aiText.aiNeedImage);
+      return;
+    }
+    setIsGenerating(true);
+    setAiError("");
+    try {
+      const data = await generateProductContent({
+        imageUrl: form.imageUrl,
+        name: form.name || undefined,
+        categoryId: form.categoryId,
+        brandId: form.brandId,
+      });
+      setForm((prev) => ({
+        ...prev,
+        name: data.title || prev.name,
+        description: data.description || prev.description,
+        highlights: data.highlights.length > 0 ? data.highlights : prev.highlights,
+      }));
+    } catch {
+      setAiError(aiText.aiError);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -141,7 +189,11 @@ export const useSellerProductNew = () => {
     isSaving,
     categories,
     categoriesError,
+    isGenerating,
+    aiError,
+    canGenerate,
     setField,
     submit,
+    generateContent,
   };
 };

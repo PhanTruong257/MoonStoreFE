@@ -19,7 +19,7 @@ function* handleReviewsRequested(action: PayloadAction<number>) {
     )) as ProductReviewsResponse;
     yield put(reviewsActions.reviewsSucceeded(data));
   } catch {
-    yield put(reviewsActions.reviewsFailed("Unable to load reviews."));
+    yield put(reviewsActions.reviewsFailed("Không tải được đánh giá."));
   }
 }
 
@@ -40,16 +40,16 @@ function* handleSubmitRequested(
 ) {
   try {
     yield call(createReview, action.payload);
-    void message.success("Review submitted.");
+    void message.success("Đã gửi đánh giá.");
     yield put(reviewsActions.reviewSubmitSucceeded());
     yield put(reviewsActions.reviewsRequested(action.payload.productId));
     yield put(
       reviewsActions.reviewEligibilityRequested(action.payload.productId),
     );
   } catch {
-    void message.error("Unable to submit review.");
+    void message.error("Không thể gửi đánh giá.");
     yield put(
-      reviewsActions.reviewSubmitFailed("Unable to submit review."),
+      reviewsActions.reviewSubmitFailed("Không thể gửi đánh giá."),
     );
   }
 }

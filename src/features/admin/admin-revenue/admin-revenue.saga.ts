@@ -17,7 +17,7 @@ function* handleRevenueRequested() {
     ])) as [AdminRevenueReport, { commissionRate: number }];
     yield put(adminRevenueActions.revenueSucceeded({ report, commissionRate: config.commissionRate }));
   } catch (error) {
-    yield put(adminRevenueActions.revenueFailed(extractApiErrorMessage(error, "Unable to load revenue.")));
+    yield put(adminRevenueActions.revenueFailed(extractApiErrorMessage(error, "Không tải được doanh thu.")));
   }
 }
 

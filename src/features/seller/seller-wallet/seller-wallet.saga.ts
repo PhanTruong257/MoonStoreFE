@@ -16,7 +16,7 @@ function* handleWalletRequested() {
   } catch (error) {
     yield put(
       sellerWalletActions.walletFailed(
-        extractApiErrorMessage(error, "Unable to load wallet."),
+        extractApiErrorMessage(error, "Không tải được ví."),
       ),
     );
   }
@@ -32,7 +32,7 @@ function* handleWithdrawalRequested(
   } catch (error) {
     yield put(
       sellerWalletActions.withdrawalFailed(
-        extractApiErrorMessage(error, "Unable to process withdrawal."),
+        extractApiErrorMessage(error, "Không thể xử lý rút tiền."),
       ),
     );
   }

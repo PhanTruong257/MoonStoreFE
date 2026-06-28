@@ -6,7 +6,9 @@ import {
   RequireSeller,
   RequireShipper,
 } from "@/app/router/route-guards";
+import { SellerLayout } from "@/features/seller/components/seller-layout";
 import { AccountPage } from "@/pages/account/account-page";
+import { AdminAnalyticsPage } from "@/pages/admin/admin-analytics";
 import { AdminBrandsPage } from "@/pages/admin/admin-brands";
 import { AdminCategoriesPage } from "@/pages/admin/admin-categories";
 import { AdminDashboardPage } from "@/pages/admin/admin-dashboard";
@@ -17,17 +19,15 @@ import {
 import { AdminReturnsPage } from "@/pages/admin/admin-returns/admin-returns-page";
 import { AdminRevenuePage } from "@/pages/admin/admin-revenue/admin-revenue-page";
 import { AdminSellersPage } from "@/pages/admin/admin-sellers";
-import { AdminShippersPage } from "@/pages/admin/admin-shippers/admin-shippers-page";
 import { AdminShipmentsPage } from "@/pages/admin/admin-shipments/admin-shipments-page";
+import { AdminShippersPage } from "@/pages/admin/admin-shippers/admin-shippers-page";
 import { AdminUsersPage } from "@/pages/admin/admin-users";
 import { AdminVouchersPage } from "@/pages/admin/admin-vouchers";
 import { AdminWithdrawalsPage } from "@/pages/admin/admin-withdrawals/admin-withdrawals-page";
-import { SellerWalletPage } from "@/pages/seller/seller-wallet/seller-wallet-page";
 import { CartPage } from "@/pages/cart/cart-page";
 import { ChatPage } from "@/pages/chat/chat-page";
 import { CheckoutPage } from "@/pages/checkout/checkout-page";
 import { OrderDetailPage, OrdersPage } from "@/pages/orders";
-import { SellerLayout } from "@/features/seller/components/seller-layout";
 import { SellerApplyPage } from "@/pages/seller/seller-apply";
 import { SellerChatPage } from "@/pages/seller/seller-chat";
 import { SellerDashboardPage } from "@/pages/seller/seller-dashboard";
@@ -37,6 +37,7 @@ import { SellerProductEditPage } from "@/pages/seller/seller-product-edit";
 import { SellerProductNewPage } from "@/pages/seller/seller-product-new";
 import { SellerProductsPage } from "@/pages/seller/seller-products";
 import { SellerReturnsPage } from "@/pages/seller/seller-returns/seller-returns-page";
+import { SellerWalletPage } from "@/pages/seller/seller-wallet/seller-wallet-page";
 import { ShipperApplyPage } from "@/pages/shipper/shipper-apply/shipper-apply-page";
 import { ShipperPendingPage } from "@/pages/shipper/shipper-pending/shipper-pending-page";
 import { ShipperShipmentsPage } from "@/pages/shipper/shipper-shipments/shipper-shipments-page";
@@ -48,52 +49,52 @@ export const protectedRoutes: RouteObject[] = [
       {
         path: "/account",
         element: <AccountPage />,
-        handle: { title: "My Account" },
+        handle: { title: "Tài khoản của tôi" },
       },
       {
         path: "/cart",
         element: <CartPage />,
-        handle: { title: "Cart" },
+        handle: { title: "Giỏ hàng" },
       },
       {
         path: "/checkout",
         element: <CheckoutPage />,
-        handle: { title: "Checkout" },
+        handle: { title: "Thanh toán" },
       },
       {
         path: "/orders",
         element: <OrdersPage />,
-        handle: { title: "My Orders" },
+        handle: { title: "Đơn hàng của tôi" },
       },
       {
         path: "/orders/:orderId",
         element: <OrderDetailPage />,
-        handle: { title: "Order Detail" },
+        handle: { title: "Chi tiết đơn hàng" },
       },
       {
         path: "/seller/apply",
         element: <SellerApplyPage />,
-        handle: { title: "Become a Seller" },
+        handle: { title: "Đăng ký bán hàng" },
       },
       {
         path: "/shipper/apply",
         element: <ShipperApplyPage />,
-        handle: { title: "Become a Shipper" },
+        handle: { title: "Đăng ký Shipper" },
       },
       {
         path: "/shipper/pending",
         element: <ShipperPendingPage />,
-        handle: { title: "Application Pending" },
+        handle: { title: "Đơn đang chờ duyệt" },
       },
       {
         path: "/chat",
         element: <ChatPage />,
-        handle: { title: "Messages" },
+        handle: { title: "Tin nhắn" },
       },
       {
         path: "/chat/:conversationId",
         element: <ChatPage />,
-        handle: { title: "Messages" },
+        handle: { title: "Tin nhắn" },
       },
     ],
   },
@@ -107,52 +108,52 @@ export const protectedRoutes: RouteObject[] = [
           {
             path: "/seller",
             element: <SellerDashboardPage />,
-            handle: { title: "Seller Dashboard" },
+            handle: { title: "Tổng quan người bán" },
           },
           {
             path: "/seller/orders",
             element: <SellerOrdersPage />,
-            handle: { title: "Seller Orders" },
+            handle: { title: "Đơn hàng của shop" },
           },
           {
             path: "/seller/orders/:groupId",
             element: <SellerOrderDetailPage />,
-            handle: { title: "Order Detail" },
+            handle: { title: "Chi tiết đơn hàng" },
           },
           {
             path: "/seller/products",
             element: <SellerProductsPage />,
-            handle: { title: "Manage Products" },
+            handle: { title: "Quản lý sản phẩm" },
           },
           {
             path: "/seller/products/new",
             element: <SellerProductNewPage />,
-            handle: { title: "Upload Product" },
+            handle: { title: "Đăng sản phẩm" },
           },
           {
             path: "/seller/products/:productId/edit",
             element: <SellerProductEditPage />,
-            handle: { title: "Edit Product" },
+            handle: { title: "Chỉnh sửa sản phẩm" },
           },
           {
             path: "/seller/chat",
             element: <SellerChatPage />,
-            handle: { title: "Seller Messages" },
+            handle: { title: "Tin nhắn người bán" },
           },
           {
             path: "/seller/chat/:conversationId",
             element: <SellerChatPage />,
-            handle: { title: "Seller Messages" },
+            handle: { title: "Tin nhắn người bán" },
           },
           {
             path: "/seller/wallet",
             element: <SellerWalletPage />,
-            handle: { title: "My Wallet" },
+            handle: { title: "Ví của tôi" },
           },
           {
             path: "/seller/returns",
             element: <SellerReturnsPage />,
-            handle: { title: "Return Requests" },
+            handle: { title: "Yêu cầu đổi/trả" },
           },
         ],
       },
@@ -164,12 +165,12 @@ export const protectedRoutes: RouteObject[] = [
       {
         path: "/shipper",
         element: <ShipperShipmentsPage />,
-        handle: { title: "My Shipments" },
+        handle: { title: "Đơn giao của tôi" },
       },
       {
         path: "/shipper/shipments",
         element: <ShipperShipmentsPage />,
-        handle: { title: "My Shipments" },
+        handle: { title: "Đơn giao của tôi" },
       },
     ],
   },
@@ -179,67 +180,72 @@ export const protectedRoutes: RouteObject[] = [
       {
         path: "/admin",
         element: <AdminDashboardPage />,
-        handle: { title: "Admin Dashboard" },
+        handle: { title: "Tổng quan quản trị" },
       },
       {
         path: "/admin/sellers",
         element: <AdminSellersPage />,
-        handle: { title: "Seller Applications" },
+        handle: { title: "Đăng ký người bán" },
       },
       {
         path: "/admin/users",
         element: <AdminUsersPage />,
-        handle: { title: "Users" },
+        handle: { title: "Người dùng" },
       },
       {
         path: "/admin/orders",
         element: <AdminOrdersPage />,
-        handle: { title: "Orders" },
+        handle: { title: "Đơn hàng" },
       },
       {
         path: "/admin/orders/:orderId",
         element: <AdminOrderDetailPage />,
-        handle: { title: "Order Detail" },
+        handle: { title: "Chi tiết đơn hàng" },
       },
       {
         path: "/admin/categories",
         element: <AdminCategoriesPage />,
-        handle: { title: "Categories" },
+        handle: { title: "Danh mục" },
       },
       {
         path: "/admin/brands",
         element: <AdminBrandsPage />,
-        handle: { title: "Brands" },
+        handle: { title: "Thương hiệu" },
       },
       {
         path: "/admin/vouchers",
         element: <AdminVouchersPage />,
-        handle: { title: "Vouchers" },
+        handle: { title: "Mã giảm giá" },
       },
       {
         path: "/admin/revenue",
         element: <AdminRevenuePage />,
-        handle: { title: "Revenue & Commission" },
+        handle: { title: "Doanh thu & Hoa hồng" },
+      },
+      {
+        path: "/admin/analytics",
+        element: <AdminAnalyticsPage />,
+        handle: { title: "Thống kê AI" },
       },
       {
         path: "/admin/withdrawals",
         element: <AdminWithdrawalsPage />,
-        handle: { title: "Withdrawal Requests" },
+        handle: { title: "Yêu cầu rút tiền" },
       },
       {
         path: "/admin/shippers",
         element: <AdminShippersPage />,
-        handle: { title: "Shippers" },
+        handle: { title: "Shipper" },
       },
       {
         path: "/admin/shipments",
         element: <AdminShipmentsPage />,
-        handle: { title: "Shipments" },
+        handle: { title: "Đơn giao" },
       },
       {
         path: "/admin/returns",
         element: <AdminReturnsPage />,
-        handle: { title: "Return Requests" },
+        handle: { title: "Yêu cầu đổi/trả" },
       },
     ],
   },

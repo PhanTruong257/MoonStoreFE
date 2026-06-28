@@ -102,7 +102,7 @@ export const useAccount = () => {
         if (!isMounted) {
           return;
         }
-        setError(getAuthErrorMessage(err, "Unable to load profile."));
+        setError(getAuthErrorMessage(err, "Không tải được hồ sơ."));
       }
     };
 
@@ -119,7 +119,7 @@ export const useAccount = () => {
       const data = await fetchMyAddresses();
       setAddresses(data);
     } catch {
-      void message.error("Unable to load addresses.");
+      void message.error("Không tải được danh sách địa chỉ.");
     } finally {
       setIsAddressLoading(false);
     }
@@ -147,11 +147,11 @@ export const useAccount = () => {
 
   const submitProfile = async () => {
     if (!firstName.trim() || !email.trim()) {
-      setError("Please enter your name and email.");
+      setError("Vui lòng nhập tên và email.");
       return;
     }
     if (currentPassword || newPassword || confirmPassword) {
-      setError("Password change is not supported yet.");
+      setError("Chưa hỗ trợ đổi mật khẩu.");
       return;
     }
 
@@ -166,9 +166,9 @@ export const useAccount = () => {
       });
       setStoredUser(response.user);
       setInitialProfile({ firstName, lastName, email });
-      setSuccessMessage("Profile updated.");
+      setSuccessMessage("Đã cập nhật hồ sơ.");
     } catch (err) {
-      setError(getAuthErrorMessage(err, "Unable to save profile."));
+      setError(getAuthErrorMessage(err, "Không thể lưu hồ sơ."));
     } finally {
       setIsSaving(false);
     }
@@ -198,15 +198,15 @@ export const useAccount = () => {
     try {
       if (editingAddress) {
         await updateMyAddress(editingAddress.id, values);
-        void message.success("Address updated.");
+        void message.success("Đã cập nhật địa chỉ.");
       } else {
         await createMyAddress(values);
-        void message.success("Address added.");
+        void message.success("Đã thêm địa chỉ.");
       }
       setIsAddressModalOpen(false);
       await reloadAddresses();
     } catch {
-      void message.error("Unable to save address.");
+      void message.error("Không thể lưu địa chỉ.");
     } finally {
       setIsAddressSaving(false);
     }
@@ -215,10 +215,10 @@ export const useAccount = () => {
   const handleDeleteAddress = async (id: number) => {
     try {
       await deleteMyAddress(id);
-      void message.success("Address removed.");
+      void message.success("Đã xoá địa chỉ.");
       await reloadAddresses();
     } catch {
-      void message.error("Unable to remove address.");
+      void message.error("Không thể xoá địa chỉ.");
     }
   };
 
@@ -227,7 +227,7 @@ export const useAccount = () => {
       await setDefaultAddress(id);
       await reloadAddresses();
     } catch {
-      void message.error("Unable to set default.");
+      void message.error("Không thể đặt làm mặc định.");
     }
   };
 

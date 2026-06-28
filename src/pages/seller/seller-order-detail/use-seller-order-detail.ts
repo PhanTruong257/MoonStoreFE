@@ -8,7 +8,7 @@ import { SELLER_ORDER_STATUS, getNextOrderStatus } from "@/const/seller.const";
 import { paymentsActions } from "@/features/payments/payments.slice";
 import { sellerOrderDetailActions } from "@/features/seller/seller-order-detail/seller-order-detail.slice";
 
-const CANCEL_NOTE_DEFAULT = "Cancelled by seller";
+const CANCEL_NOTE_DEFAULT = "Đã huỷ bởi người bán";
 
 export const useSellerOrderDetail = () => {
   const params = useParams<{ groupId: string }>();

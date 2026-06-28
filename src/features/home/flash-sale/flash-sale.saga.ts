@@ -15,7 +15,7 @@ function* handleFlashSaleInit() {
     )) as [CatalogCategory[], CatalogProduct[]];
 
     const categories = [
-      { id: "all", label: "All" },
+      { id: "all", label: "Tất cả" },
       ...categoryList.map((item) => ({
         id: String(item.id),
         label: item.name,
@@ -43,7 +43,7 @@ function* handleFlashSaleInit() {
     );
   } catch {
     yield put(
-      flashSaleActions.flashSaleInitFailed("Unable to load flash sale."),
+      flashSaleActions.flashSaleInitFailed("Không tải được flash sale."),
     );
   }
 }
@@ -67,7 +67,7 @@ function* handleAddToCart(
     );
   } catch {
     yield put(
-      flashSaleActions.flashSaleAddToCartFailed("Unable to add to cart."),
+      flashSaleActions.flashSaleAddToCartFailed("Không thể thêm vào giỏ."),
     );
   }
 }

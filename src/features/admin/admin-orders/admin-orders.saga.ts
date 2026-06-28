@@ -23,7 +23,7 @@ function* handleList(
     )) as AdminOrderListItem[];
     yield put(adminOrdersActions.listSucceeded(orders));
   } catch {
-    yield put(adminOrdersActions.listFailed("Unable to load orders."));
+    yield put(adminOrdersActions.listFailed("Không tải được đơn hàng."));
   }
 }
 
@@ -35,7 +35,7 @@ function* handleDetail(action: PayloadAction<number>) {
     )) as AdminOrderDetail;
     yield put(adminOrdersActions.detailSucceeded(order));
   } catch {
-    yield put(adminOrdersActions.detailFailed("Unable to load order."));
+    yield put(adminOrdersActions.detailFailed("Không tải được đơn hàng."));
   }
 }
 

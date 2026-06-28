@@ -18,7 +18,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
     yield call(setStoredUser, user);
     yield put(authActions.loginSucceeded(user));
   } catch (error) {
-    const message = getAuthErrorMessage(error, "Login failed.");
+    const message = getAuthErrorMessage(error, "Đăng nhập thất bại.");
     yield put(authActions.loginFailed(message));
   }
 }
@@ -29,7 +29,7 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
     yield call(setStoredUser, user);
     yield put(authActions.registerSucceeded(user));
   } catch (error) {
-    const message = getAuthErrorMessage(error, "Register failed.");
+    const message = getAuthErrorMessage(error, "Đăng ký thất bại.");
     yield put(authActions.registerFailed(message));
   }
 }

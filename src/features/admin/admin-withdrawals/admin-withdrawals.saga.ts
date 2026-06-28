@@ -14,7 +14,7 @@ function* handleWithdrawalsRequested() {
     const items = (yield call(fetchAdminWithdrawals)) as AdminWithdrawal[];
     yield put(adminWithdrawalsActions.withdrawalsSucceeded(items));
   } catch (error) {
-    yield put(adminWithdrawalsActions.withdrawalsFailed(extractApiErrorMessage(error, "Unable to load withdrawals.")));
+    yield put(adminWithdrawalsActions.withdrawalsFailed(extractApiErrorMessage(error, "Không tải được yêu cầu rút tiền.")));
   }
 }
 

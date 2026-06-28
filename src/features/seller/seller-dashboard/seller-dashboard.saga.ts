@@ -12,7 +12,7 @@ function* handleDashboardRequested() {
     yield put(sellerDashboardActions.sellerDashboardSucceeded(stats));
   } catch {
     yield put(
-      sellerDashboardActions.sellerDashboardFailed("Unable to load stats."),
+      sellerDashboardActions.sellerDashboardFailed("Không tải được thống kê."),
     );
   }
 }

@@ -1,11 +1,21 @@
 import { useRef, useEffect, type KeyboardEvent } from "react";
 
 import styles from "./ai-chat-widget.module.scss";
+import { BotMessage } from "./bot-message";
 import { useAiChat } from "./use-ai-chat";
 
 export const AiChatWidget = () => {
-  const { isOpen, toggleOpen, messages, input, setInput, sendMessage, isLoading, clearMessages } =
-    useAiChat();
+  const {
+    isOpen,
+    toggleOpen,
+    messages,
+    input,
+    setInput,
+    sendMessage,
+    goToCheckout,
+    isLoading,
+    clearMessages,
+  } = useAiChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -35,7 +45,7 @@ export const AiChatWidget = () => {
               <div className={styles.avatar}>🤖</div>
               <div>
                 <div className={styles.headerName}>Moon AI</div>
-                <div className={styles.headerSub}>Trợ lý tư vấn sản phẩm</div>
+                <div className={styles.headerSub}>Trợ lý mua sắm & đặt hàng</div>
               </div>
             </div>
             <div className={styles.headerActions}>
@@ -64,8 +74,8 @@ export const AiChatWidget = () => {
             {messages.length === 0 && (
               <div className={styles.welcome}>
                 <div className={styles.welcomeAvatar}>🤖</div>
-                <p>Xin chào! Tôi có thể giúp bạn tìm sản phẩm phù hợp.</p>
-                <p>Hỏi tôi về sản phẩm, giá cả, hoặc tư vấn mua sắm nhé!</p>
+                <p>Xin chào! Tôi có thể giúp bạn tìm sản phẩm và đặt hàng.</p>
+                <p>VD: "tìm tai nghe dưới 1 triệu" hoặc "đặt 2 cái abc giúp tôi".</p>
               </div>
             )}
 
@@ -77,10 +87,14 @@ export const AiChatWidget = () => {
                 {msg.role === "assistant" && (
                   <div className={styles.msgAvatar}>🤖</div>
                 )}
-                <div className={styles.bubble}>
-                  {msg.content}
-                  {msg.isStreaming && <span className={styles.cursor} />}
-                </div>
+                {msg.role === "assistant" ? (
+                  <BotMessage
+                    message={msg}
+                    onCheckout={(id) => void goToCheckout(id)}
+                  />
+                ) : (
+                  <div className={styles.bubble}>{msg.content}</div>
+                )}
               </div>
             ))}
 
@@ -108,7 +122,12 @@ export const AiChatWidget = () => {
               {isLoading ? (
                 <span className={styles.spinner} />
               ) : (
-                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="18"
+                  height="18"
+                >
                   <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                 </svg>
               )}

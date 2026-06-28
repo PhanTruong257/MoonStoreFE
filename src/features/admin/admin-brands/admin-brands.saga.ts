@@ -18,18 +18,18 @@ function* loadList() {
     const items = (yield call(fetchAdminBrands)) as AdminBrand[];
     yield put(adminBrandsActions.succeeded(items));
   } catch {
-    yield put(adminBrandsActions.failed("Unable to load brands."));
+    yield put(adminBrandsActions.failed("Không tải được thương hiệu."));
   }
 }
 
 function* handleCreate(action: PayloadAction<{ name: string }>) {
   try {
     yield call(createAdminBrand, action.payload);
-    void message.success("Brand created.");
+    void message.success("Đã tạo thương hiệu.");
     yield put(adminBrandsActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to create brand.");
+    const msg = extractApiErrorMessage(error, "Không thể tạo thương hiệu.");
     void message.error(msg);
     yield put(adminBrandsActions.actionFailed(msg));
   }
@@ -40,11 +40,11 @@ function* handleUpdate(action: PayloadAction<{ id: number; name: string }>) {
     yield call(updateAdminBrand, action.payload.id, {
       name: action.payload.name,
     });
-    void message.success("Brand updated.");
+    void message.success("Đã cập nhật thương hiệu.");
     yield put(adminBrandsActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to update brand.");
+    const msg = extractApiErrorMessage(error, "Không thể cập nhật thương hiệu.");
     void message.error(msg);
     yield put(adminBrandsActions.actionFailed(msg));
   }
@@ -53,11 +53,11 @@ function* handleUpdate(action: PayloadAction<{ id: number; name: string }>) {
 function* handleDelete(action: PayloadAction<number>) {
   try {
     yield call(deleteAdminBrand, action.payload);
-    void message.success("Brand deleted.");
+    void message.success("Đã xoá thương hiệu.");
     yield put(adminBrandsActions.actionSucceeded());
     yield call(loadList);
   } catch (error) {
-    const msg = extractApiErrorMessage(error, "Unable to delete brand.");
+    const msg = extractApiErrorMessage(error, "Không thể xoá thương hiệu.");
     void message.error(msg);
     yield put(adminBrandsActions.actionFailed(msg));
   }

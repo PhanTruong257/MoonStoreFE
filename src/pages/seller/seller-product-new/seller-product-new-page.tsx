@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./seller-product-new-page.module.scss";
 import { useSellerProductNew } from "./use-seller-product-new";
 
+import { HighlightsEditor } from "@/component/highlights-editor/highlights-editor";
 import { ImageUploader } from "@/component/image-uploader/image-uploader";
 import { OptionGroupsEditor } from "@/component/option-groups-editor/option-groups-editor";
 import { SELLER_PRODUCT_STATUS_OPTIONS } from "@/const/seller-product-new.const";
@@ -19,8 +20,12 @@ export const SellerProductNewPage = () => {
     isSaving,
     categories,
     categoriesError,
+    isGenerating,
+    aiError,
+    canGenerate,
     setField,
     submit,
+    generateContent,
   } = useSellerProductNew();
 
   useSetSellerShell({
@@ -128,6 +133,16 @@ export const SellerProductNewPage = () => {
               onChange={(url) => setField("imageUrl", url)}
               disabled={isSaving}
             />
+            <button
+              type="button"
+              className={styles.aiButton}
+              disabled={isSaving || isGenerating || !canGenerate}
+              onClick={() => void generateContent()}
+            >
+              {isGenerating ? t.aiGenerating : t.aiGenerateBtn}
+            </button>
+            {!canGenerate ? <p className={styles.note}>{t.aiNeedImage}</p> : null}
+            {aiError ? <p className={styles.note}>{aiError}</p> : null}
           </div>
           <div className={styles.field}>
             <label htmlFor="status">{t.statusLabel}</label>
@@ -143,6 +158,15 @@ export const SellerProductNewPage = () => {
               ))}
             </select>
           </div>
+        </div>
+
+        <div className={styles.field}>
+          <label>{t.highlightsLabel}</label>
+          <HighlightsEditor
+            value={form.highlights}
+            onChange={(highlights) => setField("highlights", highlights)}
+            disabled={isSaving}
+          />
         </div>
 
         <div className={styles.field}>

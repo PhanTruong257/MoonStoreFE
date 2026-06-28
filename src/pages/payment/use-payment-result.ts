@@ -19,7 +19,7 @@ export const usePaymentResult = () => {
     });
 
     if (Object.keys(query).length === 0) {
-      setError("Missing payment parameters.");
+      setError("Thiếu tham số thanh toán.");
       setIsLoading(false);
       return;
     }
@@ -36,7 +36,7 @@ export const usePaymentResult = () => {
         if (!isMounted) {
           return;
         }
-        setError("Unable to verify payment.");
+        setError("Không thể xác minh thanh toán.");
       } finally {
         if (isMounted) {
           setIsLoading(false);

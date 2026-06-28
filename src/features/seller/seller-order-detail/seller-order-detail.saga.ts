@@ -19,7 +19,7 @@ function* handleLoadRequested(action: PayloadAction<number>) {
   } catch {
     yield put(
       sellerOrderDetailActions.sellerOrderDetailFailed(
-        "Unable to load order detail.",
+        "Không tải được chi tiết đơn hàng.",
       ),
     );
   }
@@ -33,7 +33,7 @@ function* handleStatusUpdateRequested(
       status: action.payload.status,
       note: action.payload.note,
     });
-    void message.success(`Status updated to ${action.payload.status}.`);
+    void message.success(`Đã cập nhật trạng thái thành ${action.payload.status}.`);
     yield put(sellerOrderDetailActions.sellerOrderStatusUpdateSucceeded());
     yield put(
       sellerOrderDetailActions.sellerOrderDetailRequested(
@@ -41,10 +41,10 @@ function* handleStatusUpdateRequested(
       ),
     );
   } catch {
-    void message.error("Unable to update status.");
+    void message.error("Không thể cập nhật trạng thái.");
     yield put(
       sellerOrderDetailActions.sellerOrderStatusUpdateFailed(
-        "Unable to update status.",
+        "Không thể cập nhật trạng thái.",
       ),
     );
   }
